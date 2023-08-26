@@ -1,0 +1,14 @@
+import 'package:dio/dio.dart';
+import 'package:tavrida_flutter/repositories/Settings.dart';
+
+import '../models/models.dart';
+
+Future<Forum?> getForumDetailAsync(String id) async {
+  final connectionString = "${AppSettings.baseUri}api/1.0/forum/$id";
+  Dio dio = Dio();
+
+  dio.options.headers["Authorization"] = "Bearer ${AppSettings.authToken}";
+  var response = await dio.get(connectionString);
+
+  return Forum.fromJson(response.data);
+}
