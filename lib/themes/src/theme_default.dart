@@ -30,14 +30,32 @@ ThemeData createLightTheme() {
       bodySmall: TextStyle(
         fontFamily: 'montserrat, urban, sans-serif',
         color: AppColors.black,
-        fontSize: 15,
+        fontSize: 14,
         fontWeight: FontWeight.w400,
+      ),
+      labelMedium: TextStyle(
+        fontFamily: 'montserrat, urban, sans-serif',
+        color: AppColors.grey,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+      ),
+      headlineLarge: TextStyle(
+        fontFamily: 'montserrat, urban, sans-serif',
+        color: AppColors.black,
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+      ),
+      headlineMedium: TextStyle(
+        fontFamily: 'montserrat, urban, sans-serif',
+        color: AppColors.white,
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
       )
     ),
     buttonTheme:
-      ButtonThemeData(
+      const ButtonThemeData(
         padding: EdgeInsets.all(10),
         buttonColor: AppColors.black
-      )
+      ),
 );
 }

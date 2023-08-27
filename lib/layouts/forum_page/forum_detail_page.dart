@@ -1,9 +1,10 @@
 import 'package:flutter/gestures.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForumDetail.dart';
+import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
-import 'package:tavrida_flutter/widgets/BottomNavigationBase.dart';
-import '../../repositories/models/models.dart';
+import 'package:tavrida_flutter/widgets/ImagesCarousel.dart';
 
 class ForumDetailPage extends StatefulWidget {
   const ForumDetailPage({super.key});
@@ -28,50 +29,105 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> imageUrls = <String>[];
+    imageUrls.add(forum?.logoUrl ?? '');
+    imageUrls.addAll(forum?.imageUrls ?? <String>[]);
     var theme = Theme.of(context);
+    DateTime startedAt = DateTime.parse(forum?.startedAt ?? '12122012');
+    DateTime endedAt = DateTime.parse(forum?.endedAt ?? '12122012');
     arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
     updateData(arguments['id'] ?? '');
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          forum?.title ?? 'null',
-          style: theme.textTheme.titleLarge,
-        ),
-      ),
-      body: Container(
-        child: Column(
+        body: Column(
           children: [
             SizedBox(
-              height: 300,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: forum?.imageUrls?.length ?? 0,
-                itemBuilder: (context, index) {
-                  return Image(
-                    image: NetworkImage(forum?.imageUrls?[index] ?? ''),
-                    height: 300,
-                  );
-                }
+              height: 350,
+              child: CarouselImages(
+                  imageUrls: imageUrls.first == ''
+                      ? <String>[]
+                      : imageUrls
               ),
             ),
-            Stack(
-              children: [
-                Text(forum?.title ?? ''),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  forum?.title ?? '',
+                  style: theme.textTheme.titleLarge)
+              ),
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextButton.icon(
-                    onPressed: null,
-                    icon: const Icon(Icons.ac_unit),
-                    label: Text('Войти', style: theme.textTheme.titleMedium,),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ElevatedButton.icon(
+                    onPressed: () {},
+                    icon: const Icon(Icons.view_in_ar, color: AppColors.white,),
+                    label: Text('Начать', style: theme.textTheme.headlineMedium),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(AppColors.buttonPrimary),
+                      fixedSize: MaterialStateProperty.all(const Size(180, 45))
+                    ),
+                  ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: OutlinedButton.icon(
+                    onPressed: () {},
+                    icon: const Icon(Icons.map_outlined, color: AppColors.black,),
+                    label: Text('Карта', style: theme.textTheme.headlineLarge),
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(AppColors.buttonSecondary),
+                        fixedSize: MaterialStateProperty.all(const Size(180, 45))
+                    ),
+                  ),
+                )
               ],
-            )
+            ),
+            Align(
+              alignment: const Alignment(-0.95, 0.0),
+              child: Text('Описание', style: theme.textTheme.labelMedium,)
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(8, 4, 8, 8),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Text(forum?.description ?? '', style: theme.textTheme.bodySmall)
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(8, 12, 8, 4),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Даты проведения', style: theme.textTheme.labelMedium,)
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                      "${DateFormat('dd.MM.yyyy').format(startedAt)} -"
+                          " ${DateFormat('dd.MM.yyyy').format(endedAt)}",
+                      style: theme.textTheme.bodySmall)),
+            ),
           ],
         ),
-      )
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
+        backgroundColor: const Color.fromRGBO(255, 255, 255, 0.4),
+        hoverColor: const Color.fromRGBO(255, 255, 255, 0.4),
+        hoverElevation: 0,
+        child: const Icon(Icons.arrow_back),
+      ),
     );
   }
 }

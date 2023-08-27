@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 
-import '../models/models.dart';
+import '../views/forum.dart';
 
 Future<Forum?> getForumDetailAsync(String id) async {
   final connectionString = "${AppSettings.baseUri}api/1.0/forum/$id";

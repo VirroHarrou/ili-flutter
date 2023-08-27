@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tavrida_flutter/layouts/ar_page/ar_page.dart';
+import 'package:tavrida_flutter/AR/localAndWebObjectsView.dart';
 import 'package:tavrida_flutter/layouts/forum_page/view.dart';
+import 'package:tavrida_flutter/layouts/models_page/model_favorites_page.dart';
 import 'package:tavrida_flutter/layouts/profile_page/profile_page.dart';
 
 import '../themes/app_colors.dart';
@@ -15,9 +16,9 @@ class HomePage extends StatefulWidget{
 }
 
 class HomePageState extends State<HomePage> {
-  static List<Widget> _widgetOptions = <Widget>[
-    ForumListPage(),
-    ARPage(),
+  static final List<Widget> _widgetOptions = <Widget>[
+    const ForumListPage(),
+    ModelFavoritesPage(),
     ProfilePage(),
   ];
 

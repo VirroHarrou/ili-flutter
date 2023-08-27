@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
+import 'package:tavrida_flutter/repositories/views/models.dart';
 
-import '../models/models.dart';
 
 Future<Forums?> getForumHistoryAsync() async {
   final connectionString = "${AppSettings.baseUri}api/1.0/forum/history";

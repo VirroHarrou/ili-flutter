@@ -4,7 +4,6 @@ import 'package:ar_flutter_plugin/managers/ar_object_manager.dart';
 import 'package:ar_flutter_plugin/managers/ar_session_manager.dart';
 import 'package:ar_flutter_plugin/widgets/ar_view.dart';
 import 'package:flutter/material.dart';
-import 'package:tavrida_flutter/repositories/models/models.dart';
 
 import '../../AR/localAndWebObjectsView.dart';
 
@@ -18,15 +17,7 @@ class ARPage extends StatefulWidget {
 class _ARPageState extends State<ARPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Пока ничего нет',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-      ),
-      body: ARView(onARViewCreated: onARViewCreated),
-    );
+    return Scaffold();
   }
 
 

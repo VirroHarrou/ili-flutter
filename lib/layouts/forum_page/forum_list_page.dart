@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForums.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForumsSearch.dart';
 
-import 'package:tavrida_flutter/repositories/models/models.dart';
+import 'package:tavrida_flutter/repositories/views/models.dart';
+import 'package:tavrida_flutter/widgets/CodeDialog.dart';
 
 class ForumListPage extends StatefulWidget {
   const ForumListPage({super.key});
@@ -40,6 +42,8 @@ class _ForumListPageState extends State<ForumListPage> {
       itemCount: forums.forumList?.length ?? 0,
       padding: const EdgeInsets.all(8),
       itemBuilder: (context, index) {
+        DateTime startedAt = DateTime.parse(forums.forumList?[index]?.startedAt ?? '12122012');
+        DateTime endedAt = DateTime.parse(forums.forumList?[index]?.endedAt ?? '12122012');
         return InkWell(
             onTap: () {
               var id = forums.forumList?[index].id;
@@ -74,8 +78,8 @@ class _ForumListPageState extends State<ForumListPage> {
                         borderRadius: BorderRadius.all(Radius.circular(100)),
                       ),
                       child: Text(
-                        "${forums.forumList?[index].startedAt.substring(0, 10)} "
-                        "- ${forums.forumList?[index].endedAt.substring(0, 10)}",
+                        "${DateFormat('dd.MM.yyyy').format(startedAt)} "
+                        "- ${DateFormat('dd.MM.yyyy').format(endedAt)}",
                         style: theme.textTheme.bodySmall,
                       ),
                     ),
@@ -98,10 +102,11 @@ class _ForumListPageState extends State<ForumListPage> {
           : ListTile(
               title: TextField(
                 decoration: const InputDecoration(
-                  hintText: 'Поиск...',
+                  hintText: 'Найти...',
                   hintStyle: TextStyle(
                     color: Colors.black38,
                     fontSize: 24,
+                    fontWeight: FontWeight.w400,
                   ),
                   border: InputBorder.none,
                 ),
@@ -112,7 +117,9 @@ class _ForumListPageState extends State<ForumListPage> {
       actions: <Widget>[
         IconButton(
           onPressed: () {
-            //Todo: Сделать плавающее меню
+            showDialog(context: context, builder: (context){
+              return const CodeDialog();
+            });
           },
           icon: const Icon(Icons.download_outlined),
         ),
