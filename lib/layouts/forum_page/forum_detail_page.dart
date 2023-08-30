@@ -1,6 +1,6 @@
-import 'package:flutter/gestures.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:tavrida_flutter/main.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForumDetail.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
@@ -64,7 +64,9 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      //Todo: переход на AR
+                    },
                     icon: const Icon(Icons.view_in_ar, color: AppColors.white,),
                     label: Text('Начать', style: theme.textTheme.headlineMedium),
                     style: ButtonStyle(
@@ -76,7 +78,9 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: OutlinedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      //Todo: вызов карты
+                    },
                     icon: const Icon(Icons.map_outlined, color: AppColors.black,),
                     label: Text('Карта', style: theme.textTheme.headlineLarge),
                     style: ButtonStyle(
@@ -92,14 +96,14 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
               child: Text('Описание', style: theme.textTheme.labelMedium,)
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(8, 4, 8, 8),
+              padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Text(forum?.description ?? '', style: theme.textTheme.bodySmall)
               ),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(8, 12, 8, 4),
+              padding: const EdgeInsets.fromLTRB(8, 12, 8, 4),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text('Даты проведения', style: theme.textTheme.labelMedium,)

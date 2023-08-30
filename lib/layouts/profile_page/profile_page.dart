@@ -24,8 +24,6 @@ class _ProfilePageState extends State<ProfilePage>{
     setState(() {});
   }
 
-  bool registered = User.email != null;
-
   @override
   void initState() {
     super.initState();
@@ -36,22 +34,16 @@ class _ProfilePageState extends State<ProfilePage>{
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var appBar = AppBar(
+        automaticallyImplyLeading: false,
         title: Text('Аккаунт', style: theme.textTheme.titleLarge,),
         actions: [
           IconButton(
               onPressed: () {
-                if(registered) {
-                  User.email = null;
-                } else {
-                  var data = AppSettings().parseJwt(AppSettings.authToken);
-                  User.email = data['email'];
-                }
-                registered = !registered;
-                setState(() {});
+                Navigator.pushNamed(context, "/");
               },
-              icon: Icon(
-                registered ? Icons.exit_to_app :  Icons.person_add_alt_1,
-                color: registered ? Colors.red : AppColors.black,
+              icon: const Icon(
+                Icons.exit_to_app,
+                color: Colors.red,
               )
           ),
         ],
@@ -65,12 +57,12 @@ class _ProfilePageState extends State<ProfilePage>{
               leading: const CircleAvatar(
                 radius: 20,
                   backgroundColor: Color(0xffc6c6c6),
-                  child:  Icon(
+                  child: Icon(
                       Icons.person_2,
                       color: AppColors.black,
                     ),
                   ),
-              title: Text(User.email ?? 'Не зарегестрирован',
+              title: Text(User.email ?? '',
                   style: theme.textTheme.titleLarge)
           ),
           Expanded(
@@ -78,54 +70,57 @@ class _ProfilePageState extends State<ProfilePage>{
               itemCount: widget.forumsHistory?.forumList?.length ?? 0,
               padding: const EdgeInsets.all(8),
               itemBuilder: (context, index) {
-                DateTime startedAt = DateTime.parse(widget.forumsHistory?.forumList?[index]?.startedAt ?? '12122012');
-                DateTime endedAt = DateTime.parse(widget.forumsHistory?.forumList?[index]?.endedAt ?? '12122012');
+                DateTime startedAt = DateTime.parse(widget.forumsHistory?.forumList?[index].startedAt ?? '12122012');
+                DateTime endedAt = DateTime.parse(widget.forumsHistory?.forumList?[index].endedAt ?? '12122012');
                 var inkWell = InkWell(
                     onTap: () {
                       var id = widget.forumsHistory?.forumList?[index].id;
                       Navigator.pushNamed(context, "/ForumDetail",
                           arguments: {"id": id});
                     },
-                    child: Container(
-                      height: 300,
-                      padding: const EdgeInsets.all(7.5),
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        image: DecorationImage(
-                            image: NetworkImage(
-                                widget.forumsHistory?.forumList?[index].logoUrl as String),
-                            fit: BoxFit.cover,
-                            colorFilter: ColorFilter.mode(
-                                Colors.black.withOpacity(0.5), BlendMode.dstATop)),
-                        borderRadius: const BorderRadius.all(Radius.circular(16)),
-                      ),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              textAlign: TextAlign.left,
-                              "${widget.forumsHistory?.forumList?[index].title}",
-                              style: theme.textTheme.titleMedium,
-                            ),
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
-                              decoration: const BoxDecoration(
-                                color: Colors.white54,
-                                borderRadius: BorderRadius.all(Radius.circular(100)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Container(
+                        height: 300,
+                        padding: const EdgeInsets.all(7.5),
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                  widget.forumsHistory?.forumList?[index].logoUrl as String),
+                              fit: BoxFit.cover,
+                              colorFilter: ColorFilter.mode(
+                                  Colors.black.withOpacity(0.5), BlendMode.dstATop)),
+                          borderRadius: const BorderRadius.all(Radius.circular(16)),
+                        ),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                textAlign: TextAlign.left,
+                                "${widget.forumsHistory?.forumList?[index].title}",
+                                style: theme.textTheme.titleMedium,
                               ),
-                              child: Text(
-                                "${DateFormat('dd.MM.yyyy').format(startedAt)} "
-                                    "- ${DateFormat('dd.MM.yyyy').format(endedAt)}",
-                                style: theme.textTheme.bodySmall,
+                              Container(
+                                padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
+                                decoration: const BoxDecoration(
+                                  color: Colors.white54,
+                                  borderRadius: BorderRadius.all(Radius.circular(100)),
+                                ),
+                                child: Text(
+                                  "${DateFormat('dd.MM.yyyy').format(startedAt)} "
+                                      "- ${DateFormat('dd.MM.yyyy').format(endedAt)}",
+                                  style: theme.textTheme.bodySmall,
+                                ),
                               ),
-                            ),
-                            const Spacer(),
-                            Text(
-                              textAlign: TextAlign.start,
-                              "${widget.forumsHistory?.forumList?[index].description.substring(0, 180)}...",
-                              style: theme.textTheme.bodyMedium,
-                            )
-                          ]
+                              const Spacer(),
+                              Text(
+                                textAlign: TextAlign.start,
+                                "${widget.forumsHistory?.forumList?[index].description.substring(0, 180)}...",
+                                style: theme.textTheme.bodyMedium,
+                              )
+                            ]
+                        ),
                       ),
                     )
                 );

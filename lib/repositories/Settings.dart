@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 class AppSettings{
-  static String authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJmMjExYjQ2OC1jZDA3LTQ3NDAtOTU2Yi1lYWMxYThlMDNlYzIiLCJzdWIiOiJmQGYucnUiLCJlbWFpbCI6ImZAZi5ydSIsImlzcyI6IlRhdnJpZGEuU2VydmVyIiwiYXVkIjoiVGF2cmlkYS5DbGllbnQifQ.lEjf-Pgx0zhyyNaM-JtZZXMpvuFHJXlbavyz69XiwJ8';
+  static String authToken = '';
   static String baseUri = 'http://185.233.187.109/';
   static String imageNotFound = 'https://yt3.googleusercontent.com/iRLpuvr-WoAkDmOmXQiVnk7Gf4knJ6_OmIqZRmal4FeFxwbPLkMwIWm4QZlvH9t2GojQWZ4P=s900-c-k-c0x00ffffff-no-rj';
 

@@ -16,7 +16,7 @@ dependencies:
   path_provider: ^2.1.0
   flutter_archive: ^5.0.0
   intl: ^0.18.1
-
+  flutter_secure_storage: ^8.0.0
 
 dev_dependencies:
   flutter_test:
@@ -25,4 +25,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/logo.png
 

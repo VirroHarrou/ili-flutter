@@ -4,6 +4,11 @@ class Model {
   String? valueUrl;
   String? title;
   String? logoUrl;
+  String? forumId;
+  String? forumTitle;
+  String? forumLogoUrl;
+  String? startedAt;
+  String? endedAt;
   String? createdAt;
   String? updatedAt;
   bool? like;
@@ -24,21 +29,91 @@ class Model {
     valueUrl = json['valueUrl'];
     title = json['title'];
     logoUrl = json['logoUrl'];
+    forumId = json['forumId'];
+    forumTitle = json['forumTitle'];
+    forumLogoUrl = json['forumLogoUrl'];
+    startedAt = json['startedAt'];
+    endedAt = json['endedAt'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     like = json['like'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['code'] = this.code;
-    data['valueUrl'] = this.valueUrl;
-    data['title'] = this.title;
-    data['logoUrl'] = this.logoUrl;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['like'] = this.like;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['code'] = code;
+    data['valueUrl'] = valueUrl;
+    data['title'] = title;
+    data['logoUrl'] = logoUrl;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['like'] = like;
+    return data;
+  }
+}
+
+class Favorites {
+  List<Model>? modelList;
+
+  Favorites({this.modelList});
+
+  Favorites.fromJson(Map<String, dynamic> json) {
+    if (json['favorites'] != null) {
+      modelList = <Model>[];
+      json['favorites'].forEach((v) {
+        modelList!.add(Model.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (modelList != null) {
+      data['favorites'] = modelList!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class ModelList {
+  List<ModelReduction>? models;
+
+  ModelList({this.models});
+
+  ModelList.fromJson(Map<String, dynamic> json) {
+    if (json['models'] != null) {
+      models = <ModelReduction >[];
+      json['models'].forEach((v) {
+        models!.add(ModelReduction .fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (models != null) {
+      data['models'] = models!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class ModelReduction {
+  String? id;
+  String? code;
+
+  ModelReduction({this.id, this.code});
+
+  ModelReduction.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    code = json['code'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['code'] = code;
     return data;
   }
 }

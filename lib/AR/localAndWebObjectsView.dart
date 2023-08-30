@@ -99,7 +99,7 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
 
     this.arSessionManager!.onInitialize(
       showFeaturePoints: false,
-      showPlanes: true,
+      showPlanes: false,
       customPlaneTexturePath: "Images/triangle.png",
       showWorldOrigin: false,
       handleTaps: false,
@@ -107,10 +107,11 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
     this.arObjectManager!.onInitialize();
 
     //Download model to file system
-    httpClient = new HttpClient();
+    httpClient = HttpClient();
     _downloadFile(
-        "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
-        "LocalDuck.glb");
+        "http://185.233.187.109/api/1.0/data/model/8895f53518544bf4ad5ab5cf43c7973d.glb",
+        "8895f53518544bf4ad5ab5cf43c7973d.glb");
+
     // Alternative to use type fileSystemAppFolderGLTF2:
     //_downloadAndUnpack(
     //    "https://drive.google.com/uc?export=download&id=1fng7yiK0DIR0uem7XkV2nlPSGH9PysUs",
@@ -122,9 +123,10 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);
     String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = new File('$dir/$filename');
+    File file = File('$dir/$filename');
     await file.writeAsBytes(bytes);
     print("Downloading finished, path: " + '$dir/$filename');
+
     return file;
   }
 
@@ -133,7 +135,7 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);
     String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = new File('$dir/$filename');
+    File file = File('$dir/$filename');
     await file.writeAsBytes(bytes);
     print("Downloading finished, path: " + '$dir/$filename');
 
@@ -148,9 +150,9 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
   }
 
   Future<void> onLocalObjectAtOriginButtonPressed() async {
-    if (this.localObjectNode != null) {
-      this.arObjectManager!.removeNode(this.localObjectNode!);
-      this.localObjectNode = null;
+    if (localObjectNode != null) {
+      arObjectManager!.removeNode(localObjectNode!);
+      localObjectNode = null;
     } else {
       var newNode = ARNode(
           type: NodeType.localGLTF2,
@@ -158,47 +160,47 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
           scale: Vector3(0.2, 0.2, 0.2),
           position: Vector3(0.0, 0.0, 0.0),
           rotation: Vector4(1.0, 0.0, 0.0, 0.0));
-      bool? didAddLocalNode = await this.arObjectManager!.addNode(newNode);
-      this.localObjectNode = (didAddLocalNode!) ? newNode : null;
+      bool? didAddLocalNode = await arObjectManager!.addNode(newNode);
+      localObjectNode = (didAddLocalNode!) ? newNode : null;
     }
   }
 
   Future<void> onWebObjectAtOriginButtonPressed() async {
-    if (this.webObjectNode != null) {
-      this.arObjectManager!.removeNode(this.webObjectNode!);
-      this.webObjectNode = null;
+    if (webObjectNode != null) {
+      arObjectManager!.removeNode(webObjectNode!);
+      webObjectNode = null;
     } else {
       var newNode = ARNode(
           type: NodeType.webGLB,
           uri:
-          "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+          "http://185.233.187.109/api/1.0/data/model/8895f53518544bf4ad5ab5cf43c7973d.glb",
           scale: Vector3(0.2, 0.2, 0.2));
-      bool? didAddWebNode = await this.arObjectManager!.addNode(newNode);
-      this.webObjectNode = (didAddWebNode!) ? newNode : null;
+      bool? didAddWebNode = await arObjectManager!.addNode(newNode);
+      webObjectNode = (didAddWebNode!) ? newNode : null;
     }
   }
 
   Future<void> onFileSystemObjectAtOriginButtonPressed() async {
-    if (this.fileSystemNode != null) {
-      this.arObjectManager!.removeNode(this.fileSystemNode!);
-      this.fileSystemNode = null;
+    if (fileSystemNode != null) {
+      arObjectManager!.removeNode(fileSystemNode!);
+      fileSystemNode = null;
     } else {
       var newNode = ARNode(
           type: NodeType.fileSystemAppFolderGLB,
-          uri: "LocalDuck.glb",
+          uri: "8895f53518544bf4ad5ab5cf43c7973d.glb",
           scale: Vector3(0.2, 0.2, 0.2));
       //Alternative to use type fileSystemAppFolderGLTF2:
       //var newNode = ARNode(
       //    type: NodeType.fileSystemAppFolderGLTF2,
       //    uri: "Chicken_01.gltf",
       //    scale: Vector3(0.2, 0.2, 0.2));
-      bool? didAddFileSystemNode = await this.arObjectManager!.addNode(newNode);
-      this.fileSystemNode = (didAddFileSystemNode!) ? newNode : null;
+      bool? didAddFileSystemNode = await arObjectManager!.addNode(newNode);
+      fileSystemNode = (didAddFileSystemNode!) ? newNode : null;
     }
   }
 
   Future<void> onLocalObjectShuffleButtonPressed() async {
-    if (this.localObjectNode != null) {
+    if (localObjectNode != null) {
       var newScale = Random().nextDouble() / 3;
       var newTranslationAxis = Random().nextInt(3);
       var newTranslationAmount = Random().nextDouble() / 3;
@@ -215,12 +217,12 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
       newTransform.rotate(newRotationAxis, newRotationAmount);
       newTransform.scale(newScale);
 
-      this.localObjectNode!.transform = newTransform;
+      localObjectNode!.transform = newTransform;
     }
   }
 
   Future<void> onWebObjectShuffleButtonPressed() async {
-    if (this.webObjectNode != null) {
+    if (webObjectNode != null) {
       var newScale = Random().nextDouble() / 3;
       var newTranslationAxis = Random().nextInt(3);
       var newTranslationAmount = Random().nextDouble() / 3;
@@ -237,7 +239,7 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
       newTransform.rotate(newRotationAxis, newRotationAmount);
       newTransform.scale(newScale);
 
-      this.webObjectNode!.transform = newTransform;
+      webObjectNode!.transform = newTransform;
     }
   }
 }

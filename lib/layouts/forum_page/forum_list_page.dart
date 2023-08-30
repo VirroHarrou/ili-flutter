@@ -50,46 +50,49 @@ class _ForumListPageState extends State<ForumListPage> {
               Navigator.pushNamed(context, "/ForumDetail",
                   arguments: {"id": id});
             },
-            child: Container(
-              height: 300,
-              padding: const EdgeInsets.all(7.5),
-              decoration: BoxDecoration(
-                color: Colors.black,
-                image: DecorationImage(
-                    image: NetworkImage(
-                        forums.forumList?[index].logoUrl as String),
-                    fit: BoxFit.cover,
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.5), BlendMode.dstATop)),
-                borderRadius: const BorderRadius.all(Radius.circular(16)),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Container(
+                height: 300,
+                padding: const EdgeInsets.all(7.5),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  image: DecorationImage(
+                      image: NetworkImage(
+                          forums.forumList?[index].logoUrl as String),
+                      fit: BoxFit.cover,
+                      colorFilter: ColorFilter.mode(
+                          Colors.black.withOpacity(0.5), BlendMode.dstATop)),
+                  borderRadius: const BorderRadius.all(Radius.circular(16)),
+                ),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        textAlign: TextAlign.left,
+                        "${forums.forumList?[index].title}",
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
+                        decoration: const BoxDecoration(
+                          color: Colors.white54,
+                          borderRadius: BorderRadius.all(Radius.circular(100)),
+                        ),
+                        child: Text(
+                          "${DateFormat('dd.MM.yyyy').format(startedAt)} "
+                          "- ${DateFormat('dd.MM.yyyy').format(endedAt)}",
+                          style: theme.textTheme.bodySmall,
+                        ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        textAlign: TextAlign.start,
+                        "${forums.forumList?[index].description.substring(0, 180)}...",
+                        style: theme.textTheme.bodyMedium,
+                      )
+                    ]),
               ),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      textAlign: TextAlign.left,
-                      "${forums.forumList?[index].title}",
-                      style: theme.textTheme.titleMedium,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
-                      decoration: const BoxDecoration(
-                        color: Colors.white54,
-                        borderRadius: BorderRadius.all(Radius.circular(100)),
-                      ),
-                      child: Text(
-                        "${DateFormat('dd.MM.yyyy').format(startedAt)} "
-                        "- ${DateFormat('dd.MM.yyyy').format(endedAt)}",
-                        style: theme.textTheme.bodySmall,
-                      ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      textAlign: TextAlign.start,
-                      "${forums.forumList?[index].description.substring(0, 180)}...",
-                      style: theme.textTheme.bodyMedium,
-                    )
-                  ]),
             ));
       },
     );

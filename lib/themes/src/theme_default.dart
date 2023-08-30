@@ -21,6 +21,18 @@ ThemeData createLightTheme() {
         fontSize: 24,
         fontWeight: FontWeight.w500,
       ),
+      titleSmall: TextStyle(
+        fontFamily: 'montserrat, urban, sans-serif',
+        color: AppColors.black,
+        fontSize: 30,
+        fontWeight: FontWeight.w500,
+      ),
+      bodyLarge: TextStyle(
+        fontFamily: 'montserrat, urban, sans-serif',
+        color: AppColors.black,
+        fontSize: 15,
+        fontWeight: FontWeight.w600,
+      ),
       bodyMedium: TextStyle(
         fontFamily: 'montserrat, urban, sans-serif',
         color: AppColors.white,
@@ -30,7 +42,7 @@ ThemeData createLightTheme() {
       bodySmall: TextStyle(
         fontFamily: 'montserrat, urban, sans-serif',
         color: AppColors.black,
-        fontSize: 14,
+        fontSize: 15,
         fontWeight: FontWeight.w400,
       ),
       labelMedium: TextStyle(
