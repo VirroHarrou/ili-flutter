@@ -61,32 +61,15 @@ class _LocalAndWebObjectsWidgetState extends State<LocalAndWebObjectsWidget> {
                         ElevatedButton(
                             onPressed: onFileSystemObjectAtOriginButtonPressed,
                             child: Text("Add/Remove Filesystem\nObject at Origin")),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                            onPressed: onLocalObjectAtOriginButtonPressed,
-                            child: Text("Add/Remove Local\nObject at Origin")),
-                        ElevatedButton(
-                            onPressed: onWebObjectAtOriginButtonPressed,
-                            child: Text("Add/Remove Web\nObject at Origin")),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                            onPressed: onLocalObjectShuffleButtonPressed,
-                            child: Text("Shuffle Local\nobject at Origin")),
-                        ElevatedButton(
-                            onPressed: onWebObjectShuffleButtonPressed,
-                            child: Text("Shuffle Web\nObject at Origin")),
-                      ],
-                    )
-                  ]))
-            ])));
+                        ],
+                      ),
+                    ]
+                  )
+                )
+              ]
+            )
+        )
+    );
   }
 
   void onARViewCreated(
