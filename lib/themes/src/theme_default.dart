@@ -62,6 +62,12 @@ ThemeData createLightTheme() {
         color: AppColors.white,
         fontSize: 20,
         fontWeight: FontWeight.w500,
+      ),
+      headlineSmall: TextStyle(
+        fontFamily: 'montserrat, urban, sans-serif',
+        color: AppColors.red,
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
       )
     ),
     buttonTheme:

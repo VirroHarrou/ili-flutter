@@ -65,7 +65,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      //Todo: переход на AR
+                      //Todo: переход на QR
                     },
                     icon: const Icon(Icons.view_in_ar, color: AppColors.white,),
                     label: Text('Начать', style: theme.textTheme.headlineMedium),
@@ -78,9 +78,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: OutlinedButton.icon(
-                    onPressed: () {
-                      //Todo: вызов карты
-                    },
+                    onPressed: null,
                     icon: const Icon(Icons.map_outlined, color: AppColors.black,),
                     label: Text('Карта', style: theme.textTheme.headlineLarge),
                     style: ButtonStyle(

@@ -11,42 +11,93 @@ class AuthContainer extends StatefulWidget{
   @override
   State<StatefulWidget> createState() =>
       _AuthContainerState();
-
 }
 
 class _AuthContainerState extends State<AuthContainer> {
   bool isLogin = true;
+  bool isBadEmail = false;
   bool isBadRequest = false;
+  bool isBadPassword = false;
   bool isVisiblePassword = false;
   bool isVisibleRepeatPassword = false;
 
   String email = '';
   String password = '';
+  String passwordRepeat = '';
+  String errorMessage = '';
 
   void onButtonPressed() {
-    Map<ResponseType, String> result;
     if(isLogin){
       var response = tryLoginAsync(email, password);
       response.then((value) {
-        //Todo: сделать подстветку элементов при ошибке
-        if(value[ResponseType.success] != null){
-          AppSettings.authToken = value[ResponseType.success] ?? '';
-          var data = AppSettings().parseJwt(AppSettings.authToken);
-          User.email = data["email"];
-          Navigator.pushNamed(context, "/home");
+        setState(() {
+          isBadRequest = false;
+          isBadEmail = false;
+          errorMessage = '';
+        });
+        switch (value.type ?? ResponseType.bad) {
+          case ResponseType.success:
+            AppSettings.authToken = value.data ?? '';
+            var data = AppSettings().parseJwt(AppSettings.authToken);
+            User.email = data["email"];
+            if(AppSettings.authToken != ''){
+              AppSettings.isLogin = true;
+            }
+            Navigator.pushNamed(context, "/home");
+            break;
+          case ResponseType.bad:
+            setState(() {
+              isBadEmail = true;
+              errorMessage = value.data!;
+            });
+            break;
+          case ResponseType.notFound:
+            setState(() {
+              isBadRequest = true;
+              errorMessage = value.data!;
+            });
+            break;
+          default:
+            break;
         }
       });
     } else {
-     //Todo: логика регистрации
+      setState(() {
+        isBadPassword = false;
+        isBadEmail = false;
+        errorMessage = '';
+      });
+      if(password != passwordRepeat){
+        setState(() {
+          isBadPassword = true;
+        });
+        return;
+      }
+      if(!RegExp(r"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$").hasMatch(email)){
+        setState(() {
+          isBadEmail = true;
+          errorMessage = 'Почта введена не коректно';
+        });
+        return;
+      }
+      var result = tryRegister(email, password);
+      result.then((value) {
+        if(value != ResponseType.success){
+          setState(() {
+            errorMessage = 'Пользователь уже существует';
+          });
+        } else {
+          isLogin = true;
+        }
+      });
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return SizedBox(
-      height: isLogin ? 400 : 500,
+      height: isLogin ? 420 : 500,
       width: 350,
       child: Column(
         children: [
@@ -56,7 +107,7 @@ class _AuthContainerState extends State<AuthContainer> {
             style: theme.textTheme.titleSmall,
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 8.0, bottom: 16),
+            padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
             child: Text(
               isLogin ? "Войдите, чтобы продолжить"
                 : "Пожалуйста, укажите следующие детали"
@@ -64,6 +115,14 @@ class _AuthContainerState extends State<AuthContainer> {
               textAlign: TextAlign.center,
               maxLines: 2,
               style: theme.textTheme.bodySmall,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
+            child: Text(errorMessage,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              style: theme.textTheme.headlineSmall,
             ),
           ),
           Padding(
@@ -82,10 +141,10 @@ class _AuthContainerState extends State<AuthContainer> {
               decoration: InputDecoration(
                 hintText: "Электронная почта",
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: !isBadRequest ? AppColors.black : AppColors.red, width: 1),
+                  borderSide: BorderSide(color: isBadEmail ? AppColors.red : AppColors.black, width: 1),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide:  BorderSide(color: !isBadRequest ? AppColors.black : AppColors.red, width: 1),
+                  borderSide:  BorderSide(color: isBadEmail ? AppColors.red : AppColors.black, width: 1),
                 ),
               ),
             ),
@@ -112,15 +171,16 @@ class _AuthContainerState extends State<AuthContainer> {
                   },
                   icon: Icon(isVisiblePassword
                     ? Icons.remove_red_eye
-                    : Icons.remove_red_eye_outlined
+                    : Icons.remove_red_eye_outlined,
+                    color: isBadRequest && isLogin ? AppColors.red : AppColors.black,
                   ),
                 ),
                 hintText: "Пароль",
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: !isBadRequest ? AppColors.black : AppColors.red, width: 1),
+                  borderSide: BorderSide(color: isBadRequest && isLogin ? AppColors.red : AppColors.black, width: 1),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide:  BorderSide(color: !isBadRequest ? AppColors.black : AppColors.red, width: 1),
+                  borderSide:  BorderSide(color: isBadRequest && isLogin ? AppColors.red : AppColors.black, width: 1),
                 ),
               ),
             ),
@@ -137,6 +197,9 @@ class _AuthContainerState extends State<AuthContainer> {
                 top: 8.0,
               ),
               child: TextField(
+                onChanged: (str) {
+                  passwordRepeat = str;
+                },
                 style: theme.textTheme.bodySmall,
                 obscureText: !isVisibleRepeatPassword,
                 decoration: InputDecoration(
@@ -148,15 +211,16 @@ class _AuthContainerState extends State<AuthContainer> {
                     },
                     icon: Icon(isVisibleRepeatPassword
                         ? Icons.remove_red_eye
-                        : Icons.remove_red_eye_outlined
+                        : Icons.remove_red_eye_outlined,
+                      color: isBadPassword && !isLogin ? AppColors.red : AppColors.black,
                     ),
                   ),
                   hintText: "Повторите пароль",
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: !isBadRequest ? AppColors.black : AppColors.red, width: 1),
+                    borderSide: BorderSide(color: isBadPassword && !isLogin ? AppColors.red : AppColors.black, width: 1),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide:  BorderSide(color: !isBadRequest ? AppColors.black : AppColors.red, width: 1),
+                    borderSide:  BorderSide(color: isBadPassword && !isLogin ? AppColors.red : AppColors.black, width: 1),
                   ),
                 ),
               ),
@@ -186,6 +250,9 @@ class _AuthContainerState extends State<AuthContainer> {
                 InkWell(
                   onTap: () {
                     setState(() {
+                      errorMessage = '';
+                      isBadRequest = false;
+                      isBadEmail = false;
                       isLogin = !isLogin;
                     });
                   },

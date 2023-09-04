@@ -70,9 +70,9 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
 
     this.arSessionManager!.onInitialize(
       showFeaturePoints: false,
-      showPlanes: true,
+      showPlanes: false,
       customPlaneTexturePath: "Images/triangle.png",
-      showWorldOrigin: true,
+      showWorldOrigin: false,
       handlePans: true,
       handleRotation: true,
     );
@@ -92,7 +92,7 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
       this.arObjectManager.removeNode(node);
     });*/
     anchors.forEach((anchor) {
-      this.arAnchorManager!.removeAnchor(anchor);
+      arAnchorManager!.removeAnchor(anchor);
     });
     anchors = [];
   }
@@ -104,9 +104,9 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
     if (singleHitTestResult != null) {
       var newAnchor =
       ARPlaneAnchor(transformation: singleHitTestResult.worldTransform);
-      bool? didAddAnchor = await this.arAnchorManager!.addAnchor(newAnchor);
+      bool? didAddAnchor = await arAnchorManager!.addAnchor(newAnchor);
       if (didAddAnchor!) {
-        this.anchors.add(newAnchor);
+        anchors.add(newAnchor);
         // Add note to anchor
         var newNode = ARNode(
             type: NodeType.webGLB,
@@ -116,14 +116,14 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
         bool? didAddNodeToAnchor =
-        await this.arObjectManager!.addNode(newNode, planeAnchor: newAnchor);
+        await arObjectManager!.addNode(newNode, planeAnchor: newAnchor);
         if (didAddNodeToAnchor!) {
-          this.nodes.add(newNode);
+          nodes.add(newNode);
         } else {
-          this.arSessionManager!.onError("Adding Node to Anchor failed");
+          arSessionManager!.onError("Adding Node to Anchor failed");
         }
       } else {
-        this.arSessionManager!.onError("Adding Anchor failed");
+        arSessionManager!.onError("Adding Anchor failed");
       }
     }
   }
@@ -139,7 +139,7 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
   onPanEnded(String nodeName, Matrix4 newTransform) {
     print("Ended panning node " + nodeName);
     final pannedNode =
-    this.nodes.firstWhere((element) => element.name == nodeName);
+    nodes.firstWhere((element) => element.name == nodeName);
 
     /*
     * Uncomment the following command if you want to keep the transformations of the Flutter representations of the nodes up to date
@@ -159,7 +159,7 @@ class _ObjectGesturesWidgetState extends State<ObjectGesturesWidget> {
   onRotationEnded(String nodeName, Matrix4 newTransform) {
     print("Ended rotating node " + nodeName);
     final rotatedNode =
-    this.nodes.firstWhere((element) => element.name == nodeName);
+    nodes.firstWhere((element) => element.name == nodeName);
 
     /*
     * Uncomment the following command if you want to keep the transformations of the Flutter representations of the nodes up to date

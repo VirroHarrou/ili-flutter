@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
@@ -30,6 +28,51 @@ class _ProfilePageState extends State<ProfilePage>{
     updateData();
   }
 
+  showAlertDialog(BuildContext context) {
+
+    var theme = Theme.of(context);
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(const Color(0xffc6c6c6)),
+      ),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+      child: Text("Отмена", style: theme.textTheme.bodySmall,),
+    );
+    Widget continueButton = TextButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(AppColors.red),
+      ),
+      onPressed:  () {
+        Navigator.pushNamed(context, "/");
+      },
+      child: Text("Выйти", style: theme.textTheme.bodyMedium),
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      backgroundColor: AppColors.white,
+      title: Text("Выход", style: theme.textTheme.headlineLarge,),
+      content: Text("Вы уверены, что хотите выйти из аккаунта ${User.email}?",
+        style: theme.textTheme.bodySmall,
+      ),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -39,7 +82,7 @@ class _ProfilePageState extends State<ProfilePage>{
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, "/");
+                showAlertDialog(context);
               },
               icon: const Icon(
                 Icons.exit_to_app,
