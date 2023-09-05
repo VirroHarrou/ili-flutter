@@ -8,6 +8,6 @@ import 'package:tavrida_flutter/layouts/home_page.dart';
 final routes = {
   "/" : (context) => const AuthPage(),
   "/ForumDetail" : (context) => const ForumDetailPage(),
-  "/ar_page" : (context) => const ARPage(),
+  "/ar_page" : (context) => ARPage(),
   "/home" : (context) => const HomePage(),
 };

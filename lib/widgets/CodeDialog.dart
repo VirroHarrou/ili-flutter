@@ -28,6 +28,8 @@ class _CodeDialogState extends State<CodeDialog> {
     });
   }
 
+  //Todo: настроить для конкретной модели
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);

@@ -97,7 +97,7 @@ class _ModelFavoritesPageState extends State<ModelFavoritesPage> {
         return InkWell(
           highlightColor: Colors.white,
             onTap: () {
-              Navigator.pushNamed(context, "/ar_page", arguments: {"uri" : model.valueUrl});
+              Navigator.pushNamed(context, "/ar_page", arguments: model);
             },
             child: Card(
               color: AppColors.white,

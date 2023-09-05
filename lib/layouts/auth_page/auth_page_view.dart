@@ -9,8 +9,13 @@ class AuthPage extends StatelessWidget{
     var theme = Theme.of(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Padding(
-        padding: const EdgeInsets.all(40.0),
+        padding: const EdgeInsets.only(
+          left: 40.0,
+          right: 40.0,
+          top: 40.0,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

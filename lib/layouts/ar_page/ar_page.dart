@@ -10,20 +10,24 @@ import 'package:ar_flutter_plugin/models/ar_anchor.dart';
 import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:flutter/material.dart';
+import 'package:tavrida_flutter/repositories/models/LikeModel.dart';
+import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:flutter/services.dart';
-import 'package:vector_math/vector_math_64.dart';
-import 'dart:math';
+import 'package:vector_math/vector_math_64.dart' hide Colors;
 
 
 class ARPage extends StatefulWidget {
-  const ARPage({super.key});
+  ARPage({super.key});
+  final GlobalKey _key = GlobalKey();
 
   @override
   State<StatefulWidget> createState() => _ARPageState();
 }
 
 class _ARPageState extends State<ARPage> {
+  Model? model;
+
   ARSessionManager? arSessionManager;
   ARObjectManager? arObjectManager;
   ARAnchorManager? arAnchorManager;
@@ -38,86 +42,136 @@ class _ARPageState extends State<ARPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    model = ModalRoute.of(context)?.settings.arguments as Model?;
+    List<Widget> items = [
+            ARView(
+              onARViewCreated: onARViewCreated,
+              planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 30,
+                  left: 14,
+                ),
+                child: IconButton(
+                  color: AppColors.white,
+                  onPressed: onRemoveEverything,
+                  icon: const Icon(Icons.layers_clear),
+                ),
+              ),
+            ),
+            Align(
+                alignment: FractionalOffset.bottomRight,
+                child: SizedBox(
+                  height: 300,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 30,
+                      right: 14,
+                    ),
+                    child: Column(
+                      verticalDirection: VerticalDirection.up,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 8.0
+                          ),
+                          child: IconButton(
+                              onPressed: () => onTakeScreenshot(),
+                              color: AppColors.white,
+                              icon: const Icon(Icons.photo_camera)
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 8.0
+                          ),
+                          child: IconButton(
+                              onPressed: onInfo,
+                              color: AppColors.white,
+                              icon: const Icon(Icons.info_outline)
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 8.0
+                          ),
+                          child: IconButton(
+                              onPressed: () {},
+                              color: AppColors.white,
+                              icon: const Icon(Icons.reply_outlined)
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 8.0
+                          ),
+                          child: IconButton(
+                              onPressed: () {},
+                              color: AppColors.white,
+                              icon: const Icon(Icons.favorite)
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+            ),
+          ];
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).pop();
         },
-        backgroundColor: const Color(0xA0c6c6c6),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
         child: const Icon(Icons.arrow_back),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       body: Container(
-
+        color: const Color(0xFF066677),
         child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: IconButton(
-                  iconSize: 30,
-                  color: AppColors.black,
-                  onPressed: onRemoveEverything,
-                  icon: const Icon(Icons.cleaning_services),
-                ),
-              ),
-            ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: SizedBox(
-                  height: 300,
-                  child: Column(
-                    children: [
-                      IconButton(
-                          onPressed: () {},
-                          iconSize: 30,
-                          color: AppColors.white,
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all(const EdgeInsets.all(20.0)),
-                          ),
-                          icon: const Icon(Icons.photo_camera)
-                      ),
-                      IconButton(
-                          onPressed: () {},
-                          iconSize: 30,
-                          color: AppColors.white,
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all(const EdgeInsets.all(20.0)),
-                          ),
-                          icon: const Icon(Icons.favorite)
-                      ),
-                      IconButton(
-                          onPressed: () {},
-                          iconSize: 30,
-                          color: AppColors.white,
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all(const EdgeInsets.all(20.0)),
-                          ),
-                          icon: const Icon(Icons.share)
-                      ),
-                      IconButton(
-                          onPressed: () {},
-                          iconSize: 30,
-                          color: AppColors.white,
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all(const EdgeInsets.all(20.0)),
-                          ),
-                          icon: const Icon(Icons.info_outline)
-                      ),
-                    ],
-                  ),
-                ),
-            ),
-            ARView(
-              onARViewCreated: onARViewCreated,
-              planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
-            ),
-          ],
+          children: items,
         ),
       ),
     );
+  }
+
+  Future<void> onTakeScreenshot() async {
+    var image = await arSessionManager!.snapshot();
+    await showDialog(
+        context: context,
+        builder: (_) => Dialog(
+          child: Container(
+            decoration: BoxDecoration(
+                image: DecorationImage(image: image, fit: BoxFit.cover)),
+          ),
+        ));
+    //Todo: настроить сохранение скриншотов или сделать фотки
+  }
+
+  Future<void> onLike() async {
+    await likeModelAsync(model?.id ?? '');
+  }
+
+  Future<void> onInfo() async {
+    await showDialog(
+        context: context,
+        builder: (_) => Dialog(
+          child: Text(
+            "${model?.title}\n${model?.forumId}",
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ));
   }
 
   void onARViewCreated(

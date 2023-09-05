@@ -26,79 +26,10 @@ class _AuthContainerState extends State<AuthContainer> {
   String passwordRepeat = '';
   String errorMessage = '';
 
-  void onButtonPressed() {
-    if(isLogin){
-      var response = tryLoginAsync(email, password);
-      response.then((value) {
-        setState(() {
-          isBadRequest = false;
-          isBadEmail = false;
-          errorMessage = '';
-        });
-        switch (value.type ?? ResponseType.bad) {
-          case ResponseType.success:
-            AppSettings.authToken = value.data ?? '';
-            var data = AppSettings().parseJwt(AppSettings.authToken);
-            User.email = data["email"];
-            if(AppSettings.authToken != ''){
-              AppSettings.isLogin = true;
-            }
-            Navigator.pushNamed(context, "/home");
-            break;
-          case ResponseType.bad:
-            setState(() {
-              isBadEmail = true;
-              errorMessage = value.data!;
-            });
-            break;
-          case ResponseType.notFound:
-            setState(() {
-              isBadRequest = true;
-              errorMessage = value.data!;
-            });
-            break;
-          default:
-            break;
-        }
-      });
-    } else {
-      setState(() {
-        isBadPassword = false;
-        isBadEmail = false;
-        errorMessage = '';
-      });
-      if(password != passwordRepeat){
-        setState(() {
-          isBadPassword = true;
-        });
-        return;
-      }
-      if(!RegExp(r"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$").hasMatch(email)){
-        setState(() {
-          isBadEmail = true;
-          errorMessage = 'Почта введена не коректно';
-        });
-        return;
-      }
-      var result = tryRegister(email, password);
-      result.then((value) {
-        if(value != ResponseType.success){
-          setState(() {
-            errorMessage = 'Пользователь уже существует';
-          });
-        } else {
-          isLogin = true;
-        }
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    return SizedBox(
-      height: isLogin ? 420 : 500,
-      width: 350,
+    return Expanded(
       child: Column(
         children: [
           Text(
@@ -267,5 +198,72 @@ class _AuthContainerState extends State<AuthContainer> {
         ],
       ),
     );
+  }
+
+  void onButtonPressed() {
+    if(isLogin){
+      var response = tryLoginAsync(email, password);
+      response.then((value) {
+        setState(() {
+          isBadRequest = false;
+          isBadEmail = false;
+          errorMessage = '';
+        });
+        switch (value.type ?? ResponseType.bad) {
+          case ResponseType.success:
+            AppSettings.authToken = value.data ?? '';
+            var data = AppSettings().parseJwt(AppSettings.authToken);
+            User.email = data["email"];
+            if(AppSettings.authToken != ''){
+              AppSettings.isLogin = true;
+            }
+            Navigator.pushNamed(context, "/home");
+            break;
+          case ResponseType.bad:
+            setState(() {
+              isBadEmail = true;
+              errorMessage = value.data!;
+            });
+            break;
+          case ResponseType.notFound:
+            setState(() {
+              isBadRequest = true;
+              errorMessage = value.data!;
+            });
+            break;
+          default:
+            break;
+        }
+      });
+    } else {
+      setState(() {
+        isBadPassword = false;
+        isBadEmail = false;
+        errorMessage = '';
+      });
+      if(password != passwordRepeat){
+        setState(() {
+          isBadPassword = true;
+        });
+        return;
+      }
+      if(!RegExp(r"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$").hasMatch(email)){
+        setState(() {
+          isBadEmail = true;
+          errorMessage = 'Почта введена не коректно';
+        });
+        return;
+      }
+      var result = tryRegister(email, password);
+      result.then((value) {
+        if(value != ResponseType.success){
+          setState(() {
+            errorMessage = 'Пользователь уже существует';
+          });
+        } else {
+          isLogin = true;
+        }
+      });
+    }
   }
 }
