@@ -42,8 +42,8 @@ class _ForumListPageState extends State<ForumListPage> {
       itemCount: forums.forumList?.length ?? 0,
       padding: const EdgeInsets.all(8),
       itemBuilder: (context, index) {
-        DateTime startedAt = DateTime.parse(forums.forumList?[index]?.startedAt ?? '12122012');
-        DateTime endedAt = DateTime.parse(forums.forumList?[index]?.endedAt ?? '12122012');
+        DateTime startedAt = DateTime.parse(forums.forumList?[index].startedAt ?? '12122012');
+        DateTime endedAt = DateTime.parse(forums.forumList?[index].endedAt ?? '12122012');
         return InkWell(
             onTap: () {
               var id = forums.forumList?[index].id;

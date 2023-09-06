@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tavrida_flutter/main.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/user/user_repository.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
@@ -215,6 +217,11 @@ class _AuthContainerState extends State<AuthContainer> {
             var data = AppSettings().parseJwt(AppSettings.authToken);
             User.email = data["email"];
             if(AppSettings.authToken != ''){
+              SharedPreferences.getInstance().then((storage) {
+                storage.setString("authUserToken", AppSettings.authToken);
+                storage.setBool("isLogin", true);
+                storage.setString("userEmail", User.email!);
+              });
               AppSettings.isLogin = true;
             }
             Navigator.pushNamed(context, "/home");

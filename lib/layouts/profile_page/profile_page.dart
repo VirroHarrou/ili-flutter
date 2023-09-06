@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tavrida_flutter/main.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForumHistory.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
@@ -46,7 +48,12 @@ class _ProfilePageState extends State<ProfilePage>{
         backgroundColor: MaterialStateProperty.all(AppColors.red),
       ),
       onPressed:  () {
-        Navigator.pushNamed(context, "/");
+        final storage = SharedPreferences.getInstance().then((value) {
+          value.remove('authUserToken');
+          value.remove('isLogin');
+          value.remove('userEmail');
+          Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false);
+        });
       },
       child: Text("Выйти", style: theme.textTheme.bodyMedium),
     );

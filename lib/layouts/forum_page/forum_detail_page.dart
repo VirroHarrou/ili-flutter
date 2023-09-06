@@ -65,7 +65,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      //Todo: переход на QR
+                      Navigator.pushNamed(context, "/QR");
                     },
                     icon: const Icon(Icons.view_in_ar, color: AppColors.white,),
                     label: Text('Начать', style: theme.textTheme.headlineMedium),

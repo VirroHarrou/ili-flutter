@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
 import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
 import 'package:ar_flutter_plugin/datatypes/hittest_result_types.dart';
@@ -9,7 +11,10 @@ import 'package:ar_flutter_plugin/managers/ar_session_manager.dart';
 import 'package:ar_flutter_plugin/models/ar_anchor.dart';
 import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:tavrida_flutter/repositories/models/GetModel.dart';
 import 'package:tavrida_flutter/repositories/models/LikeModel.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
@@ -26,7 +31,9 @@ class ARPage extends StatefulWidget {
 }
 
 class _ARPageState extends State<ARPage> {
-  Model? model;
+  late Model model;
+  HttpClient httpClient = HttpClient();
+  bool isFirstBuild = true;
 
   ARSessionManager? arSessionManager;
   ARObjectManager? arObjectManager;
@@ -48,7 +55,11 @@ class _ARPageState extends State<ARPage> {
 
   @override
   Widget build(BuildContext context) {
-    model = ModalRoute.of(context)?.settings.arguments as Model?;
+    if(isFirstBuild) {
+      model = ModalRoute.of(context)?.settings.arguments as Model;
+      _updateModel();
+      isFirstBuild = false;
+    }
     List<Widget> items = [
             ARView(
               onARViewCreated: onARViewCreated,
@@ -115,9 +126,9 @@ class _ARPageState extends State<ARPage> {
                               top: 8.0
                           ),
                           child: IconButton(
-                              onPressed: () {},
+                              onPressed: onLike,
                               color: AppColors.white,
-                              icon: const Icon(Icons.favorite)
+                              icon: Icon(model?.like ?? false ? Icons.favorite : Icons.favorite_border),
                           ),
                         ),
                       ],
@@ -129,7 +140,7 @@ class _ARPageState extends State<ARPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pop();
+          Navigator.of(context).popUntil((route) => route.settings.name == "/home");
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
         elevation: 0,
@@ -147,7 +158,7 @@ class _ARPageState extends State<ARPage> {
   }
 
   Future<void> onTakeScreenshot() async {
-    var image = await arSessionManager!.snapshot();
+    ImageProvider<Object> image = await arSessionManager!.snapshot();
     await showDialog(
         context: context,
         builder: (_) => Dialog(
@@ -160,18 +171,36 @@ class _ARPageState extends State<ARPage> {
   }
 
   Future<void> onLike() async {
-    await likeModelAsync(model?.id ?? '');
+    setState(() {
+      model!.like = !model!.like!;
+    });
+    await likeModelAsync(model!.id!);
   }
 
   Future<void> onInfo() async {
     await showDialog(
         context: context,
         builder: (_) => Dialog(
-          child: Text(
-            "${model?.title}\n${model?.forumId}",
-            style: Theme.of(context).textTheme.bodySmall,
+          backgroundColor: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "${model?.title}\n${model?.description ?? ''}",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           ),
         ));
+  }
+
+  Future<File> _downloadFile(String url, String filename) async {
+    var request = await httpClient.getUrl(Uri.parse(url));
+    var response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    File file = File('$dir/$filename');
+    await file.writeAsBytes(bytes);
+
+    return file;
   }
 
   void onARViewCreated(
@@ -224,9 +253,8 @@ class _ARPageState extends State<ARPage> {
         anchors.add(newAnchor);
         // Add note to anchor
         var newNode = ARNode(
-            type: NodeType.webGLB,
-            uri:
-            "https://github.com/KhronosGroup/glTF-Sample-Models/raw/master/2.0/Duck/glTF-Binary/Duck.glb",
+            type: NodeType.fileSystemAppFolderGLB,
+            uri: "${model?.id}.glb",
             scale: Vector3(0.2, 0.2, 0.2),
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
@@ -281,5 +309,13 @@ class _ARPageState extends State<ARPage> {
     * (e.g. if you intend to share the nodes through the cloud)
     */
     //rotatedNode.transform = newTransform;
+  }
+
+  Future<void> _updateModel() async {
+    var result = await getModelAsync(null, model.id);
+    setState(() {
+      model = result ?? model;
+    });
+    _downloadFile(model.valueUrl ?? '', "${model.id}.glb");
   }
 }

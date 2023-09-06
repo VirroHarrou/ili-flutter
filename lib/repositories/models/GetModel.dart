@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/views/model.dart';
@@ -15,12 +17,10 @@ Future<Model?> getModelAsync(int? code, String? id) async {
 
   dio.options.headers["Authorization"] = "Bearer ${AppSettings.authToken}";
   Response<dynamic>? response;
-  try{
-    response = await dio.get(connectionString);
-  } catch (ex) {
-    return null;
-  }
-
+    response = await dio.get(
+      connectionString,
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
 
   return Model.fromJson(response.data);
 }

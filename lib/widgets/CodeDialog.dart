@@ -22,7 +22,7 @@ class _CodeDialogState extends State<CodeDialog> {
           isBadRequest = true;
         } else {
           isBadRequest = false;
-          Navigator.pushNamed(context, "/ar_page");
+          Navigator.pushNamed(context, "/ar_page", arguments: value);
         }
       });
     });

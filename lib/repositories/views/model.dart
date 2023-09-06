@@ -3,6 +3,7 @@ class Model {
   String? code;
   String? valueUrl;
   String? title;
+  String? description;
   String? logoUrl;
   String? forumId;
   String? forumTitle;
@@ -28,6 +29,7 @@ class Model {
     code = json['code'];
     valueUrl = json['valueUrl'];
     title = json['title'];
+    description = json['description'];
     logoUrl = json['logoUrl'];
     forumId = json['forumId'];
     forumTitle = json['forumTitle'];
@@ -37,6 +39,7 @@ class Model {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     like = json['like'];
+    print(json.toString());
   }
 
   Map<String, dynamic> toJson() {
