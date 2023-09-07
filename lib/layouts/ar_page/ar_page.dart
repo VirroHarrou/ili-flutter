@@ -34,6 +34,7 @@ class _ARPageState extends State<ARPage> {
   late Model model;
   HttpClient httpClient = HttpClient();
   bool isFirstBuild = true;
+  double scale = 1.0;
 
   ARSessionManager? arSessionManager;
   ARObjectManager? arObjectManager;
@@ -60,37 +61,7 @@ class _ARPageState extends State<ARPage> {
       _updateModel();
       isFirstBuild = false;
     }
-    List<Widget> items = [
-            ARView(
-              onARViewCreated: onARViewCreated,
-              planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
-            ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 30,
-                  left: 14,
-                ),
-                child: IconButton(
-                  color: AppColors.white,
-                  onPressed: onRemoveEverything,
-                  icon: const Icon(Icons.layers_clear),
-                ),
-              ),
-            ),
-            Align(
-                alignment: FractionalOffset.bottomRight,
-                child: SizedBox(
-                  height: 300,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 30,
-                      right: 14,
-                    ),
-                    child: Column(
-                      verticalDirection: VerticalDirection.up,
-                      children: [
+    var rightButtons = [
                         Padding(
                           padding: const EdgeInsets.only(
                               top: 8.0
@@ -128,14 +99,65 @@ class _ARPageState extends State<ARPage> {
                           child: IconButton(
                               onPressed: onLike,
                               color: AppColors.white,
-                              icon: Icon(model?.like ?? false ? Icons.favorite : Icons.favorite_border),
+                              icon: Icon(model.like ?? false ? Icons.favorite : Icons.favorite_border),
                           ),
                         ),
-                      ],
+                      ];
+    List<Widget> items = [
+            ARView(
+              onARViewCreated: onARViewCreated,
+              planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  bottom: 30,
+                  left: 14,
+                ),
+                child: IconButton(
+                  color: AppColors.white,
+                  onPressed: onRemoveEverything,
+                  icon: const Icon(Icons.layers_clear),
+                ),
+              ),
+            ),
+            Align(
+                alignment: FractionalOffset.bottomRight,
+                child: SizedBox(
+                  height: 300,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 30,
+                      right: 14,
+                    ),
+                    child: Column(
+                      verticalDirection: VerticalDirection.up,
+                      children: rightButtons,
                     ),
                   ),
                 ),
             ),
+            Align(
+              alignment: FractionalOffset.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                        onPressed: _downscaleModel,
+                        icon: const Icon(Icons.remove_circle_outline, color: AppColors.white),
+                    ),
+                    Text("${scale.toStringAsFixed(1)}x", style: Theme.of(context).textTheme.headlineMedium,),
+                    IconButton(
+                        onPressed: _upscaleModel,
+                        icon: const Icon(Icons.add_circle_outline, color: AppColors.white),
+                    ),
+                  ],
+                ),
+              ),
+            )
           ];
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -149,7 +171,7 @@ class _ARPageState extends State<ARPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       body: Container(
-        color: const Color(0xFF066677),
+        color: AppColors.black,
         child: Stack(
           children: items,
         ),
@@ -164,7 +186,8 @@ class _ARPageState extends State<ARPage> {
         builder: (_) => Dialog(
           child: Container(
             decoration: BoxDecoration(
-                image: DecorationImage(image: image, fit: BoxFit.cover)),
+                image: DecorationImage(image: image, fit: BoxFit.cover)
+            ),
           ),
         ));
     //Todo: настроить сохранение скриншотов или сделать фотки
@@ -172,9 +195,9 @@ class _ARPageState extends State<ARPage> {
 
   Future<void> onLike() async {
     setState(() {
-      model!.like = !model!.like!;
+      model.like = !model.like!;
     });
-    await likeModelAsync(model!.id!);
+    await likeModelAsync(model.id!);
   }
 
   Future<void> onInfo() async {
@@ -185,7 +208,7 @@ class _ARPageState extends State<ARPage> {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              "${model?.title}\n${model?.description ?? ''}",
+              "${model.title}\n${model.description ?? ''}",
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -254,8 +277,8 @@ class _ARPageState extends State<ARPage> {
         // Add note to anchor
         var newNode = ARNode(
             type: NodeType.fileSystemAppFolderGLB,
-            uri: "${model?.id}.glb",
-            scale: Vector3(0.2, 0.2, 0.2),
+            uri: "${model.id}.glb",
+            scale: Vector3(0.2, 0.2, 0.2) * scale,
             position: Vector3(0.0, 0.0, 0.0),
             rotation: Vector4(1.0, 0.0, 0.0, 0.0));
         bool? didAddNodeToAnchor =
@@ -317,5 +340,29 @@ class _ARPageState extends State<ARPage> {
       model = result ?? model;
     });
     _downloadFile(model.valueUrl ?? '', "${model.id}.glb");
+  }
+
+  void _upscaleModel() {
+    setState(() {
+      if(scale >= 2.98) {
+        return;
+      }
+      scale += 0.2;
+    });
+    nodes.forEach((element) {
+      element.scale = Vector3(0.2, 0.2, 0.2) * scale;
+    });
+  }
+
+  void _downscaleModel() {
+    setState(() {
+      if(scale <= 0.21) {
+        return;
+      }
+      scale -= 0.2;
+    });
+    nodes.forEach((element) {
+      element.scale = Vector3(0.2, 0.2, 0.2) * scale;
+    });
   }
 }

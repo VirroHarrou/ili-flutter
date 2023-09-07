@@ -39,7 +39,6 @@ class Model {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     like = json['like'];
-    print(json.toString());
   }
 
   Map<String, dynamic> toJson() {

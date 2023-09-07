@@ -34,7 +34,7 @@ Future<JwtResponse> tryLoginAsync(String email, String password) async {
   return JwtResponse(ResponseType.serverError, null);
 }
 
-Future<ResponseType> tryRegister(String email, String password) async {
+Future<JwtResponse> tryRegister(String email, String password) async {
   const connectionString = "http://185.233.187.109/api/1.0/auth/signup";
   Dio dio = Dio();
   var response = await dio.post(connectionString, data: {
@@ -46,11 +46,11 @@ Future<ResponseType> tryRegister(String email, String password) async {
     validateStatus: (status) => status! < 500,
     followRedirects: false,
   ));
-
-  if(response.statusCode == 204) {
-    return ResponseType.success;
+  print(response.data);
+  if(response.statusCode == 200) {
+    return JwtResponse(ResponseType.success, response.data);
   }
-  return ResponseType.bad;
+  return JwtResponse(ResponseType.bad, '');
 }
 
 class JwtResponse {

@@ -19,7 +19,10 @@ Future<Model?> getModelAsync(int? code, String? id) async {
   Response<dynamic>? response;
     response = await dio.get(
       connectionString,
-      options: Options(contentType: Headers.formUrlEncodedContentType),
+      options: Options(
+        contentType: Headers.formUrlEncodedContentType,
+        validateStatus: (status) => status! <= 500,
+      ),
     );
 
   return Model.fromJson(response.data);

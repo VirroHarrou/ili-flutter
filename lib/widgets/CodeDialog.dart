@@ -15,16 +15,15 @@ class _CodeDialogState extends State<CodeDialog> {
   bool isBadRequest = false;
 
   void _onButtonTapped() {
-    setState(() {
-      var response = getModelAsync(code, null);
-      response.then((value) {
-        if(value == null){
-          isBadRequest = true;
-        } else {
-          isBadRequest = false;
-          Navigator.pushNamed(context, "/ar_page", arguments: value);
-        }
-      });
+    var response = getModelAsync(code, null);
+    response.then((value) {
+      if(value == null || value.id == null){
+        isBadRequest = true;
+      } else {
+        isBadRequest = false;
+        Navigator.pushNamed(context, "/ar_page", arguments: value);
+      }
+      setState(() {});
     });
   }
 

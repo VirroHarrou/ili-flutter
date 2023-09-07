@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tavrida_flutter/repositories/models/GetModelFavorites.dart';
+import 'package:tavrida_flutter/repositories/models/LikeModel.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 
@@ -28,6 +29,9 @@ class _ModelFavoritesPageState extends State<ModelFavoritesPage> {
     response.then((value) {
       setState(() {
         models = value?.modelList ?? <Model>[];
+        models.forEach((element) {
+          element.like = true;
+        });
       });
     });
   }
@@ -161,10 +165,11 @@ class _ModelFavoritesPageState extends State<ModelFavoritesPage> {
                           alignment: const Alignment(0.95, -0.9),
                           child: FloatingActionButton(
                             onPressed: (){
+                              likeModelAsync(model.id!);
                               setState(() {
                                 if(model.like!){
                                   model.like = false;
-                                } else{
+                                } else {
                                   model.like = true;
                                 }
                               });

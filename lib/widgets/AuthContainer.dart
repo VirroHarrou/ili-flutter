@@ -105,15 +105,15 @@ class _AuthContainerState extends State<AuthContainer> {
                   icon: Icon(isVisiblePassword
                     ? Icons.remove_red_eye
                     : Icons.remove_red_eye_outlined,
-                    color: isBadRequest && isLogin ? AppColors.red : AppColors.black,
+                    color: isBadRequest ? AppColors.red : AppColors.black,
                   ),
                 ),
                 hintText: "Пароль",
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: isBadRequest && isLogin ? AppColors.red : AppColors.black, width: 1),
+                  borderSide: BorderSide(color: isBadRequest ? AppColors.red : AppColors.black, width: 1),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderSide:  BorderSide(color: isBadRequest && isLogin ? AppColors.red : AppColors.black, width: 1),
+                  borderSide:  BorderSide(color: isBadRequest ? AppColors.red : AppColors.black, width: 1),
                 ),
               ),
             ),
@@ -245,12 +245,14 @@ class _AuthContainerState extends State<AuthContainer> {
     } else {
       setState(() {
         isBadPassword = false;
+        isBadRequest = false;
         isBadEmail = false;
         errorMessage = '';
       });
       if(password != passwordRepeat){
         setState(() {
           isBadPassword = true;
+          errorMessage = 'Пароли различны';
         });
         return;
       }
@@ -261,13 +263,22 @@ class _AuthContainerState extends State<AuthContainer> {
         });
         return;
       }
+      if(!RegExp(r"^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+){8,}$").hasMatch(password)){
+        setState(() {
+          isBadRequest = true;
+          errorMessage = 'Пароль слишком коротокий или требуется число';
+        });
+        return;
+      }
       var result = tryRegister(email, password);
       result.then((value) {
-        if(value != ResponseType.success){
+        if(value.type != ResponseType.success){
           setState(() {
             errorMessage = 'Пользователь уже существует';
           });
         } else {
+          AppSettings.authToken = value.data!;
+          User.email = AppSettings().parseJwt(AppSettings.authToken)['email'];
           isLogin = true;
         }
       });
