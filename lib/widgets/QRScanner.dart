@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/models/GetModel.dart';
 
 class QRViewExample extends StatefulWidget{
@@ -62,7 +63,11 @@ class _QRViewExampleState extends State<QRViewExample> {
         var response = await getModelAsync(null, result!.code);
         if(response != null && !isPushed) {
           isPushed = true;
-          Navigator.pushNamed(context, "/ar_page", arguments: response);
+          if (AppSettings.isWarning) {
+            Navigator.pushNamed(context, "/ar_warning", arguments: response);
+          } else {
+            Navigator.pushNamed(context, "/ar_page", arguments: response);
+          }
         }
       }
     });

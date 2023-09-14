@@ -98,25 +98,7 @@ class _ProfilePageState extends State<ProfilePage>{
           ),
         ],
       );
-    return Scaffold(
-      appBar: appBar,
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ListTile(
-              leading: const CircleAvatar(
-                radius: 20,
-                  backgroundColor: Color(0xffc6c6c6),
-                  child: Icon(
-                      Icons.person_2,
-                      color: AppColors.black,
-                    ),
-                  ),
-              title: Text(User.email ?? '',
-                  style: theme.textTheme.titleLarge)
-          ),
-          Expanded(
-            child: ListView.builder(
+    ListView listView = ListView.builder(
               itemCount: widget.forumsHistory?.forumList?.length ?? 0,
               padding: const EdgeInsets.all(8),
               itemBuilder: (context, index) {
@@ -166,7 +148,7 @@ class _ProfilePageState extends State<ProfilePage>{
                               const Spacer(),
                               Text(
                                 textAlign: TextAlign.start,
-                                "${widget.forumsHistory?.forumList?[index].description.substring(0, 180)}...",
+                                "${widget.forumsHistory?.forumList?[index].description.characters.take(180)}...",
                                 style: theme.textTheme.bodyMedium,
                               )
                             ]
@@ -176,11 +158,29 @@ class _ProfilePageState extends State<ProfilePage>{
                 );
                 return inkWell;
               },
-            ),
+            );
+    return Scaffold(
+      appBar: appBar,
+      body: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+              leading: const CircleAvatar(
+                radius: 20,
+                  backgroundColor: Color(0xffc6c6c6),
+                  child: Icon(
+                      Icons.person_2,
+                      color: AppColors.black,
+                    ),
+                  ),
+              title: Text(User.email ?? '',
+                  style: theme.textTheme.titleLarge)
+          ),
+          Expanded(
+            child: listView,
           ),
         ],
       )
-
     );
   }
 

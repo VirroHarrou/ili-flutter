@@ -40,6 +40,7 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var navigationBar = BottomNavigationBar(
+      elevation: 30,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.home_outlined),

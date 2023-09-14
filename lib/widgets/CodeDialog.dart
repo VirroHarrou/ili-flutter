@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/models/GetModel.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 
@@ -21,7 +22,11 @@ class _CodeDialogState extends State<CodeDialog> {
         isBadRequest = true;
       } else {
         isBadRequest = false;
-        Navigator.pushNamed(context, "/ar_page", arguments: value);
+        if (AppSettings.isWarning) {
+          Navigator.pushNamed(context, "/ar_warning", arguments: value);
+        } else {
+          Navigator.pushNamed(context, "/ar_page", arguments: value);
+        }
       }
       setState(() {});
     });

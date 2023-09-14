@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/models/GetModelFavorites.dart';
 import 'package:tavrida_flutter/repositories/models/LikeModel.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
@@ -101,7 +102,11 @@ class _ModelFavoritesPageState extends State<ModelFavoritesPage> {
         return InkWell(
           highlightColor: Colors.white,
             onTap: () {
-              Navigator.pushNamed(context, "/ar_page", arguments: model);
+              if (AppSettings.isWarning) {
+                Navigator.pushNamed(context, "/ar_warning", arguments: model);
+              } else {
+                Navigator.pushNamed(context, "/ar_page", arguments: model);
+              }
             },
             child: Card(
               color: AppColors.white,

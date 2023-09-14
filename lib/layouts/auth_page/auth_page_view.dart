@@ -20,8 +20,8 @@ class AuthPage extends StatelessWidget{
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 110, bottom: 60),
-              child: Image.asset("assets/logo.png", height: 32),
+              padding: const EdgeInsets.only(top: 90, bottom: 40),
+              child: Image.asset("assets/logo2.png", height: 80),
             ),
             const AuthContainer(),
           ],

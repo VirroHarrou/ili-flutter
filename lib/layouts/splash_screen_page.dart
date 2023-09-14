@@ -23,12 +23,13 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Image.asset('assets/logo.png'),
+        child: Image.asset('assets/logo2.png', width: 200,),
       ),
     );
   }
 
   Future<void> _storageRead() async {
+
     final storage = await SharedPreferences.getInstance();
     AppSettings.authToken = storage.getString('authUserToken') ?? '';
     AppSettings.isLogin = storage.getBool('isLogin') ?? false;

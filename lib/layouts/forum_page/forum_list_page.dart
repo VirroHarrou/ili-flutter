@@ -88,7 +88,7 @@ class _ForumListPageState extends State<ForumListPage> {
                       const Spacer(),
                       Text(
                         textAlign: TextAlign.start,
-                        "${forums.forumList?[index].description.substring(0, 180)}...",
+                        "${forums.forumList?[index].description.characters.take(180)}...",
                         style: theme.textTheme.bodyMedium,
                       )
                     ]),

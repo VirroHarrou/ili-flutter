@@ -6,6 +6,7 @@ class AppSettings{
   static String imageNotFound = 'https://yt3.googleusercontent.com/iRLpuvr-WoAkDmOmXQiVnk7Gf4knJ6_OmIqZRmal4FeFxwbPLkMwIWm4QZlvH9t2GojQWZ4P=s900-c-k-c0x00ffffff-no-rj';
 
   static bool isLogin = authToken != '';
+  static bool isWarning = true;
 
   Map<String, dynamic> parseJwt(String token) {
     final parts = token.split('.');
