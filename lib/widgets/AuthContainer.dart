@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tavrida_flutter/main.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/user/user_repository.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../repositories/views/user.dart';
 
@@ -31,9 +31,7 @@ class _AuthContainerState extends State<AuthContainer> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    return Expanded(
-      child: Column(
-        children: [
+    var list = [
           Text(
             isLogin ? "Добро пожаловать!"
               : "Регистрация",
@@ -171,6 +169,9 @@ class _AuthContainerState extends State<AuthContainer> {
                 style: theme.textTheme.headlineMedium,
               ),
           ),
+    ];
+    if(isLogin){
+      list.add(
           Padding(
             padding: const EdgeInsets.only(top: 60),
             child: Row(
@@ -197,10 +198,72 @@ class _AuthContainerState extends State<AuthContainer> {
               ],
             ),
           )
-        ],
+      );
+    } else {
+      list.addAll(
+        [
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Text(
+              "Нажимая на кнопку, вы даете согласие на обработку персональных данных и соглашаетесь с",
+              style: theme.textTheme.displaySmall,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          InkWell(
+            onTap: _launchUrl,
+            child: const Text(
+              "политикой конфиденциальности",
+              style: TextStyle(
+                color: AppColors.black,
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 30),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  isLogin ? "Нет аккаунта?" : "Уже есть аккаунт?",
+                  style: theme.textTheme.bodySmall,
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      errorMessage = '';
+                      isBadRequest = false;
+                      isBadEmail = false;
+                      isLogin = !isLogin;
+                    });
+                  },
+                  child: Text(
+                    isLogin ? " Создать аккаунт" : " Войти",
+                    style: theme.textTheme.bodyLarge,
+                  ),
+                )
+              ],
+            ),
+          )
+        ]
+      );
+    }
+    return Expanded(
+      child: Column(
+        children: list,
       ),
     );
   }
+
+  void _launchUrl() async {
+          final url = Uri.parse("http://185.233.187.109/policy.html");
+          if(!await launchUrl(url)) {
+            throw Exception('Could not launch $url');
+          }
+        }
 
   void onButtonPressed() {
     if(isLogin){
@@ -252,7 +315,7 @@ class _AuthContainerState extends State<AuthContainer> {
       if(password != passwordRepeat){
         setState(() {
           isBadPassword = true;
-          errorMessage = 'Пароли различны';
+          errorMessage = 'Пароли не совпадают';
         });
         return;
       }

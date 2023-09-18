@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
 import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
@@ -13,13 +14,16 @@ import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/models/GetModel.dart';
 import 'package:tavrida_flutter/repositories/models/LikeModel.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:flutter/services.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
+import 'package:path/path.dart' as Path;
 
 
 class ARPage extends StatefulWidget {
@@ -179,18 +183,52 @@ class _ARPageState extends State<ARPage> {
     );
   }
 
-  Future<void> onTakeScreenshot() async {
-    ImageProvider<Object> image = await arSessionManager!.snapshot();
-    await showDialog(
-        context: context,
-        builder: (_) => Dialog(
-          child: Container(
-            decoration: BoxDecoration(
-                image: DecorationImage(image: image, fit: BoxFit.cover)
-            ),
-          ),
-        ));
-    //Todo: настроить сохранение скриншотов или сделать фотки
+  void onTakeScreenshot(){
+    arSessionManager!.snapshot().then((image) {
+      showDialog(
+          context: context,
+          builder: (_) {
+            DecorationImage decorationImage = DecorationImage(image: image, fit: BoxFit.cover);
+            return Dialog(
+              backgroundColor: Colors.transparent,
+              child: FractionallySizedBox(
+                heightFactor: 0.7,
+                child: Stack(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(Radius.circular(30)),
+                            image: decorationImage
+                        ),
+                      ),
+                      Align(
+                        alignment: const Alignment(0.95, 0.95),
+                        child: FloatingActionButton(
+                          onPressed: () {
+                            saveImage(image);
+                            Navigator.of(context).pop();
+                          },
+                          backgroundColor: const Color(0xAAc6c6c6),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
+                          child: const Icon(Icons.save_alt),
+                        ),
+                      ),
+                    ]
+                ),
+              ),
+            );
+          });
+    });
+  }
+
+  Future<void> saveImage(ImageProvider image) async{
+    Uint8List? img = await image.getBytes(context, format: ImageByteFormat.png);
+    Directory path = await getApplicationDocumentsDirectory();
+    File file = File(Path.join(path.path,
+        "${DateTime.now().toString().replaceAll(" ", ":")}.png"));
+    await file.writeAsBytes(img!.toList());
+    await GallerySaver.saveImage(file.path, toDcim: true, albumName: "ili - photos");
+    file.delete();
   }
 
   Future<void> onLike() async {
@@ -216,11 +254,16 @@ class _ARPageState extends State<ARPage> {
   }
 
   Future<File> _downloadFile(String url, String filename) async {
+    String dir = (await getApplicationDocumentsDirectory()).path;
+    File file = File('$dir/$filename');
+    if(await file.exists()) {
+      return file;
+    }
+
     var request = await httpClient.getUrl(Uri.parse(url));
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = File('$dir/$filename');
+
     await file.writeAsBytes(bytes);
 
     return file;

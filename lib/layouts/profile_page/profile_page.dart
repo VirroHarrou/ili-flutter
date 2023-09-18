@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tavrida_flutter/main.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForumHistory.dart';
+import 'package:tavrida_flutter/repositories/user/user_repository.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 
@@ -30,8 +31,7 @@ class _ProfilePageState extends State<ProfilePage>{
     updateData();
   }
 
-  showAlertDialog(BuildContext context) {
-
+  showExitDialog(BuildContext context) {
     var theme = Theme.of(context);
     // set up the buttons
     Widget cancelButton = TextButton(
@@ -80,6 +80,55 @@ class _ProfilePageState extends State<ProfilePage>{
     );
   }
 
+  showDeleteDialog(BuildContext context){
+    var theme = Theme.of(context);
+
+    Widget cancelButton = TextButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(const Color(0xffc6c6c6)),
+      ),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+      child: Text("Отмена", style: theme.textTheme.bodySmall,),
+    );
+    Widget continueButton = TextButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(AppColors.red),
+      ),
+      onPressed:  () {
+        final storage = SharedPreferences.getInstance().then((value) {
+          value.remove('authUserToken');
+          value.remove('isLogin');
+          value.remove('userEmail');
+          tryDeleteUser();
+          Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false);
+        });
+      },
+      child: Text("Удалить", style: theme.textTheme.bodyMedium),
+    );
+
+    AlertDialog alert = AlertDialog(
+      backgroundColor: AppColors.white,
+      title: Text("Удалить аккаунт?", style: theme.textTheme.headlineLarge,),
+      content: Text("Вы уверены, что хотите удалить аккаунт ${User.email}?",
+        style: theme.textTheme.bodySmall,
+      ),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -87,14 +136,31 @@ class _ProfilePageState extends State<ProfilePage>{
         automaticallyImplyLeading: false,
         title: Text('Аккаунт', style: theme.textTheme.titleLarge,),
         actions: [
-          IconButton(
-              onPressed: () {
-                showAlertDialog(context);
-              },
-              icon: const Icon(
-                Icons.exit_to_app,
-                color: Colors.red,
-              )
+          SubmenuButton(
+            style: ButtonStyle(
+              fixedSize: MaterialStateProperty.all(const Size(30, 30)),
+            ),
+              menuStyle: MenuStyle(
+                backgroundColor: MaterialStateProperty.all(AppColors.white),
+                elevation: MaterialStateProperty.all(30),
+              ),
+              menuChildren: [
+                ListTile(
+                  leading: const Icon(Icons.exit_to_app),
+                  title: Text("Выйти из аккаунта", style: theme.textTheme.bodySmall),
+                  onTap: () {
+                    showExitDialog(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.delete_outline, color: AppColors.red,),
+                  title: Text("Удалить аккаунт", style: theme.textTheme.headlineSmall),
+                  onTap: () {
+                    showDeleteDialog(context);
+                  },
+                )
+              ],
+              child: const Icon(Icons.more_vert, color: AppColors.black,)
           ),
         ],
       );

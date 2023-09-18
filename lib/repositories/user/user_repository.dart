@@ -35,7 +35,7 @@ Future<JwtResponse> tryLoginAsync(String email, String password) async {
 }
 
 Future<JwtResponse> tryRegister(String email, String password) async {
-  const connectionString = "http://185.233.187.109/api/1.0/auth/signup";
+  final connectionString = "${AppSettings.baseUri}api/1.0/auth/signup";
   Dio dio = Dio();
   var response = await dio.post(connectionString, data: {
     "userName": email,
@@ -46,11 +46,21 @@ Future<JwtResponse> tryRegister(String email, String password) async {
     validateStatus: (status) => status! < 500,
     followRedirects: false,
   ));
-  print(response.data);
   if(response.statusCode == 200) {
     return JwtResponse(ResponseType.success, response.data);
   }
   return JwtResponse(ResponseType.bad, '');
+}
+
+Future<void> tryDeleteUser() async {
+  //Todo: сделать с проверкой пароля
+  final connectionString = "${AppSettings.baseUri}api/1.0/auth/";
+  Dio dio = Dio();
+  await dio.delete(connectionString,
+      options: Options(
+        validateStatus: (status) => status! < 500,
+        followRedirects: false,
+      ));
 }
 
 class JwtResponse {

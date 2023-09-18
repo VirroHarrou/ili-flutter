@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tavrida_flutter/AR/localAndWebObjectsView.dart';
-import 'package:tavrida_flutter/layouts/auth_page/auth_page_view.dart';
 import 'package:tavrida_flutter/layouts/forum_page/view.dart';
 import 'package:tavrida_flutter/layouts/models_page/model_favorites_page.dart';
 import 'package:tavrida_flutter/layouts/profile_page/profile_page.dart';

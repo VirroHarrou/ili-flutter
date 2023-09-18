@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:tavrida_flutter/main.dart';
+import 'package:tavrida_flutter/repositories/forum/AddForumHistory.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForumDetail.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
@@ -19,6 +20,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
 
   Future<void> updateData(String id) async {
     forum = await getForumDetailAsync(id);
+    addForumHistoryAsync(id);
     setState(() {});
   }
 
