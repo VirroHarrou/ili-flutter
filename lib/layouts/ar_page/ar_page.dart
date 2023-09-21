@@ -81,7 +81,7 @@ class _ARPageState extends State<ARPage> {
                               top: 8.0
                           ),
                           child: IconButton(
-                              onPressed: onInfo,
+                              onPressed: _onInfo,
                               color: AppColors.white,
                               icon: const Icon(Icons.info_outline)
                           ),
@@ -101,7 +101,7 @@ class _ARPageState extends State<ARPage> {
                               top: 8.0
                           ),
                           child: IconButton(
-                              onPressed: onLike,
+                              onPressed: _onLike,
                               color: AppColors.white,
                               icon: Icon(model.like ?? false ? Icons.favorite : Icons.favorite_border),
                           ),
@@ -208,7 +208,7 @@ class _ARPageState extends State<ARPage> {
                             saveImage(image);
                             Navigator.of(context).pop();
                           },
-                          backgroundColor: const Color(0xAAc6c6c6),
+                          backgroundColor: const Color(0xAAFFFFFF),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
                           child: const Icon(Icons.save_alt),
                         ),
@@ -231,14 +231,14 @@ class _ARPageState extends State<ARPage> {
     file.delete();
   }
 
-  Future<void> onLike() async {
+  Future<void> _onLike() async {
     setState(() {
       model.like = !model.like!;
     });
     await likeModelAsync(model.id!);
   }
 
-  Future<void> onInfo() async {
+  Future<void> _onInfo() async {
     await showDialog(
         context: context,
         builder: (_) => Dialog(
@@ -301,9 +301,9 @@ class _ARPageState extends State<ARPage> {
     /*nodes.forEach((node) {
       this.arObjectManager.removeNode(node);
     });*/
-    anchors.forEach((anchor) {
+    for (var anchor in anchors) {
       arAnchorManager!.removeAnchor(anchor);
-    });
+    }
     anchors = [];
   }
 
@@ -311,31 +311,29 @@ class _ARPageState extends State<ARPage> {
       List<ARHitTestResult> hitTestResults) async {
     var singleHitTestResult = hitTestResults.firstWhere(
             (hitTestResult) => hitTestResult.type == ARHitTestResultType.plane);
-    if (singleHitTestResult != null) {
-      var newAnchor =
-      ARPlaneAnchor(transformation: singleHitTestResult.worldTransform);
-      bool? didAddAnchor = await arAnchorManager!.addAnchor(newAnchor);
-      if (didAddAnchor!) {
-        anchors.add(newAnchor);
-        // Add note to anchor
-        var newNode = ARNode(
-            type: NodeType.fileSystemAppFolderGLB,
-            uri: "${model.id}.glb",
-            scale: Vector3(0.2, 0.2, 0.2) * scale,
-            position: Vector3(0.0, 0.0, 0.0),
-            rotation: Vector4(1.0, 0.0, 0.0, 0.0));
-        bool? didAddNodeToAnchor =
-        await arObjectManager!.addNode(newNode, planeAnchor: newAnchor);
-        if (didAddNodeToAnchor!) {
-          nodes.add(newNode);
-        } else {
-          arSessionManager!.onError("Adding Node to Anchor failed");
-        }
+    var newAnchor =
+    ARPlaneAnchor(transformation: singleHitTestResult.worldTransform);
+    bool? didAddAnchor = await arAnchorManager!.addAnchor(newAnchor);
+    if (didAddAnchor!) {
+      anchors.add(newAnchor);
+      // Add note to anchor
+      var newNode = ARNode(
+          type: NodeType.fileSystemAppFolderGLB,
+          uri: "${model.id}.glb",
+          scale: Vector3(0.2, 0.2, 0.2) * scale,
+          position: Vector3(0.0, 0.0, 0.0),
+          rotation: Vector4(1.0, 0.0, 0.0, 0.0));
+      bool? didAddNodeToAnchor =
+      await arObjectManager!.addNode(newNode, planeAnchor: newAnchor);
+      if (didAddNodeToAnchor!) {
+        nodes.add(newNode);
       } else {
-        arSessionManager!.onError("Adding Anchor failed");
+        arSessionManager!.onError("Adding Node to Anchor failed");
       }
+    } else {
+      arSessionManager!.onError("Adding Anchor failed");
     }
-  }
+    }
 
   onPanStarted(String nodeName) {
     print("Started panning node " + nodeName);
@@ -392,9 +390,9 @@ class _ARPageState extends State<ARPage> {
       }
       scale += 0.2;
     });
-    nodes.forEach((element) {
-      element.scale = Vector3(0.2, 0.2, 0.2) * scale;
-    });
+    for (var element in nodes) {
+      element.scale *= scale;
+    }
   }
 
   void _downscaleModel() {
@@ -404,8 +402,8 @@ class _ARPageState extends State<ARPage> {
       }
       scale -= 0.2;
     });
-    nodes.forEach((element) {
-      element.scale = Vector3(0.2, 0.2, 0.2) * scale;
-    });
+    for (var element in nodes) {
+      element.scale *= scale;
+    }
   }
 }
