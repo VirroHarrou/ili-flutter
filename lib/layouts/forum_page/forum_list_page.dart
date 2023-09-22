@@ -4,6 +4,7 @@ import 'package:tavrida_flutter/repositories/forum/GetForums.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForumsSearch.dart';
 
 import 'package:tavrida_flutter/repositories/views/models.dart';
+import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:tavrida_flutter/widgets/CodeDialog.dart';
 
 class ForumListPage extends StatefulWidget {
@@ -51,10 +52,10 @@ class _ForumListPageState extends State<ForumListPage> {
                   arguments: {"id": id});
             },
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.only(bottom: 20),
               child: Container(
-                height: 300,
-                padding: const EdgeInsets.all(7.5),
+                height: 350,
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.black,
                   image: DecorationImage(
@@ -73,22 +74,25 @@ class _ForumListPageState extends State<ForumListPage> {
                         "${forums.forumList?[index].title}",
                         style: theme.textTheme.titleMedium,
                       ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
-                        decoration: const BoxDecoration(
-                          color: Colors.white54,
-                          borderRadius: BorderRadius.all(Radius.circular(100)),
-                        ),
-                        child: Text(
-                          "${DateFormat('dd.MM.yyyy').format(startedAt)} "
-                          "- ${DateFormat('dd.MM.yyyy').format(endedAt)}",
-                          style: theme.textTheme.bodySmall,
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Container(
+                          padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
+                          decoration: const BoxDecoration(
+                            color: Colors.white54,
+                            borderRadius: BorderRadius.all(Radius.circular(100)),
+                          ),
+                          child: Text(
+                            "${DateFormat('dd.MM.yyyy').format(startedAt)} "
+                            "- ${DateFormat('dd.MM.yyyy').format(endedAt)}",
+                            style: theme.textTheme.bodySmall,
+                          ),
                         ),
                       ),
                       const Spacer(),
                       Text(
                         textAlign: TextAlign.start,
-                        "${forums.forumList?[index].description.characters.take(180)}...",
+                        "${forums.forumList?[index].description.characters.take(150)}...",
                         style: theme.textTheme.bodyMedium,
                       )
                     ]),
@@ -102,35 +106,36 @@ class _ForumListPageState extends State<ForumListPage> {
       backgroundColor: Theme.of(context).colorScheme.background,
       title: !isSearching
           ? Text("Площадки", style: theme.textTheme.titleLarge)
-          : ListTile(
-              title: TextField(
-                decoration: const InputDecoration(
-                  hintText: 'Найти...',
-                  hintStyle: TextStyle(
-                    color: Colors.black38,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  border: InputBorder.none,
-                ),
-                onChanged: (query) => updateData(query),
-                style: theme.textTheme.titleLarge,
+          : TextField(
+            textAlignVertical: TextAlignVertical.center,
+            decoration: InputDecoration(
+              hintText: 'Найти...',
+              hintStyle: const TextStyle(
+                color: Colors.black38,
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
               ),
+              border: InputBorder.none,
+              filled: true,
+              fillColor: AppColors.lightGrey,
+              focusedBorder: UnderlineInputBorder(
+                borderSide: const BorderSide(color: Colors.transparent, width: 2.0),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: const BorderSide(color: Colors.transparent, width: 2.0),
+                borderRadius: BorderRadius.circular(8.0),
+              )
             ),
+            onChanged: (query) => updateData(query),
+            style: theme.textTheme.bodySmall,
+          ),
       actions: <Widget>[
-        IconButton(
-          onPressed: () {
-            showDialog(context: context, builder: (context){
-              return const CodeDialog();
-            });
-          },
-          icon: const Icon(Icons.download_outlined),
-        ),
         IconButton(
             onPressed: () {
               setState(() {
                 if (!isSearching) {
-                  customIcon = const Icon(Icons.cancel);
+                  customIcon = const Icon(Icons.clear);
                   isSearching = true;
                 } else {
                   customIcon = const Icon(Icons.search);

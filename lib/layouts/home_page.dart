@@ -51,9 +51,9 @@ class HomePageState extends State<HomePage> {
           activeIcon: Icon(Icons.favorite),
         ),
         BottomNavigationBarItem(
-            icon: Icon(Icons.person_2_outlined),
-            label: 'Аккаунт',
-            activeIcon: Icon(Icons.person_2)
+            icon: Icon(Icons.access_time_outlined),
+            label: 'История',
+            activeIcon: Icon(Icons.access_time_filled_outlined),
         ),
       ],
       currentIndex: _selectedIndex,

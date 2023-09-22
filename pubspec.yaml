@@ -20,6 +20,7 @@ dependencies:
   qr_code_scanner: ^1.0.1
   shared_preferences: ^2.2.1
   url_launcher: ^6.1.14
+  flutter_svg: ^2.0.7
 
 dev_dependencies:
   flutter_test:
@@ -30,15 +31,18 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/icon.png
+    - assets/icons/icon_ili.png
+    - assets/icons/no_results_found_icon.svg
+    - assets/icons/eos-icons_content-deleted.svg
+    - assets/icons/solar_camera-linear.svg
     - assets/logo.png
     - assets/logo2.png
-    - assets/roomBackground.png
+    - assets/no_results_found.svg
 
 flutter_launcher_icons:
   android: "launcher_icon"
   adaptive_icon_background: "#c090fe"
   ios: true
-  adaptive_icon_foreground: "assets/icon.png"
-  image_path: "assets/icon.png"
+  adaptive_icon_foreground: "assets/icon_ili.png"
+  image_path: "assets/icon_ili.png"
   min_sdk_android: 21 # android min sdk min:16, default 21

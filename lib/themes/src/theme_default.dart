@@ -6,7 +6,11 @@ ThemeData createLightTheme() {
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.white,
     ),
-    appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
+
+    appBarTheme: const AppBarTheme(
+      backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
+    ),
     useMaterial3: true,
     textTheme: const TextTheme(
       titleLarge: TextStyle(
@@ -66,7 +70,7 @@ ThemeData createLightTheme() {
       headlineSmall: TextStyle(
         fontFamily: 'montserrat, urban, sans-serif',
         color: AppColors.red,
-        fontSize: 14,
+        fontSize: 15,
         fontWeight: FontWeight.w400,
       ),
       displaySmall: TextStyle(
@@ -81,5 +85,6 @@ ThemeData createLightTheme() {
         padding: EdgeInsets.all(10),
         buttonColor: AppColors.black
       ),
-);
+
+  );
 }

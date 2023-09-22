@@ -8,22 +8,19 @@ class AuthPage extends StatelessWidget{
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
-    return Scaffold(
+    return const Scaffold(
       resizeToAvoidBottomInset: true,
       body: Padding(
-        padding: const EdgeInsets.only(
+        padding: EdgeInsets.only(
           left: 40.0,
           right: 40.0,
-          top: 40.0,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 90, bottom: 40),
-              child: Image.asset("assets/logo2.png", height: 80),
+            Align(
+              alignment: Alignment.center,
+              child: AuthContainer(),
             ),
-            const AuthContainer(),
           ],
         ),
       ),

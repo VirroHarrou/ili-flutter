@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/models/GetModelFavorites.dart';
 import 'package:tavrida_flutter/repositories/models/LikeModel.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
+import 'package:tavrida_flutter/widgets/NotAvailable.dart';
 
 class ModelFavoritesPage extends StatefulWidget{
   const ModelFavoritesPage({super.key});
@@ -40,33 +42,40 @@ class _ModelFavoritesPageState extends State<ModelFavoritesPage> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-
     var appBar = AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: Theme.of(context).colorScheme.background,
       title: !isSearching
-          ? Text("Избранное", style: theme.textTheme.titleLarge)
-          : ListTile(
-            title: TextField(
-              decoration: const InputDecoration(
-                hintText: 'Найти...',
-                hintStyle: TextStyle(
-                  color: Colors.black38,
-                  fontSize: 24,
-                  fontWeight: FontWeight.w400,
-                ),
-                border: InputBorder.none,
-              ),
-              onChanged: (query) => _updateData(query),
-              style: theme.textTheme.titleLarge,
+      ? Text("Избранное", style: theme.textTheme.titleLarge)
+      : TextField(
+        decoration: InputDecoration(
+            hintText: 'Найти...',
+            hintStyle: const TextStyle(
+              color: Colors.black38,
+              fontSize: 15,
+              fontWeight: FontWeight.w400,
             ),
-          ),
+            border: InputBorder.none,
+            filled: true,
+            fillColor: AppColors.lightGrey,
+            focusedBorder: UnderlineInputBorder(
+              borderSide: const BorderSide(color: Colors.transparent, width: 2.0),
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: const BorderSide(color: Colors.transparent, width: 2.0),
+              borderRadius: BorderRadius.circular(8.0),
+            )
+        ),
+        onChanged: (query) => _updateData(query),
+        style: theme.textTheme.bodySmall,
+      ),
       actions: <Widget>[
         IconButton(
             onPressed: () {
               setState(() {
                 if (!isSearching) {
-                  customIcon = const Icon(Icons.cancel);
+                  customIcon = const Icon(Icons.clear);
                   isSearching = true;
                 } else {
                   customIcon = const Icon(Icons.search);
@@ -102,11 +111,7 @@ class _ModelFavoritesPageState extends State<ModelFavoritesPage> {
         return InkWell(
           highlightColor: Colors.white,
             onTap: () {
-              if (AppSettings.isWarning) {
-                Navigator.pushNamed(context, "/ar_warning", arguments: model);
-              } else {
-                Navigator.pushNamed(context, "/ar_page", arguments: model);
-              }
+              Navigator.pushNamed(context, "/ar_page", arguments: model);
             },
             child: Card(
               color: AppColors.white,
@@ -200,7 +205,7 @@ class _ModelFavoritesPageState extends State<ModelFavoritesPage> {
     );
     return Scaffold(
       appBar: appBar,
-      body: listView,
+      body: AppSettings.isLogin ? listView : generateNotAvailable(context),
     );
   }
 }

@@ -14,6 +14,7 @@ import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
 import 'package:ar_flutter_plugin/models/ar_node.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
@@ -58,55 +59,98 @@ class _ARPageState extends State<ARPage> {
     super.initState();
   }
 
+  Future<void> _showARWarning(BuildContext context) async {
+    var theme = Theme.of(context);
+    // set up the buttons
+    Widget continueButton = TextButton(
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(AppColors.black),
+          minimumSize: MaterialStateProperty.all(const Size(150, 40))
+      ),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+      child: Text("Ок", style: theme.textTheme.bodyMedium),
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      icon: SvgPicture.asset("assets/icons/no_results_found_icon.svg", semanticsLabel: 'Label',),
+      iconColor: AppColors.black,
+      backgroundColor: AppColors.white,
+      title: Text("Мы используем AR", style: theme.textTheme.headlineLarge,),
+      content: Text("Если вам нет 18, используйте приложение в присутствии родителей."
+          " Cледите за своим окружением, AR может искажать объекты.",
+        textAlign: TextAlign.center,
+        style: theme.textTheme.bodySmall,
+      ),
+      actions: [
+        Center(child: continueButton),
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (AppSettings.isWarning) {
+      AppSettings.isWarning = false;
+      Future.delayed(const Duration(milliseconds: 200), () => _showARWarning(context));
+    }
     if(isFirstBuild) {
       model = ModalRoute.of(context)?.settings.arguments as Model;
       _updateModel();
       isFirstBuild = false;
     }
     var rightButtons = [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 8.0
-                          ),
-                          child: IconButton(
-                              onPressed: () => onTakeScreenshot(),
-                              color: AppColors.white,
-                              icon: const Icon(Icons.photo_camera)
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 8.0
-                          ),
-                          child: IconButton(
-                              onPressed: _onInfo,
-                              color: AppColors.white,
-                              icon: const Icon(Icons.info_outline)
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 8.0
-                          ),
-                          child: IconButton(
-                              onPressed: () {},
-                              color: AppColors.white,
-                              icon: const Icon(Icons.reply_outlined)
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              top: 8.0
-                          ),
-                          child: IconButton(
-                              onPressed: _onLike,
-                              color: AppColors.white,
-                              icon: Icon(model.like ?? false ? Icons.favorite : Icons.favorite_border),
-                          ),
-                        ),
-                      ];
+      Padding(
+        padding: const EdgeInsets.only(
+            top: 8.0
+        ),
+        child: IconButton(
+            onPressed: _onInfo,
+            color: AppColors.white,
+            icon: const Icon(Icons.info_outline)
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(
+            top: 8.0
+        ),
+        child: IconButton(
+            onPressed: () {},
+            color: AppColors.white,
+            icon: const Icon(Icons.reply_outlined)
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(
+            top: 8.0
+        ),
+        child: IconButton(
+          onPressed: _onLike,
+          color: AppColors.white,
+          icon: Icon(model.like ?? false ? Icons.favorite : Icons.favorite_border),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(
+            top: 8.0
+        ),
+        child: IconButton(
+            onPressed: () => onTakeScreenshot(),
+            color: AppColors.white,
+            icon: SvgPicture.asset("assets/icons/solar_camera-linear.svg", color: AppColors.white, width: 24,)
+        ),
+      ),
+    ];
     List<Widget> items = [
             ARView(
               onARViewCreated: onARViewCreated,
@@ -122,7 +166,7 @@ class _ARPageState extends State<ARPage> {
                 child: IconButton(
                   color: AppColors.white,
                   onPressed: onRemoveEverything,
-                  icon: const Icon(Icons.layers_clear),
+                  icon: SvgPicture.asset("assets/icons/eos-icons_content-deleted.svg", color: AppColors.white, width: 24,),
                 ),
               ),
             ),
@@ -170,7 +214,7 @@ class _ARPageState extends State<ARPage> {
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.lightGrey,
         child: const Icon(Icons.arrow_back),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,

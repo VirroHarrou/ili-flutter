@@ -7,6 +7,7 @@ import 'package:tavrida_flutter/repositories/forum/GetForumHistory.dart';
 import 'package:tavrida_flutter/repositories/user/user_repository.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
+import 'package:tavrida_flutter/widgets/NotAvailable.dart';
 
 class ProfilePage extends StatefulWidget{
   ProfilePage({super.key});
@@ -134,7 +135,7 @@ class _ProfilePageState extends State<ProfilePage>{
     var theme = Theme.of(context);
     var appBar = AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Аккаунт', style: theme.textTheme.titleLarge,),
+        title: Text('История посещений', style: theme.textTheme.titleLarge,),
         actions: [
           SubmenuButton(
             style: ButtonStyle(
@@ -179,8 +180,8 @@ class _ProfilePageState extends State<ProfilePage>{
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: Container(
-                        height: 300,
-                        padding: const EdgeInsets.all(7.5),
+                        height: 350,
+                        padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           color: Colors.black,
                           image: DecorationImage(
@@ -199,16 +200,19 @@ class _ProfilePageState extends State<ProfilePage>{
                                 "${widget.forumsHistory?.forumList?[index].title}",
                                 style: theme.textTheme.titleMedium,
                               ),
-                              Container(
-                                padding: const EdgeInsets.fromLTRB(10, 2, 10, 2),
-                                decoration: const BoxDecoration(
-                                  color: Colors.white54,
-                                  borderRadius: BorderRadius.all(Radius.circular(100)),
-                                ),
-                                child: Text(
-                                  "${DateFormat('dd.MM.yyyy').format(startedAt)} "
-                                      "- ${DateFormat('dd.MM.yyyy').format(endedAt)}",
-                                  style: theme.textTheme.bodySmall,
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Container(
+                                  padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white54,
+                                    borderRadius: BorderRadius.all(Radius.circular(100)),
+                                  ),
+                                  child: Text(
+                                    "${DateFormat('dd.MM.yyyy').format(startedAt)} "
+                                        "- ${DateFormat('dd.MM.yyyy').format(endedAt)}",
+                                    style: theme.textTheme.bodySmall,
+                                  ),
                                 ),
                               ),
                               const Spacer(),
@@ -230,20 +234,8 @@ class _ProfilePageState extends State<ProfilePage>{
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          ListTile(
-              leading: const CircleAvatar(
-                radius: 20,
-                  backgroundColor: Color(0xffc6c6c6),
-                  child: Icon(
-                      Icons.person_2,
-                      color: AppColors.black,
-                    ),
-                  ),
-              title: Text(User.email ?? '',
-                  style: theme.textTheme.titleLarge)
-          ),
           Expanded(
-            child: listView,
+            child: AppSettings.isLogin ? listView : generateNotAvailable(context),
           ),
         ],
       )

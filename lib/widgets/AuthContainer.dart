@@ -32,6 +32,10 @@ class _AuthContainerState extends State<AuthContainer> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var list = [
+      Padding(
+        padding: const EdgeInsets.only(bottom: 30, top: 40),
+        child: Image.asset("assets/logo2.png", height: 30),
+      ),
           Text(
             isLogin ? "Добро пожаловать!"
               : "Регистрация",
@@ -64,19 +68,19 @@ class _AuthContainerState extends State<AuthContainer> {
               top: 8.0,
             ),
             child: TextField(
-              style: theme.textTheme.bodySmall,
+              style: isBadEmail ? theme.textTheme.headlineSmall : theme.textTheme.bodySmall,
               onChanged: (str) {
                 email = str;
               },
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 hintText: "Электронная почта",
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: isBadEmail ? AppColors.red : AppColors.black, width: 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide.none,
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide:  BorderSide(color: isBadEmail ? AppColors.red : AppColors.black, width: 1),
-                ),
+                filled: true,
+                fillColor: isBadEmail ? AppColors.lightRed : AppColors.lightGrey,
               ),
             ),
           ),
@@ -91,7 +95,7 @@ class _AuthContainerState extends State<AuthContainer> {
               onChanged: (str) {
                 password = str;
               },
-              style: theme.textTheme.bodySmall,
+              style: isBadRequest ? theme.textTheme.headlineSmall : theme.textTheme.bodySmall,
               obscureText: !isVisiblePassword,
               decoration: InputDecoration(
                 suffixIcon: IconButton(
@@ -103,16 +107,16 @@ class _AuthContainerState extends State<AuthContainer> {
                   icon: Icon(isVisiblePassword
                     ? Icons.remove_red_eye
                     : Icons.remove_red_eye_outlined,
-                    color: isBadRequest ? AppColors.red : AppColors.black,
+                    color: isBadRequest ? AppColors.red : AppColors.grey,
                   ),
                 ),
                 hintText: "Пароль",
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: isBadRequest ? AppColors.red : AppColors.black, width: 1),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide.none,
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide:  BorderSide(color: isBadRequest ? AppColors.red : AppColors.black, width: 1),
-                ),
+                filled: true,
+                fillColor: isBadRequest ? AppColors.lightRed : AppColors.lightGrey
               ),
             ),
           ),
@@ -131,7 +135,7 @@ class _AuthContainerState extends State<AuthContainer> {
                 onChanged: (str) {
                   passwordRepeat = str;
                 },
-                style: theme.textTheme.bodySmall,
+                style: isBadPassword && !isLogin ? theme.textTheme.headlineSmall : theme.textTheme.bodySmall,
                 obscureText: !isVisibleRepeatPassword,
                 decoration: InputDecoration(
                   suffixIcon: IconButton(
@@ -143,16 +147,16 @@ class _AuthContainerState extends State<AuthContainer> {
                     icon: Icon(isVisibleRepeatPassword
                         ? Icons.remove_red_eye
                         : Icons.remove_red_eye_outlined,
-                      color: isBadPassword && !isLogin ? AppColors.red : AppColors.black,
+                      color: isBadPassword && !isLogin ? AppColors.red : AppColors.grey,
                     ),
                   ),
                   hintText: "Повторите пароль",
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: isBadPassword && !isLogin ? AppColors.red : AppColors.black, width: 1),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide.none,
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:  BorderSide(color: isBadPassword && !isLogin ? AppColors.red : AppColors.black, width: 1),
-                  ),
+                  filled: true,
+                  fillColor: isBadPassword && !isLogin ? AppColors.lightRed : AppColors.lightGrey,
                 ),
               ),
             ),
@@ -163,7 +167,6 @@ class _AuthContainerState extends State<AuthContainer> {
                   minimumSize: MaterialStateProperty.all(const Size(300, 50)),
                   enableFeedback: false
               ),
-              // ignor3e: sort_child_properties_last
               child: Text(
                 isLogin ? "Войти" : "Продолжить",
                 style: theme.textTheme.headlineMedium,
@@ -188,6 +191,7 @@ class _AuthContainerState extends State<AuthContainer> {
                       isBadRequest = false;
                       isBadEmail = false;
                       isLogin = !isLogin;
+                      passwordRepeat = '';
                     });
                   },
                   child: Text(
@@ -251,10 +255,9 @@ class _AuthContainerState extends State<AuthContainer> {
         ]
       );
     }
-    return Expanded(
-      child: Column(
-        children: list,
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: list,
     );
   }
 
@@ -329,7 +332,7 @@ class _AuthContainerState extends State<AuthContainer> {
       if(!RegExp(r"^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+){8,}$").hasMatch(password)){
         setState(() {
           isBadRequest = true;
-          errorMessage = 'Пароль слишком коротокий или требуется число';
+          errorMessage = 'Неверный пароль';
         });
         return;
       }
