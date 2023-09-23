@@ -29,7 +29,6 @@ import 'package:path/path.dart' as Path;
 
 class ARPage extends StatefulWidget {
   ARPage({super.key});
-  final GlobalKey _key = GlobalKey();
 
   @override
   State<StatefulWidget> createState() => _ARPageState();
@@ -324,7 +323,7 @@ class _ARPageState extends State<ARPage> {
 
     this.arSessionManager!.onInitialize(
       showFeaturePoints: false,
-      showPlanes: false,
+      showPlanes: true,
       customPlaneTexturePath: "Images/triangle.png",
       showWorldOrigin: false,
       handlePans: true,
@@ -389,8 +388,8 @@ class _ARPageState extends State<ARPage> {
 
   onPanEnded(String nodeName, Matrix4 newTransform) {
     print("Ended panning node " + nodeName);
-    final pannedNode =
-    nodes.firstWhere((element) => element.name == nodeName);
+    // final pannedNode =
+    // nodes.firstWhere((element) => element.name == nodeName);
 
     /*
     * Uncomment the following command if you want to keep the transformations of the Flutter representations of the nodes up to date
@@ -409,8 +408,8 @@ class _ARPageState extends State<ARPage> {
 
   onRotationEnded(String nodeName, Matrix4 newTransform) {
     print("Ended rotating node " + nodeName);
-    final rotatedNode =
-    nodes.firstWhere((element) => element.name == nodeName);
+    // final rotatedNode =
+    // nodes.firstWhere((element) => element.name == nodeName);
 
     /*
     * Uncomment the following command if you want to keep the transformations of the Flutter representations of the nodes up to date

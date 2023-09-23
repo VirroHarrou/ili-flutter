@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/models/GetModel.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 
@@ -107,6 +106,23 @@ class _QRViewExampleState extends State<QRViewExample> {
                             textAlign: TextAlign.center,
                             maxLength: 4,
                             keyboardType: TextInputType.number,
+                            onChanged: (input) {
+                              if(input.length == 4) {
+                                code = int.tryParse(input) ?? 0;
+                              }
+                              if (code != 0){
+                                var response = getModelAsync(code, null);
+                                response.then((value) {
+                                  if(value == null || value.id == null){
+                                    isBadRequest = true;
+                                  } else {
+                                    isBadRequest = false;
+                                    Navigator.pushNamed(context, "/ar_page", arguments: value);
+                                  }
+                                  setState(() {});
+                                });
+                              }
+                            },
                             onSubmitted: (input) {
                               if(input.length == 4) {
                                 code = int.tryParse(input) ?? 0;
