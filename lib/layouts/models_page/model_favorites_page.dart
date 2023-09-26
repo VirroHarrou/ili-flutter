@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/models/GetModelFavorites.dart';
 import 'package:tavrida_flutter/repositories/models/LikeModel.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
+import 'package:tavrida_flutter/widgets/DataEmpty.dart';
 import 'package:tavrida_flutter/widgets/NotAvailable.dart';
 
 class ModelFavoritesPage extends StatefulWidget{
@@ -205,7 +205,11 @@ class _ModelFavoritesPageState extends State<ModelFavoritesPage> {
     );
     return Scaffold(
       appBar: appBar,
-      body: AppSettings.isLogin ? listView : generateNotAvailable(context),
+      body:
+      AppSettings.isLogin ?
+        models.isNotEmpty ?
+          listView : generateDataEmpty(context, "Сохраняйте понравившиеся 3D-модели\nи возвращайтесь к ним в любое время")
+        : generateNotAvailable(context),
     );
   }
 }

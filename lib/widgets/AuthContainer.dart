@@ -56,7 +56,7 @@ class _AuthContainerState extends State<AuthContainer> {
             padding: const EdgeInsets.only(top: 2.0, bottom: 2.0),
             child: Text(errorMessage,
               textAlign: TextAlign.center,
-              maxLines: 1,
+              maxLines: 2,
               style: theme.textTheme.headlineSmall,
             ),
           ),
@@ -300,6 +300,7 @@ class _AuthContainerState extends State<AuthContainer> {
             break;
           case ResponseType.notFound:
             setState(() {
+              isBadEmail = true;
               isBadRequest = true;
               errorMessage = value.data!;
             });
@@ -315,13 +316,7 @@ class _AuthContainerState extends State<AuthContainer> {
         isBadEmail = false;
         errorMessage = '';
       });
-      if(password != passwordRepeat){
-        setState(() {
-          isBadPassword = true;
-          errorMessage = 'Пароли не совпадают';
-        });
-        return;
-      }
+
       if(!RegExp(r"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$").hasMatch(email)){
         setState(() {
           isBadEmail = true;
@@ -329,10 +324,17 @@ class _AuthContainerState extends State<AuthContainer> {
         });
         return;
       }
-      if(!RegExp(r"^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+){8,}$").hasMatch(password)){
+      if(!RegExp(r"^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$").hasMatch(password)){
         setState(() {
           isBadRequest = true;
           errorMessage = 'Неверный пароль';
+        });
+        return;
+      }
+      if(password != passwordRepeat){
+        setState(() {
+          isBadPassword = true;
+          errorMessage = 'Пароли не совпадают';
         });
         return;
       }
@@ -346,6 +348,15 @@ class _AuthContainerState extends State<AuthContainer> {
           AppSettings.authToken = value.data!;
           User.email = AppSettings().parseJwt(AppSettings.authToken)['email'];
           isLogin = true;
+          if(AppSettings.authToken != ''){
+            SharedPreferences.getInstance().then((storage) {
+              storage.setString("authUserToken", AppSettings.authToken);
+              storage.setBool("isLogin", true);
+              storage.setString("userEmail", User.email!);
+            });
+            AppSettings.isLogin = true;
+          }
+          Navigator.of(context).pushNamed("/home");
         }
       });
     }

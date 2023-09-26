@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/models/GetModel.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 
@@ -88,6 +87,7 @@ class _QRViewExampleState extends State<QRViewExample> {
                           ),
                           child: TextField(
                             decoration: InputDecoration(
+                              hintText: "••••",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                                 borderSide: BorderSide.none,

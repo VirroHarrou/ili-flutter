@@ -144,7 +144,14 @@ class _ForumListPageState extends State<ForumListPage> {
                 }
               });
             },
-            icon: customIcon),
+            icon: customIcon
+        ),
+        IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed("/QR");
+            },
+            icon: const Icon(Icons.qr_code_scanner)
+        ),
       ],
     );
     return Scaffold(

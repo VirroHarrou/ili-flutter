@@ -7,12 +7,13 @@ import 'package:tavrida_flutter/repositories/forum/GetForumHistory.dart';
 import 'package:tavrida_flutter/repositories/user/user_repository.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
+import 'package:tavrida_flutter/widgets/DataEmpty.dart';
 import 'package:tavrida_flutter/widgets/NotAvailable.dart';
 
 class ProfilePage extends StatefulWidget{
   ProfilePage({super.key});
 
-  Forums? forumsHistory;
+  List<Forum> forums = [];
 
   @override
   State<StatefulWidget> createState() =>
@@ -22,8 +23,10 @@ class ProfilePage extends StatefulWidget{
 class _ProfilePageState extends State<ProfilePage>{
 
   Future<void> updateData() async {
-    widget.forumsHistory = await getForumHistoryAsync();
-    setState(() {});
+    getForumHistoryAsync().then((value)  {
+      widget.forums = value?.forumList ?? [];
+      setState(() {});
+    });
   }
 
   @override
@@ -83,7 +86,7 @@ class _ProfilePageState extends State<ProfilePage>{
 
   showDeleteDialog(BuildContext context){
     var theme = Theme.of(context);
-
+    //Todo: сделать удаление
     Widget cancelButton = TextButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(const Color(0xffc6c6c6)),
@@ -166,14 +169,14 @@ class _ProfilePageState extends State<ProfilePage>{
         ],
       );
     ListView listView = ListView.builder(
-              itemCount: widget.forumsHistory?.forumList?.length ?? 0,
+              itemCount: widget.forums.length ?? 0,
               padding: const EdgeInsets.all(8),
               itemBuilder: (context, index) {
-                DateTime startedAt = DateTime.parse(widget.forumsHistory?.forumList?[index].startedAt ?? '12122012');
-                DateTime endedAt = DateTime.parse(widget.forumsHistory?.forumList?[index].endedAt ?? '12122012');
+                DateTime startedAt = DateTime.parse(widget.forums[index].startedAt ?? '12122012');
+                DateTime endedAt = DateTime.parse(widget.forums[index].endedAt ?? '12122012');
                 var inkWell = InkWell(
                     onTap: () {
-                      var id = widget.forumsHistory?.forumList?[index].id;
+                      var id = widget.forums[index].id;
                       Navigator.pushNamed(context, "/ForumDetail",
                           arguments: {"id": id});
                     },
@@ -186,7 +189,7 @@ class _ProfilePageState extends State<ProfilePage>{
                           color: Colors.black,
                           image: DecorationImage(
                               image: NetworkImage(
-                                  widget.forumsHistory?.forumList?[index].logoUrl as String),
+                                  widget.forums[index].logoUrl),
                               fit: BoxFit.cover,
                               colorFilter: ColorFilter.mode(
                                   Colors.black.withOpacity(0.5), BlendMode.dstATop)),
@@ -197,7 +200,7 @@ class _ProfilePageState extends State<ProfilePage>{
                             children: [
                               Text(
                                 textAlign: TextAlign.left,
-                                "${widget.forumsHistory?.forumList?[index].title}",
+                                widget.forums[index].title,
                                 style: theme.textTheme.titleMedium,
                               ),
                               Padding(
@@ -218,7 +221,7 @@ class _ProfilePageState extends State<ProfilePage>{
                               const Spacer(),
                               Text(
                                 textAlign: TextAlign.start,
-                                "${widget.forumsHistory?.forumList?[index].description.characters.take(180)}...",
+                                "${widget.forums[index].description.characters.take(180)}...",
                                 style: theme.textTheme.bodyMedium,
                               )
                             ]
@@ -235,7 +238,11 @@ class _ProfilePageState extends State<ProfilePage>{
         mainAxisSize: MainAxisSize.min,
         children: [
           Expanded(
-            child: AppSettings.isLogin ? listView : generateNotAvailable(context),
+            child: AppSettings.isLogin
+                ? widget.forums.isNotEmpty
+                  ? listView
+                  : generateDataEmpty(context, "Участвуйте в различных событиях, а мы\nсохраним историю ваших посещений")
+                : generateNotAvailable(context),
           ),
         ],
       )
