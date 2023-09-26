@@ -31,6 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _storageRead() async {
 
     final storage = await SharedPreferences.getInstance();
+    AppSettings.isWarning = storage.getBool('isWarning') ?? true;
     AppSettings.authToken = storage.getString('authUserToken') ?? '';
     AppSettings.isLogin = storage.getBool('isLogin') ?? false;
     User.email = storage.getString('userEmail');

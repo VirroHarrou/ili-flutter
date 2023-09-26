@@ -19,10 +19,10 @@ Future<JwtResponse> tryLoginAsync(String email, String password) async {
     }
     if (response.statusCode == 400) {
       return JwtResponse(
-          ResponseType.bad, 'Не существует аккаунта с такой эл. почтой');
+          ResponseType.bad, 'Почта введена неверно');
     }
     if (response.statusCode == 404) {
-      return JwtResponse(ResponseType.notFound, 'Неверный пароль');
+      return JwtResponse(ResponseType.notFound, 'Не существует аккаунта с такими\nэл. почтой и/или паролем');
     }
   } catch (ex) {
     if (ex is DioException) {
@@ -56,11 +56,24 @@ Future<void> tryDeleteUser() async {
   //Todo: сделать с проверкой пароля
   final connectionString = "${AppSettings.baseUri}api/1.0/auth/";
   Dio dio = Dio();
-  await dio.delete(connectionString,
+  var response = await dio.delete(connectionString,
       options: Options(
         validateStatus: (status) => status! < 500,
-        followRedirects: false,
       ));
+}
+
+Future<JwtResponse> tryCreateNoNameUser() async {
+  //Todo: сделать с проверкой пароля
+  final connectionString = "${AppSettings.baseUri}api/1.0/auth/noname";
+  Dio dio = Dio();
+  var response = await dio.get(connectionString,
+      options: Options(
+        validateStatus: (status) => status! < 500,
+      ));
+  if(response.statusCode == 200) {
+    return JwtResponse(ResponseType.success, response.data);
+  }
+  return JwtResponse(ResponseType.bad, '');
 }
 
 class JwtResponse {

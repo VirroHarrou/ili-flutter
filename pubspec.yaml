@@ -34,6 +34,7 @@ flutter:
     - assets/icons/icon_ili.png
     - assets/icons/no_results_found_icon.svg
     - assets/icons/eos-icons_content-deleted.svg
+    - assets/icons/nothing_here.svg
     - assets/icons/solar_camera-linear.svg
     - assets/logo.png
     - assets/logo2.png

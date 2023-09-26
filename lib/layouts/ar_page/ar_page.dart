@@ -17,12 +17,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/models/GetModel.dart';
 import 'package:tavrida_flutter/repositories/models/LikeModel.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:flutter/services.dart';
+import 'package:tavrida_flutter/widgets/TalkerWidget.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 import 'package:path/path.dart' as Path;
 
@@ -36,9 +38,16 @@ class ARPage extends StatefulWidget {
 
 class _ARPageState extends State<ARPage> {
   late Model model;
-  HttpClient httpClient = HttpClient();
-  bool isFirstBuild = true;
-  double scale = 1.0;
+  final _httpClient = HttpClient();
+  bool _isFirstBuild = true;
+  double _scale = 1.0;
+  var talker = TalkerWidget(
+    height: 50,
+    wight: 250,
+    duration: 10,
+    text: 'Нажмите на поверхность\nдля просмотра модели',
+    icon: const Icon(Icons.touch_app),
+  );
 
   ARSessionManager? arSessionManager;
   ARObjectManager? arObjectManager;
@@ -58,55 +67,21 @@ class _ARPageState extends State<ARPage> {
     super.initState();
   }
 
-  Future<void> _showARWarning(BuildContext context) async {
-    var theme = Theme.of(context);
-    // set up the buttons
-    Widget continueButton = TextButton(
-      style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(AppColors.black),
-          minimumSize: MaterialStateProperty.all(const Size(150, 40))
-      ),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-      child: Text("Ок", style: theme.textTheme.bodyMedium),
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      icon: SvgPicture.asset("assets/icons/no_results_found_icon.svg", semanticsLabel: 'Label',),
-      iconColor: AppColors.black,
-      backgroundColor: AppColors.white,
-      title: Text("Мы используем AR", style: theme.textTheme.headlineLarge,),
-      content: Text("Если вам нет 18, используйте приложение в присутствии родителей."
-          " Cледите за своим окружением, AR может искажать объекты.",
-        textAlign: TextAlign.center,
-        style: theme.textTheme.bodySmall,
-      ),
-      actions: [
-        Center(child: continueButton),
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     if (AppSettings.isWarning) {
       AppSettings.isWarning = false;
-      Future.delayed(const Duration(milliseconds: 200), () => _showARWarning(context));
+      Future.delayed(const Duration(milliseconds: 200), () async {
+        _showARWarning(context);
+        SharedPreferences.getInstance().then((storage) {
+          storage.setBool("isWarning", false);
+        });
+      });
     }
-    if(isFirstBuild) {
+    if(_isFirstBuild) {
       model = ModalRoute.of(context)?.settings.arguments as Model;
       _updateModel();
-      isFirstBuild = false;
+      _isFirstBuild = false;
     }
     var rightButtons = [
       Padding(
@@ -124,9 +99,19 @@ class _ARPageState extends State<ARPage> {
             top: 8.0
         ),
         child: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: model.code!));
+              setState(() {
+                talker = TalkerWidget(
+                  text: 'Код модели скопирован в буфер',
+                  icon: const Icon(Icons.check, color: AppColors.black,),
+                  wight: 300,
+                  height: 50,
+                );
+              });
+            },
             color: AppColors.white,
-            icon: const Icon(Icons.reply_outlined)
+            icon: const Icon(Icons.reply),
         ),
       ),
       Padding(
@@ -151,61 +136,66 @@ class _ARPageState extends State<ARPage> {
       ),
     ];
     List<Widget> items = [
-            ARView(
-              onARViewCreated: onARViewCreated,
-              planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
+      ARView(
+        onARViewCreated: onARViewCreated,
+        planeDetectionConfig: PlaneDetectionConfig.horizontalAndVertical,
+      ),
+      Align(
+        alignment: Alignment.bottomLeft,
+        child: Padding(
+          padding: const EdgeInsets.only(
+            bottom: 30,
+            left: 14,
+          ),
+          child: IconButton(
+            color: AppColors.white,
+            onPressed: onRemoveEverything,
+            icon: SvgPicture.asset("assets/icons/eos-icons_content-deleted.svg", color: AppColors.white, width: 24,),
+          ),
+        ),
+      ),
+      Align(
+        alignment: FractionalOffset.bottomRight,
+        child: SizedBox(
+          height: 300,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              bottom: 30,
+              right: 14,
             ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  bottom: 30,
-                  left: 14,
-                ),
-                child: IconButton(
-                  color: AppColors.white,
-                  onPressed: onRemoveEverything,
-                  icon: SvgPicture.asset("assets/icons/eos-icons_content-deleted.svg", color: AppColors.white, width: 24,),
-                ),
+            child: Column(
+              verticalDirection: VerticalDirection.up,
+              children: rightButtons,
+            ),
+          ),
+        ),
+      ),
+      Align(
+        alignment: FractionalOffset.bottomCenter,
+        child: Padding(
+          padding: const EdgeInsets.all(30),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconButton(
+                onPressed: _downscaleModel,
+                icon: const Icon(Icons.remove_circle_outline, color: AppColors.white),
               ),
-            ),
-            Align(
-                alignment: FractionalOffset.bottomRight,
-                child: SizedBox(
-                  height: 300,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 30,
-                      right: 14,
-                    ),
-                    child: Column(
-                      verticalDirection: VerticalDirection.up,
-                      children: rightButtons,
-                    ),
-                  ),
-                ),
-            ),
-            Align(
-              alignment: FractionalOffset.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                        onPressed: _downscaleModel,
-                        icon: const Icon(Icons.remove_circle_outline, color: AppColors.white),
-                    ),
-                    Text("${scale.toStringAsFixed(1)}x", style: Theme.of(context).textTheme.headlineMedium,),
-                    IconButton(
-                        onPressed: _upscaleModel,
-                        icon: const Icon(Icons.add_circle_outline, color: AppColors.white),
-                    ),
-                  ],
-                ),
+              Text("${_scale.toStringAsFixed(1)}x", style: Theme.of(context).textTheme.headlineMedium,),
+              IconButton(
+                onPressed: _upscaleModel,
+                icon: const Icon(Icons.add_circle_outline, color: AppColors.white),
               ),
-            )
-          ];
+            ],
+          ),
+        ),
+      ),
+      Align(
+        alignment: const Alignment(0.9, -0.9),
+        child: talker,
+      )
+    ];
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -213,7 +203,7 @@ class _ARPageState extends State<ARPage> {
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
         elevation: 0,
-        backgroundColor: AppColors.lightGrey,
+        backgroundColor: AppColors.lightWhite,
         child: const Icon(Icons.arrow_back),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
@@ -227,6 +217,8 @@ class _ARPageState extends State<ARPage> {
   }
 
   void onTakeScreenshot(){
+    //Todo: переделать скриншот
+    var theme = Theme.of(context);
     arSessionManager!.snapshot().then((image) {
       showDialog(
           context: context,
@@ -245,15 +237,37 @@ class _ARPageState extends State<ARPage> {
                         ),
                       ),
                       Align(
-                        alignment: const Alignment(0.95, 0.95),
-                        child: FloatingActionButton(
-                          onPressed: () {
-                            saveImage(image);
-                            Navigator.of(context).pop();
-                          },
-                          backgroundColor: const Color(0xAAFFFFFF),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
-                          child: const Icon(Icons.save_alt),
+                        alignment: const Alignment(0, 0.95),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: OutlinedButton.icon(
+                                onPressed: null,
+                                icon: const Icon(Icons.share, color: AppColors.black,),
+                                label: Text('Поделиться', style: theme.textTheme.headlineLarge),
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(AppColors.buttonSecondary),
+                                    fixedSize: MaterialStateProperty.all(const Size(180, 45))
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  Navigator.pushNamed(context, "/QR");
+                                },
+                                icon: const Icon(Icons.save_alt, color: AppColors.white,),
+                                label: Text('Сохранить', style: theme.textTheme.headlineMedium),
+                                style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(AppColors.buttonPrimary),
+                                    fixedSize: MaterialStateProperty.all(const Size(180, 45))
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ]
@@ -277,6 +291,15 @@ class _ARPageState extends State<ARPage> {
   Future<void> _onLike() async {
     setState(() {
       model.like = !model.like!;
+      talker = TalkerWidget(
+        text: model.like!  ? 'В избранном' : 'Удалено из избранного',
+        icon: Icon(
+          model.like! ? Icons.check : Icons.heart_broken,
+          color: AppColors.black,
+        ),
+        wight: 300,
+        height: 50,
+      );
     });
     await likeModelAsync(model.id!);
   }
@@ -285,12 +308,50 @@ class _ARPageState extends State<ARPage> {
     await showDialog(
         context: context,
         builder: (_) => Dialog(
-          backgroundColor: Colors.white,
+          alignment: Alignment.bottomCenter,
+          insetPadding: EdgeInsets.zero,
+          backgroundColor: Colors.transparent,
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              "${model.title}\n${model.description ?? ''}",
-              style: Theme.of(context).textTheme.bodySmall,
+            padding: const EdgeInsets.all(0.0),
+            child: Container(
+              decoration: const BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              height: model.description == null ? 200 : model.description!.length <= 200 ? 200 : 400,
+              width: 400,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 20,
+                      left: 20,
+                      right: 20,
+                    ),
+                    child: Text(
+                      "${model.title}",
+                      style: Theme.of(context).textTheme.headlineLarge,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 20,
+                      left: 20,
+                      right: 20,
+                    ),
+                    child: Text(
+                      model.description ?? 'Описание у данной модели отсутствует',
+                      style: Theme.of(context).textTheme.bodySmall,
+                      textAlign: TextAlign.left,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ));
@@ -303,7 +364,7 @@ class _ARPageState extends State<ARPage> {
       return file;
     }
 
-    var request = await httpClient.getUrl(Uri.parse(url));
+    var request = await _httpClient.getUrl(Uri.parse(url));
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);
 
@@ -357,13 +418,16 @@ class _ARPageState extends State<ARPage> {
     var newAnchor =
     ARPlaneAnchor(transformation: singleHitTestResult.worldTransform);
     bool? didAddAnchor = await arAnchorManager!.addAnchor(newAnchor);
+    if(anchors.isNotEmpty) {
+      return;
+    }
     if (didAddAnchor!) {
       anchors.add(newAnchor);
       // Add note to anchor
       var newNode = ARNode(
           type: NodeType.fileSystemAppFolderGLB,
           uri: "${model.id}.glb",
-          scale: Vector3(0.2, 0.2, 0.2) * scale,
+          scale: Vector3(0.2, 0.2, 0.2) * _scale,
           position: Vector3(0.0, 0.0, 0.0),
           rotation: Vector4(1.0, 0.0, 0.0, 0.0));
       bool? didAddNodeToAnchor =
@@ -418,6 +482,45 @@ class _ARPageState extends State<ARPage> {
     //rotatedNode.transform = newTransform;
   }
 
+  Future<void> _showARWarning(BuildContext context) async {
+    var theme = Theme.of(context);
+    // set up the buttons
+    Widget continueButton = TextButton(
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(AppColors.black),
+          minimumSize: MaterialStateProperty.all(const Size(150, 40))
+      ),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+      child: Text("Ок", style: theme.textTheme.bodyMedium),
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      icon: SvgPicture.asset("assets/icons/no_results_found_icon.svg", semanticsLabel: 'Label',),
+      iconColor: AppColors.black,
+      backgroundColor: AppColors.white,
+      title: Text("Мы используем AR", style: theme.textTheme.headlineLarge,),
+      content: Text("Если вам нет 18, используйте приложение в присутствии родителей."
+          " Cледите за своим окружением, AR может искажать объекты.",
+        textAlign: TextAlign.center,
+        style: theme.textTheme.bodySmall,
+      ),
+      actions: [
+        Center(child: continueButton),
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   Future<void> _updateModel() async {
     var result = await getModelAsync(null, model.id);
     setState(() {
@@ -428,25 +531,25 @@ class _ARPageState extends State<ARPage> {
 
   void _upscaleModel() {
     setState(() {
-      if(scale >= 2.98) {
+      if(_scale >= 3.71) {
         return;
       }
-      scale += 0.2;
+      _scale += 0.3;
     });
     for (var element in nodes) {
-      element.scale *= scale;
+      element.scale = Vector3(0.2, 0.2, 0.2) * _scale;
     }
   }
 
   void _downscaleModel() {
     setState(() {
-      if(scale <= 0.21) {
+      if(_scale <= 0.33) {
         return;
       }
-      scale -= 0.2;
+      _scale -= 0.3;
     });
     for (var element in nodes) {
-      element.scale *= scale;
+      element.scale = Vector3(0.2, 0.2, 0.2) * _scale;
     }
   }
 }

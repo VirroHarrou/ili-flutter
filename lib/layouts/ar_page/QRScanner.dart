@@ -87,6 +87,7 @@ class _QRViewExampleState extends State<QRViewExample> {
                           ),
                           child: TextField(
                             decoration: InputDecoration(
+                              hintText: "••••",
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                                 borderSide: BorderSide.none,
