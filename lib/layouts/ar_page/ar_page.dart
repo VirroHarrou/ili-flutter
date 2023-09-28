@@ -70,15 +70,6 @@ class _ARPageState extends State<ARPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (AppSettings.isWarning) {
-      AppSettings.isWarning = false;
-      Future.delayed(const Duration(milliseconds: 200), () async {
-        _showARWarning(context);
-        SharedPreferences.getInstance().then((storage) {
-          storage.setBool("isWarning", false);
-        });
-      });
-    }
     if(_isFirstBuild) {
       model = ModalRoute.of(context)?.settings.arguments as Model;
       _updateModel();
@@ -200,7 +191,7 @@ class _ARPageState extends State<ARPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).popUntil((route) => route.settings.name == "/home");
+          Navigator.of(context).pop();
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
         elevation: 0,
@@ -245,12 +236,12 @@ class _ARPageState extends State<ARPage> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: OutlinedButton.icon(
-                                onPressed: null,
-                                icon: const Icon(Icons.share, color: AppColors.black,),
-                                label: Text('Поделиться', style: theme.textTheme.headlineLarge),
+                                onPressed: () => Navigator.of(context).pop(),
+                                icon: const Icon(Icons.repeat, color: AppColors.black,),
+                                label: Text('Переснять', style: theme.textTheme.bodySmall),
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(AppColors.buttonSecondary),
-                                    fixedSize: MaterialStateProperty.all(const Size(180, 45))
+                                    fixedSize: MaterialStateProperty.all(const Size(160, 35))
                                 ),
                               ),
                             ),
@@ -261,10 +252,10 @@ class _ARPageState extends State<ARPage> {
                                   Navigator.pushNamed(context, "/QR");
                                 },
                                 icon: const Icon(Icons.save_alt, color: AppColors.white,),
-                                label: Text('Сохранить', style: theme.textTheme.headlineMedium),
+                                label: Text('Сохранить', style: theme.textTheme.bodyMedium),
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(AppColors.buttonPrimary),
-                                    fixedSize: MaterialStateProperty.all(const Size(180, 45))
+                                    fixedSize: MaterialStateProperty.all(const Size(160, 35))
                                 ),
                               ),
                             ),
@@ -481,45 +472,6 @@ class _ARPageState extends State<ARPage> {
     * (e.g. if you intend to share the nodes through the cloud)
     */
     //rotatedNode.transform = newTransform;
-  }
-
-  Future<void> _showARWarning(BuildContext context) async {
-    var theme = Theme.of(context);
-    // set up the buttons
-    Widget continueButton = TextButton(
-      style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(AppColors.black),
-          minimumSize: MaterialStateProperty.all(const Size(150, 40))
-      ),
-      onPressed: () {
-        Navigator.of(context).pop();
-      },
-      child: Text("Ок", style: theme.textTheme.bodyMedium),
-    );
-
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
-      icon: SvgPicture.asset("assets/icons/no_results_found_icon.svg", semanticsLabel: 'Label',),
-      iconColor: AppColors.black,
-      backgroundColor: AppColors.white,
-      title: Text("Мы используем AR", style: theme.textTheme.headlineLarge,),
-      content: Text("Если вам нет 18, используйте приложение в присутствии родителей."
-          " Cледите за своим окружением, AR может искажать объекты.",
-        textAlign: TextAlign.center,
-        style: theme.textTheme.bodySmall,
-      ),
-      actions: [
-        Center(child: continueButton),
-      ],
-    );
-
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
-    );
   }
 
   Future<void> _updateModel() async {

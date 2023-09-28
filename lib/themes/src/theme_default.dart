@@ -46,26 +46,26 @@ ThemeData createLightTheme() {
       bodySmall: TextStyle(
         fontFamily: 'Open Sans, sans-serif',
         color: AppColors.black,
-        fontSize: 15,
+        fontSize: 14,
         fontWeight: FontWeight.w400,
       ),
       labelMedium: TextStyle(
         fontFamily: 'Open Sans, sans-serif',
         color: AppColors.grey,
         fontSize: 14,
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w500,
       ),
       headlineLarge: TextStyle(
         fontFamily: 'Open Sans, sans-serif',
         color: AppColors.black,
         fontSize: 20,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
       ),
       headlineMedium: TextStyle(
         fontFamily: 'Open Sans, sans-serif',
         color: AppColors.white,
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
       ),
       headlineSmall: TextStyle(
         fontFamily: 'Open Sans, sans-serif',
@@ -78,7 +78,7 @@ ThemeData createLightTheme() {
         color: AppColors.grey,
         fontSize: 12,
         fontWeight: FontWeight.w400,
-      )
+      ),
     ),
     buttonTheme:
       const ButtonThemeData(

@@ -11,6 +11,7 @@ class AppSettings{
   static String imageNotFound = 'assets/no_results_found.svg';
 
   static bool isLogin = authToken != '';
+  static bool isNoName = true;
   static bool isWarning = true;
 
   Map<String, dynamic> parseJwt(String token) {

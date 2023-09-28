@@ -38,29 +38,31 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var navigationBar = BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      elevation: 30,
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
-          label: 'Площадки',
-          activeIcon: Icon(Icons.home),
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.favorite_border),
-          label: 'Избранное',
-          activeIcon: Icon(Icons.favorite),
-        ),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.access_time_outlined),
-            label: 'История',
-            activeIcon: Icon(Icons.access_time_filled_outlined),
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      selectedItemColor: AppColors.buttonPrimary,
-      onTap: _onItemTapped,
+    var navigationBar = Container(
+      height: 75,
+      child: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: 'Площадки',
+            activeIcon: Icon(Icons.home),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border),
+            label: 'Избранное',
+            activeIcon: Icon(Icons.favorite),
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.access_time_outlined),
+              label: 'История',
+              activeIcon: Icon(Icons.access_time_filled_outlined),
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: AppColors.buttonPrimary,
+        onTap: _onItemTapped,
+      ),
     );
 
     return Scaffold(

@@ -40,7 +40,8 @@ class _ProfilePageState extends State<ProfilePage>{
     // set up the buttons
     Widget cancelButton = TextButton(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(const Color(0xffc6c6c6)),
+        fixedSize: MaterialStateProperty.all(const Size(94, 38)),
+        backgroundColor: MaterialStateProperty.all(const Color(0xFFF2F2F2)),
       ),
       onPressed:  () {
         Navigator.of(context).pop();
@@ -49,12 +50,14 @@ class _ProfilePageState extends State<ProfilePage>{
     );
     Widget continueButton = TextButton(
       style: ButtonStyle(
+        fixedSize: MaterialStateProperty.all(const Size(84, 38)),
         backgroundColor: MaterialStateProperty.all(AppColors.red),
       ),
       onPressed:  () {
         final storage = SharedPreferences.getInstance().then((value) {
           value.remove('authUserToken');
           value.remove('isLogin');
+          value.remove('isNoName');
           value.remove('userEmail');
           Navigator.pushNamedAndRemoveUntil(context, "/", (r) => false);
         });
@@ -64,6 +67,7 @@ class _ProfilePageState extends State<ProfilePage>{
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
+      surfaceTintColor: Colors.transparent,
       backgroundColor: AppColors.white,
       title: Text("Выход", style: theme.textTheme.headlineLarge,),
       content: Text("Вы уверены, что хотите выйти из аккаунта ${User.email}?",
@@ -86,10 +90,10 @@ class _ProfilePageState extends State<ProfilePage>{
 
   showDeleteDialog(BuildContext context){
     var theme = Theme.of(context);
-    //Todo: сделать удаление
     Widget cancelButton = TextButton(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(const Color(0xffc6c6c6)),
+        fixedSize: MaterialStateProperty.all(const Size(94, 38)),
+        backgroundColor: MaterialStateProperty.all(const Color(0xFFF2F2F2)),
       ),
       onPressed:  () {
         Navigator.of(context).pop();
@@ -113,6 +117,7 @@ class _ProfilePageState extends State<ProfilePage>{
     );
 
     AlertDialog alert = AlertDialog(
+      surfaceTintColor: Colors.transparent,
       backgroundColor: AppColors.white,
       title: Text("Удалить аккаунт?", style: theme.textTheme.headlineLarge,),
       content: Text("Вы уверены, что хотите удалить аккаунт ${User.email}?",
@@ -138,15 +143,23 @@ class _ProfilePageState extends State<ProfilePage>{
     var theme = Theme.of(context);
     var appBar = AppBar(
         automaticallyImplyLeading: false,
+        toolbarHeight: 66,
+        titleSpacing: 24,
         title: Text('История посещений', style: theme.textTheme.titleLarge,),
         actions: [
+          !AppSettings.isNoName ?
           SubmenuButton(
             style: ButtonStyle(
               fixedSize: MaterialStateProperty.all(const Size(30, 30)),
             ),
               menuStyle: MenuStyle(
-                backgroundColor: MaterialStateProperty.all(AppColors.white),
+                backgroundColor: MaterialStateProperty.all(Colors.white),
                 elevation: MaterialStateProperty.all(30),
+                shadowColor: MaterialStateProperty.all(Colors.black),
+                surfaceTintColor: MaterialStateProperty.all(Colors.transparent),
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                )),
               ),
               menuChildren: [
                 ListTile(
@@ -165,12 +178,11 @@ class _ProfilePageState extends State<ProfilePage>{
                 )
               ],
               child: const Icon(Icons.more_vert, color: AppColors.black,)
-          ),
+          ) : const Icon(Icons.no_adult_content, color: Colors.transparent),
         ],
       );
     ListView listView = ListView.builder(
               itemCount: widget.forums.length ?? 0,
-              padding: const EdgeInsets.all(8),
               itemBuilder: (context, index) {
                 DateTime startedAt = DateTime.parse(widget.forums[index].startedAt ?? '12122012');
                 DateTime endedAt = DateTime.parse(widget.forums[index].endedAt ?? '12122012');
@@ -181,10 +193,11 @@ class _ProfilePageState extends State<ProfilePage>{
                           arguments: {"id": id});
                     },
                     child: Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
+                      padding: const EdgeInsets.only(bottom: 20, left: 24, right: 24),
                       child: Container(
-                        height: 350,
-                        padding: const EdgeInsets.all(12),
+                        height: 366,
+                        width: 366,
+                        padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: Colors.black,
                           image: DecorationImage(
@@ -194,6 +207,12 @@ class _ProfilePageState extends State<ProfilePage>{
                               colorFilter: ColorFilter.mode(
                                   Colors.black.withOpacity(0.5), BlendMode.dstATop)),
                           borderRadius: const BorderRadius.all(Radius.circular(16)),
+                          boxShadow: const [BoxShadow(
+                            color: Color(0x14000000),
+                            blurRadius: 12,
+                            offset: Offset(0, 0),
+                            spreadRadius: 0,
+                          ),],
                         ),
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -206,10 +225,10 @@ class _ProfilePageState extends State<ProfilePage>{
                               Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: Container(
-                                  padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                                   decoration: const BoxDecoration(
                                     color: Colors.white54,
-                                    borderRadius: BorderRadius.all(Radius.circular(100)),
+                                    borderRadius: BorderRadius.all(Radius.circular(14)),
                                   ),
                                   child: Text(
                                     "${DateFormat('dd.MM.yyyy').format(startedAt)} "
@@ -220,8 +239,9 @@ class _ProfilePageState extends State<ProfilePage>{
                               ),
                               const Spacer(),
                               Text(
+                                maxLines: 4,
                                 textAlign: TextAlign.start,
-                                "${widget.forums[index].description.characters.take(180)}...",
+                                "${widget.forums[index].description}...",
                                 style: theme.textTheme.bodyMedium,
                               )
                             ]
@@ -238,7 +258,7 @@ class _ProfilePageState extends State<ProfilePage>{
         mainAxisSize: MainAxisSize.min,
         children: [
           Expanded(
-            child: AppSettings.isLogin
+            child: AppSettings.isLogin && !AppSettings.isNoName
                 ? widget.forums.isNotEmpty
                   ? listView
                   : generateDataEmpty(context, "Участвуйте в различных событиях, а мы\nсохраним историю ваших посещений")

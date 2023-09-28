@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForums.dart';
@@ -18,7 +20,7 @@ class _ForumListPageState extends State<ForumListPage> {
   Forums forums = Forums();
 
   late dynamic theme;
-  Icon customIcon = const Icon(Icons.search);
+  Icon customIcon = const Icon(Icons.search, size: 32,);
   bool isSearching = false;
 
   Future<void> updateData(String? query) async {
@@ -41,7 +43,6 @@ class _ForumListPageState extends State<ForumListPage> {
     theme = Theme.of(context);
     ListView listView = ListView.builder(
       itemCount: forums.forumList?.length ?? 0,
-      padding: const EdgeInsets.all(8),
       itemBuilder: (context, index) {
         DateTime startedAt = DateTime.parse(forums.forumList?[index].startedAt ?? '12122012');
         DateTime endedAt = DateTime.parse(forums.forumList?[index].endedAt ?? '12122012');
@@ -52,10 +53,11 @@ class _ForumListPageState extends State<ForumListPage> {
                   arguments: {"id": id});
             },
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 20),
+              padding: const EdgeInsets.only(bottom: 20, left: 24, right: 24),
               child: Container(
-                height: 350,
-                padding: const EdgeInsets.all(12),
+                height: 366,
+                width:  366,
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.black,
                   image: DecorationImage(
@@ -65,6 +67,12 @@ class _ForumListPageState extends State<ForumListPage> {
                       colorFilter: ColorFilter.mode(
                           Colors.black.withOpacity(0.5), BlendMode.dstATop)),
                   borderRadius: const BorderRadius.all(Radius.circular(16)),
+                  boxShadow: const [BoxShadow(
+                    color: Color(0x14000000),
+                    blurRadius: 12,
+                    offset: Offset(0, 0),
+                    spreadRadius: 0,
+                  ),],
                 ),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,10 +85,11 @@ class _ForumListPageState extends State<ForumListPage> {
                       Padding(
                         padding: const EdgeInsets.only(top: 8.0),
                         child: Container(
-                          padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
+                          height: 28,
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                           decoration: const BoxDecoration(
                             color: Colors.white54,
-                            borderRadius: BorderRadius.all(Radius.circular(100)),
+                            borderRadius: BorderRadius.all(Radius.circular(14)),
                           ),
                           child: Text(
                             "${DateFormat('dd.MM.yyyy').format(startedAt)} "
@@ -91,8 +100,9 @@ class _ForumListPageState extends State<ForumListPage> {
                       ),
                       const Spacer(),
                       Text(
+                        maxLines: 4,
                         textAlign: TextAlign.start,
-                        "${forums.forumList?[index].description.characters.take(150)}...",
+                        "${forums.forumList?[index].description}",
                         style: theme.textTheme.bodyMedium,
                       )
                     ]),
@@ -102,6 +112,8 @@ class _ForumListPageState extends State<ForumListPage> {
     );
 
     var appBar = AppBar(
+      toolbarHeight: 66,
+      titleSpacing: 24,
       automaticallyImplyLeading: false,
       backgroundColor: Theme.of(context).colorScheme.background,
       title: !isSearching
@@ -135,10 +147,10 @@ class _ForumListPageState extends State<ForumListPage> {
             onPressed: () {
               setState(() {
                 if (!isSearching) {
-                  customIcon = const Icon(Icons.clear);
+                  customIcon = const Icon(Icons.clear, size: 32,);
                   isSearching = true;
                 } else {
-                  customIcon = const Icon(Icons.search);
+                  customIcon = const Icon(Icons.search, size: 32,);
                   isSearching = false;
                   updateData(null);
                 }
@@ -150,8 +162,9 @@ class _ForumListPageState extends State<ForumListPage> {
             onPressed: () {
               Navigator.of(context).pushNamed("/QR");
             },
-            icon: const Icon(Icons.qr_code_scanner)
+            icon: const Icon(Icons.qr_code_scanner, size: 32,)
         ),
+        const Icon(Icons.save_alt, color: Colors.transparent, size: 14,),
       ],
     );
     return Scaffold(

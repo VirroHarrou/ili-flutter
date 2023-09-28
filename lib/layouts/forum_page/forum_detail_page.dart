@@ -51,72 +51,77 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                       : imageUrls
               ),
             ),
+
             Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  forum?.title ?? '',
-                  style: theme.textTheme.titleLarge)
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.pushNamed(context, "/QR");
-                    },
-                    icon: const Icon(Icons.view_in_ar, color: AppColors.white,),
-                    label: Text('Начать', style: theme.textTheme.headlineMedium),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(AppColors.buttonPrimary),
-                      fixedSize: MaterialStateProperty.all(const Size(180, 45))
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+              child: Column(
+                children: [
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                          forum?.title ?? '',
+                          style: theme.textTheme.titleLarge)
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 16),
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              Navigator.pushNamed(context, "/QR");
+                            },
+                            icon: const Icon(Icons.view_in_ar, color: AppColors.white,),
+                            label: Text('Начать', style: theme.textTheme.headlineMedium),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(AppColors.buttonPrimary),
+                              fixedSize: MaterialStateProperty.all(const Size(175, 45)),
+
+                            ),
+                          ),
+                        ),
+                        OutlinedButton.icon(
+                          onPressed: () {},
+                          icon: const Icon(Icons.map_outlined, color: AppColors.black,),
+                          label: Text('Карта', style: theme.textTheme.headlineLarge),
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(AppColors.buttonSecondary),
+                              fixedSize: MaterialStateProperty.all(const Size(175, 45))
+                          ),
+                        )
+                      ],
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: OutlinedButton.icon(
-                    onPressed: null,
-                    icon: const Icon(Icons.map_outlined, color: AppColors.black,),
-                    label: Text('Карта', style: theme.textTheme.headlineLarge),
-                    style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(AppColors.buttonSecondary),
-                        fixedSize: MaterialStateProperty.all(const Size(180, 45))
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5),
+                    child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Text('Описание', style: theme.textTheme.labelMedium,)
                     ),
                   ),
-                )
-              ],
-            ),
-            Align(
-              alignment: const Alignment(-0.95, 0.0),
-              child: Text('Описание', style: theme.textTheme.labelMedium,)
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Text(forum?.description ?? '', style: theme.textTheme.bodySmall)
+                  Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(forum?.description ?? '', style: theme.textTheme.bodySmall)
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 5),
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('Даты проведения', style: theme.textTheme.labelMedium,)
+                    ),
+                  ),
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                          "${DateFormat('dd.MM.yyyy').format(startedAt)} -"
+                              " ${DateFormat('dd.MM.yyyy').format(endedAt)}",
+                          style: theme.textTheme.bodySmall)),
+                ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 12, 8, 4),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text('Даты проведения', style: theme.textTheme.labelMedium,)
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
-              child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                      "${DateFormat('dd.MM.yyyy').format(startedAt)} -"
-                          " ${DateFormat('dd.MM.yyyy').format(endedAt)}",
-                      style: theme.textTheme.bodySmall)),
             ),
           ],
         ),

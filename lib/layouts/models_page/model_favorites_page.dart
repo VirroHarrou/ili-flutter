@@ -19,7 +19,7 @@ class _ModelFavoritesPageState extends State<ModelFavoritesPage> {
 
   bool isSearching = false;
   List<Model> models = <Model>[];
-  Icon customIcon = const Icon(Icons.search);
+  Icon customIcon = const Icon(Icons.search, size: 32,);
 
   @override
   void initState() {
@@ -43,6 +43,8 @@ class _ModelFavoritesPageState extends State<ModelFavoritesPage> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var appBar = AppBar(
+      titleSpacing: 25,
+      toolbarHeight: 66,
       automaticallyImplyLeading: false,
       backgroundColor: Theme.of(context).colorScheme.background,
       title: !isSearching
@@ -75,140 +77,136 @@ class _ModelFavoritesPageState extends State<ModelFavoritesPage> {
             onPressed: () {
               setState(() {
                 if (!isSearching) {
-                  customIcon = const Icon(Icons.clear);
+                  customIcon = const Icon(Icons.clear, size: 32,);
                   isSearching = true;
                 } else {
-                  customIcon = const Icon(Icons.search);
+                  customIcon = const Icon(Icons.search, size: 32,);
                   isSearching = false;
                   _updateData(null);
                 }
               });
             },
             icon: customIcon),
+        const Icon(Icons.save_alt, color: Colors.transparent, size: 14,),
       ],
     );
-    ListView listView = ListView.separated(
+    ListView listView = ListView.builder(
       itemCount: models.length,
-      padding: const EdgeInsets.all(8),
-      separatorBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.only(
-            top: 10,
-            left: 6,
-            right: 6,
-            bottom: 10,
-          ),
-          child: Container(
-            height: 1,
-            color: const Color(0xAAcccccc),
-          ),
-        );
-      },
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 24),
       itemBuilder: (context, index) {
         var model = models[index];
         DateTime startedAt = DateTime.parse(model.startedAt!);
         DateTime endedAt = DateTime.parse(model.endedAt!);
-        return InkWell(
-          highlightColor: Colors.white,
-            onTap: () {
-              Navigator.pushNamed(context, "/ar_page", arguments: model);
-            },
-            child: Card(
-              color: AppColors.white,
-              elevation: 0,
-              child: Column(
-                children: [
-                  Row(
-                    children:[
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            image: NetworkImage(model.forumLogoUrl!),
-                            fit: BoxFit.cover,
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12.0),
+          child: InkWell(
+            highlightColor: Colors.white,
+              onTap: () {
+                Navigator.pushNamed(context, "/ar_page", arguments: model);
+              },
+              child: Card(
+                color: AppColors.white,
+                elevation: 0,
+                child: Column(
+                  children: [
+                    Row(
+                      children:[
+                        Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(model.forumLogoUrl!),
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: const BorderRadius.all(Radius.circular(12)),
                           ),
-                          borderRadius: const BorderRadius.all(Radius.circular(12)),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
+                              child: Text(model.forumTitle!, style: theme.textTheme.headlineLarge),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16.0),
+                              child: Text(
+                                '${DateFormat('dd.MM.yyyy').format(startedAt)} -'
+                                    ' ${DateFormat('dd.MM.yyyy').format(endedAt)}',
+                                style: theme.textTheme.labelMedium,),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      height: 320,
+                      width: 366,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: NetworkImage(
+                                model.logoUrl as String),
+                            fit: BoxFit.cover,
+                            colorFilter: ColorFilter.mode(
+                                Colors.black.withOpacity(0.7), BlendMode.dstATop)),
+                        borderRadius: const BorderRadius.all(Radius.circular(16)),
+                        gradient: LinearGradient(
+                          begin: const Alignment(-0.00, 1.00),
+                          end: const Alignment(0, -1),
+                          colors: [Colors.black, Colors.black.withOpacity(0.7781251072883606), Colors.black.withOpacity(0.6567537784576416), Colors.black.withOpacity(0)],
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Stack(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0, bottom: 8.0),
-                            child: Text(model.forumTitle!, style: theme.textTheme.headlineLarge),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: Text(model.title ?? '', style: theme.textTheme.titleMedium),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Text(
-                              '${DateFormat('dd.MM.yyyy').format(startedAt)} -'
-                                  ' ${DateFormat('dd.MM.yyyy').format(endedAt)}',
-                              style: theme.textTheme.labelMedium,),
+                          Align(
+                            alignment: const Alignment(0.95, -0.9),
+                            child: FloatingActionButton(
+                              onPressed: (){
+                                likeModelAsync(model.id!);
+                                setState(() {
+                                  if(model.like!){
+                                    model.like = false;
+                                  } else {
+                                    model.like = true;
+                                  }
+                                });
+                              },
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
+                              backgroundColor: const Color.fromRGBO(255, 255, 255, 0.4),
+                              hoverColor: const Color.fromRGBO(255, 255, 255, 0.4),
+                              hoverElevation: 0,
+                              child: model.like ?? true
+                                ? const Icon(Icons.favorite)
+                                : const Icon(Icons.favorite_border_sharp),
+                            )
                           )
                         ],
                       )
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  Container(
-                    height: 300,
-                    padding: const EdgeInsets.all(7.5),
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      image: DecorationImage(
-                          image: NetworkImage(
-                              model.logoUrl as String),
-                          fit: BoxFit.cover,
-                          colorFilter: ColorFilter.mode(
-                              Colors.black.withOpacity(0.7), BlendMode.dstATop)),
-                      borderRadius: const BorderRadius.all(Radius.circular(12)),
                     ),
-                    child: Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Text(model.title ?? '', style: theme.textTheme.titleMedium),
-                        ),
-                        Align(
-                          alignment: const Alignment(0.95, -0.9),
-                          child: FloatingActionButton(
-                            onPressed: (){
-                              likeModelAsync(model.id!);
-                              setState(() {
-                                if(model.like!){
-                                  model.like = false;
-                                } else {
-                                  model.like = true;
-                                }
-                              });
-                            },
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
-                            backgroundColor: const Color.fromRGBO(255, 255, 255, 0.4),
-                            hoverColor: const Color.fromRGBO(255, 255, 255, 0.4),
-                            hoverElevation: 0,
-                            child: model.like ?? true
-                              ? const Icon(Icons.favorite)
-                              : const Icon(Icons.favorite_border_sharp),
-                          )
-                        )
-                      ],
-                    )
-                  ),
-                ],
-              ),
-            )
+                  ],
+                ),
+              )
+          ),
         );
       },
     );
     return Scaffold(
       appBar: appBar,
       body:
-      AppSettings.isLogin ?
-        models.isNotEmpty ?
-          listView : generateDataEmpty(context, "Сохраняйте понравившиеся 3D-модели\nи возвращайтесь к ним в любое время")
+      AppSettings.isLogin && !AppSettings.isNoName
+          ? models.isNotEmpty
+            ? listView
+          : generateDataEmpty(context, "Сохраняйте понравившиеся 3D-модели\nи возвращайтесь к ним в любое время")
         : generateNotAvailable(context),
     );
   }

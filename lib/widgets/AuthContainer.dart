@@ -72,6 +72,11 @@ class _AuthContainerState extends State<AuthContainer> {
               onChanged: (str) {
                 email = str;
               },
+              onEditingComplete: () {
+                setState(() {
+                  isBadEmail = false;
+                });
+              },
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 hintText: "Электронная почта",
@@ -94,6 +99,12 @@ class _AuthContainerState extends State<AuthContainer> {
             child: TextField(
               onChanged: (str) {
                 password = str;
+                isBadRequest = false;
+              },
+              onEditingComplete: () {
+                setState(() {
+                  isBadRequest = false;
+                });
               },
               style: isBadRequest ? theme.textTheme.headlineSmall : theme.textTheme.bodySmall,
               obscureText: !isVisiblePassword,
@@ -134,6 +145,11 @@ class _AuthContainerState extends State<AuthContainer> {
               child: TextField(
                 onChanged: (str) {
                   passwordRepeat = str;
+                },
+                onEditingComplete: () {
+                  setState(() {
+                    isBadPassword = false;
+                  });
                 },
                 style: isBadPassword && !isLogin ? theme.textTheme.headlineSmall : theme.textTheme.bodySmall,
                 obscureText: !isVisibleRepeatPassword,
@@ -283,9 +299,11 @@ class _AuthContainerState extends State<AuthContainer> {
             var data = AppSettings().parseJwt(AppSettings.authToken);
             User.email = data["email"];
             if(AppSettings.authToken != ''){
+              AppSettings.isNoName = false;
               SharedPreferences.getInstance().then((storage) {
                 storage.setString("authUserToken", AppSettings.authToken);
                 storage.setBool("isLogin", true);
+                storage.setBool("isNoName", false);
                 storage.setString("userEmail", User.email!);
               });
               AppSettings.isLogin = true;
@@ -338,6 +356,25 @@ class _AuthContainerState extends State<AuthContainer> {
         });
         return;
       }
+      if(AppSettings.isNoName){
+        tryUpdate(email, password).then((value) {
+          if(value.type != ResponseType.success){
+            setState(() {
+              errorMessage = 'Пользователь уже существует';
+            });
+          } else {
+            AppSettings.authToken = value.data!;
+            User.email = AppSettings().parseJwt(AppSettings.authToken)['email'];
+            SharedPreferences.getInstance().then((storage) {
+              storage.setString("authUserToken", AppSettings.authToken);
+              storage.setBool("isLogin", true);
+              storage.setBool("isNoName", false);
+              storage.setString("userEmail", User.email!);
+            });
+          }
+        });
+        return;
+      }
       var result = tryRegister(email, password);
       result.then((value) {
         if(value.type != ResponseType.success){
@@ -352,6 +389,7 @@ class _AuthContainerState extends State<AuthContainer> {
             SharedPreferences.getInstance().then((storage) {
               storage.setString("authUserToken", AppSettings.authToken);
               storage.setBool("isLogin", true);
+              storage.setBool("isNoName", false);
               storage.setString("userEmail", User.email!);
             });
             AppSettings.isLogin = true;

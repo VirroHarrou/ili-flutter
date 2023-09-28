@@ -62,6 +62,24 @@ Future<void> tryDeleteUser() async {
       ));
 }
 
+Future<JwtResponse> tryUpdate(String email, String password) async {
+  final connectionString = "${AppSettings.baseUri}api/1.0/auth/signup";
+  Dio dio = Dio();
+  var response = await dio.post(connectionString, data: {
+    "userName": email,
+    "email": email,
+    "password": password,
+  },
+      options: Options(
+        validateStatus: (status) => status! < 500,
+        followRedirects: false,
+      ));
+  if (response.statusCode == 200) {
+
+  }
+  return JwtResponse(ResponseType.bad, '');
+}
+
 Future<JwtResponse> tryCreateNoNameUser() async {
   //Todo: сделать с проверкой пароля
   final connectionString = "${AppSettings.baseUri}api/1.0/auth/noname";

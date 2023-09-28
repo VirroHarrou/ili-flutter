@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tavrida_flutter/main.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
+import 'package:tavrida_flutter/repositories/user/user_repository.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -34,12 +36,20 @@ class _SplashScreenState extends State<SplashScreen> {
     AppSettings.isWarning = storage.getBool('isWarning') ?? true;
     AppSettings.authToken = storage.getString('authUserToken') ?? '';
     AppSettings.isLogin = storage.getBool('isLogin') ?? false;
+    AppSettings.isNoName = storage.getBool('isNoName') ?? true;
     User.email = storage.getString('userEmail');
 
-    if(AppSettings.isLogin){
-      Navigator.of(context).pushNamedAndRemoveUntil("/home", (r) => false);
-    } else {
-      Navigator.pushNamedAndRemoveUntil(context, "/auth", (r) => false);
+    if(AppSettings.isNoName && AppSettings.isLogin == false){
+      tryCreateNoNameUser().then((response) {
+        AppSettings.authToken = response.data ?? '';
+        AppSettings.isLogin = true;
+
+        storage.setBool('isLogin', true);
+        storage.setString('authUserToken', AppSettings.authToken);
+        storage.setBool('isNoName', true);
+      });
     }
+
+    Navigator.of(context).pushNamedAndRemoveUntil("/QR", (r) => false);
   }
 }
