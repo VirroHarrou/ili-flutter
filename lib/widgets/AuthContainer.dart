@@ -185,7 +185,13 @@ class _AuthContainerState extends State<AuthContainer> {
               ),
               child: Text(
                 isLogin ? "Войти" : "Продолжить",
-                style: theme.textTheme.headlineMedium,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontFamily: 'Open Sans',
+                  fontWeight: FontWeight.w600,
+                  height: 0,
+                ),
               ),
           ),
     ];

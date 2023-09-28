@@ -17,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/models/GetModel.dart';
 import 'package:tavrida_flutter/repositories/models/LikeModel.dart';
@@ -36,16 +35,21 @@ class ARPage extends StatefulWidget {
   State<StatefulWidget> createState() => _ARPageState();
 }
 
-class _ARPageState extends State<ARPage> {
+class _ARPageState extends State<ARPage> with AutomaticKeepAliveClientMixin {
   late Model model;
   final _httpClient = HttpClient();
   bool _isFirstBuild = true;
+  bool _isShowMessage = false;
+  bool _showIcon = false;
+  double _wightContainer = 0;
+  String _messageText = '';
   double _scale = 1.0;
+
   var talker = TalkerWidget(
     height: 50,
     wight: 250,
-    duration: 10,
-    text: 'Нажмите на поверхность\nдля просмотра модели',
+    duration: 0,
+    text: '',
     icon: const Icon(Icons.touch_app),
   );
 
@@ -58,13 +62,8 @@ class _ARPageState extends State<ARPage> {
 
   @override
   void dispose() {
-    super.dispose();
     arSessionManager!.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
+    super.dispose();
   }
 
   @override
@@ -73,7 +72,39 @@ class _ARPageState extends State<ARPage> {
       model = ModalRoute.of(context)?.settings.arguments as Model;
       _updateModel();
       _isFirstBuild = false;
+      _isShowMessage = true;
+      _messageText = 'Поводите по горизонтальной поверхности,\nчтобы определить плоскость';
+      Future.delayed(const Duration(milliseconds: 300), () {
+        setState(() {
+          _isShowMessage = true;
+          _wightContainer = 414;
+          _messageText = 'Поводите по горизонтальной поверхности,\nчтобы определить плоскость';
+        });
+        Future.delayed(const Duration(seconds: 6),() {
+          setState(() {
+            _wightContainer = 0;
+          });
+          Future.delayed(const Duration(milliseconds: 400), () {
+            setState(() {
+              _wightContainer = 414;
+              _showIcon = true;
+              _messageText = "Нажмите на горизонтальную поверхность и\nдождитесь появления 3D-модели";
+            });
+            Future.delayed(const Duration(seconds: 6), () {
+              setState(() {
+                _wightContainer = 0;
+              });
+              Future.delayed(const Duration(seconds: 400), () {
+                setState(() {
+                  _isShowMessage = false;
+                });
+              });
+            });
+          });
+        });
+      });
     }
+
     var rightButtons = [
       Padding(
         padding: const EdgeInsets.only(
@@ -187,6 +218,52 @@ class _ARPageState extends State<ARPage> {
       )
     ];
 
+    if (_isShowMessage) {
+      var container = AnimatedContainer(
+        width: _wightContainer,
+        height: 155,
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        clipBehavior: Clip.antiAlias,
+        decoration: ShapeDecoration(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        duration: const Duration(milliseconds: 300),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Align(
+              alignment: Alignment.topCenter,
+              child: SizedBox(
+                child: Text(
+                  _messageText,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontFamily: 'Open Sans',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            _showIcon? Align(
+              alignment: Alignment.bottomCenter,
+              child: SvgPicture.asset("assets/icons/horizon-alt.svg", height: 75,),
+            ) : const Align(),
+          ],
+        ),
+      );
+      items.add(Align(
+        alignment: const Alignment(0, -0.5),
+        child: container,
+      ));
+    }
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -216,9 +293,11 @@ class _ARPageState extends State<ARPage> {
           builder: (_) {
             DecorationImage decorationImage = DecorationImage(image: image, fit: BoxFit.cover);
             return Dialog(
+              insetPadding: EdgeInsets.zero,
               backgroundColor: Colors.transparent,
-              child: FractionallySizedBox(
-                heightFactor: 0.7,
+              child: SizedBox(
+                height: 650,
+                width: 374,
                 child: Stack(
                     children: [
                       Container(
@@ -233,28 +312,49 @@ class _ARPageState extends State<ARPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.only(left: 20.0, bottom: 20, right: 7),
                               child: OutlinedButton.icon(
                                 onPressed: () => Navigator.of(context).pop(),
-                                icon: const Icon(Icons.repeat, color: AppColors.black,),
-                                label: Text('Переснять', style: theme.textTheme.bodySmall),
+                                icon: SvgPicture.asset("assets/icons/restart-fill.svg"),
+                                label: const Text(
+                                    'Переснять',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                    color: Color(0xFF333333),
+                                    fontSize: 16,
+                                    fontFamily: 'Open Sans',
+                                    fontWeight: FontWeight.w500,
+                                    height: 0.09,
+                                  ),
+                                ),
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(AppColors.buttonSecondary),
-                                    fixedSize: MaterialStateProperty.all(const Size(160, 35))
+                                    fixedSize: MaterialStateProperty.all(const Size(160, 48))
                                 ),
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.only(left: 7, bottom: 20, right: 20),
                               child: ElevatedButton.icon(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, "/QR");
+                                  saveImage(image);
+                                  Navigator.of(context).pop();
                                 },
                                 icon: const Icon(Icons.save_alt, color: AppColors.white,),
-                                label: Text('Сохранить', style: theme.textTheme.bodyMedium),
+                                label: const Text(
+                                  'Сохранить',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontFamily: 'Open Sans',
+                                    fontWeight: FontWeight.w500,
+                                    height: 0.09,
+                                  ),
+                                ),
                                 style: ButtonStyle(
                                     backgroundColor: MaterialStateProperty.all(AppColors.buttonPrimary),
-                                    fixedSize: MaterialStateProperty.all(const Size(160, 35))
+                                    fixedSize: MaterialStateProperty.all(const Size(160, 48))
                                 ),
                               ),
                             ),
@@ -375,7 +475,7 @@ class _ARPageState extends State<ARPage> {
 
     this.arSessionManager!.onInitialize(
       showFeaturePoints: false,
-      showPlanes: true,
+      showPlanes: false,
       customPlaneTexturePath: "Images/triangle.png",
       showWorldOrigin: false,
       handlePans: true,
@@ -504,4 +604,7 @@ class _ARPageState extends State<ARPage> {
       element.scale = Vector3(0.2, 0.2, 0.2) * _scale;
     }
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
