@@ -46,7 +46,7 @@ class _QRViewExampleState extends State<QRViewExample> {
         backgroundColor: AppColors.grey,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
         onPressed: () {
-          Navigator.of(context).pop();
+          Navigator.of(context).pushNamed("/home");
         },
         child: const Icon(Icons.arrow_back),
       ),
@@ -64,9 +64,8 @@ class _QRViewExampleState extends State<QRViewExample> {
             ),
           ),
           Align(
-            alignment: const Alignment(0.0,0.2),
             child: SizedBox(
-              height: 450,
+              height: 350,
               child: Column(
                 children: [
                   Align(
@@ -76,77 +75,92 @@ class _QRViewExampleState extends State<QRViewExample> {
                   const Spacer(),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: Column(
-                      children: [
-                        Text("или введите код модели", style: theme.textTheme.bodyMedium,),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 4.0,
-                            left: 50.0,
-                            right: 50.0,
-                          ),
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: "••••",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide: BorderSide.none,
-                              ),
-                              filled: true,
-                              fillColor: const Color(0xAAFFFFFF),
-                              counter: Container(),
-                            ),
-                            style: TextStyle(
-                                color: !isBadRequest ? AppColors.black : AppColors.red,
-                                fontSize: 30,
-                                height: 1,
-                                textBaseline: TextBaseline.ideographic,
-                                letterSpacing: 16.0,
-                                fontWeight: FontWeight.w500
-                            ),
-                            textAlign: TextAlign.center,
-                            maxLength: 4,
-                            keyboardType: TextInputType.number,
-                            onChanged: (input) {
-                              if(input.length == 4) {
-                                code = int.tryParse(input) ?? 0;
-                              }
-                              if (code != 0){
-                                var response = getModelAsync(code, null);
-                                response.then((value) {
-                                  if(value == null || value.id == null){
-                                    isBadRequest = true;
-                                  } else {
-                                    isBadRequest = false;
-                                    Navigator.pushNamed(context, "/ar_page", arguments: value);
-                                  }
-                                  setState(() {});
-                                });
-                              }
-                            },
-                            onSubmitted: (input) {
-                              if(input.length == 4) {
-                                code = int.tryParse(input) ?? 0;
-                              }
-                              if (code != 0){
-                                var response = getModelAsync(code, null);
-                                response.then((value) {
-                                  if(value == null || value.id == null){
-                                    isBadRequest = true;
-                                  } else {
-                                    isBadRequest = false;
-                                    Navigator.pushNamed(context, "/ar_page", arguments: value);
-                                  }
-                                  setState(() {});
-                                });
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                    child: Text("или введите код модели", style: theme.textTheme.bodyMedium,),
                   ),
                 ],
+              ),
+            ),
+          ),
+          Align(
+            alignment: const Alignment(0, 0.65),
+            child: SizedBox(
+              width: scanArea,
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: "••••",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: AppColors.grey,
+                  counter: const SizedBox(height: 0, width: 0,),
+                ),
+                style: TextStyle(
+                    color: !isBadRequest ? AppColors.black : AppColors.red,
+                    fontSize: 30,
+                    height: 1,
+                    textBaseline: TextBaseline.ideographic,
+                    letterSpacing: 16.0,
+                    fontWeight: FontWeight.w500
+                ),
+                textAlign: TextAlign.center,
+                maxLength: 4,
+                keyboardType: TextInputType.number,
+                onChanged: (input) {
+                  if(input.length == 4) {
+                    code = int.tryParse(input) ?? 0;
+                  }
+                  if (code != 0 && input.length == 4){
+                    var response = getModelAsync(code, null);
+                    response.then((value) {
+                      if(value == null || value.id == null){
+                        isBadRequest = true;
+                      } else {
+                        isBadRequest = false;
+                        Navigator.pushNamed(context, "/ar_page", arguments: value);
+                      }
+                      setState(() {});
+                    });
+                  }
+                },
+                onSubmitted: (input) {
+                  if(input.length == 4) {
+                    code = int.tryParse(input) ?? 0;
+                  }
+                  if (code != 0){
+                    var response = getModelAsync(code, null);
+                    response.then((value) {
+                      if(value == null || value.id == null){
+                        isBadRequest = true;
+                      } else {
+                        isBadRequest = false;
+                        Navigator.pushNamed(context, "/ar_page", arguments: value);
+                      }
+                      setState(() {});
+                    });
+                  }
+                },
+              ),
+            ),
+          ),
+          const Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 30.0),
+              child: SizedBox(
+                width: 334,
+                child: Text(
+                  'Если вам нет 18, используйте приложение в присутствии родителей. Cледите за своим окружением, AR может искажать объекты.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontFamily: 'Open Sans',
+                    fontWeight: FontWeight.w400,
+                    height: 1.3,
+                  ),
+                ),
               ),
             ),
           )
