@@ -17,7 +17,6 @@ class _QRViewExampleState extends State<QRViewExample> {
   bool isBadRequest = false;
   bool isLocked = false;
   int code = 0;
-  bool onInput = false;
 
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   Barcode? result;
@@ -42,22 +41,32 @@ class _QRViewExampleState extends State<QRViewExample> {
         MediaQuery.of(context).size.height < 400)
         ? 150.0
         : 300.0;
-    var layout = Stack(
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.grey,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: const Icon(Icons.arrow_back),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+      body: Stack(
         children: <Widget>[
           QRView(
             key: qrKey,
             onQRViewCreated: _onQRViewCreated,
             overlay: QrScannerOverlayShape(
               borderColor: Colors.grey,
-              borderRadius: 16,
+              borderRadius: 10,
               cutOutSize: scanArea,
               overlayColor: const Color(0xBB000000),
             ),
           ),
           Align(
-            alignment: const Alignment(0.0,0.0),
+            alignment: const Alignment(0.0,0.2),
             child: SizedBox(
-              height: 370,
+              height: 450,
               child: Column(
                 children: [
                   Align(
@@ -67,99 +76,82 @@ class _QRViewExampleState extends State<QRViewExample> {
                   const Spacer(),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: Text("или введите код модели", style: theme.textTheme.bodyMedium,),
+                    child: Column(
+                      children: [
+                        Text("или введите код модели", style: theme.textTheme.bodyMedium,),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            top: 4.0,
+                            left: 50.0,
+                            right: 50.0,
+                          ),
+                          child: TextField(
+                            decoration: InputDecoration(
+                              hintText: "••••",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide.none,
+                              ),
+                              filled: true,
+                              fillColor: const Color(0xAAFFFFFF),
+                              counter: Container(),
+                            ),
+                            style: TextStyle(
+                                color: !isBadRequest ? AppColors.black : AppColors.red,
+                                fontSize: 30,
+                                height: 1,
+                                textBaseline: TextBaseline.ideographic,
+                                letterSpacing: 16.0,
+                                fontWeight: FontWeight.w500
+                            ),
+                            textAlign: TextAlign.center,
+                            maxLength: 4,
+                            keyboardType: TextInputType.number,
+                            onChanged: (input) {
+                              if(input.length == 4) {
+                                code = int.tryParse(input) ?? 0;
+                              }
+                              if (code != 0){
+                                var response = getModelAsync(code, null);
+                                response.then((value) {
+                                  if(value == null || value.id == null){
+                                    isBadRequest = true;
+                                  } else {
+                                    isBadRequest = false;
+                                    Navigator.pushNamed(context, "/ar_page", arguments: value);
+                                  }
+                                  setState(() {});
+                                });
+                              }
+                            },
+                            onSubmitted: (input) {
+                              if(input.length == 4) {
+                                code = int.tryParse(input) ?? 0;
+                              }
+                              if (code != 0){
+                                var response = getModelAsync(code, null);
+                                response.then((value) {
+                                  if(value == null || value.id == null){
+                                    isBadRequest = true;
+                                  } else {
+                                    isBadRequest = false;
+                                    Navigator.pushNamed(context, "/ar_page", arguments: value);
+                                  }
+                                  setState(() {});
+                                });
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ),
-          Align(
-            alignment: const Alignment(0, 0.65),
-            child: SizedBox(
-              width: 300,
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "••••",
-                  hintStyle: onInput ? const TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.black,
-                  ) : const TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white54,
-                  ),
-                  border: UnderlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  counter: const SizedBox(
-                    height: 0,
-                    width: 0,
-                  ),
-                  filled: true,
-                  fillColor: onInput ? AppColors.grey: const Color(0x3394A1B2),
-                ),
-                style: TextStyle(
-                    color: !isBadRequest ? AppColors.black : AppColors.red,
-                    fontSize: 30,
-                    textBaseline: TextBaseline.ideographic,
-                    letterSpacing: 16.0,
-                    fontWeight: FontWeight.w500
-                ),
-                textAlign: TextAlign.center,
-                maxLength: 4,
-                keyboardType: TextInputType.number,
-                onSubmitted: (input) {
-                  if(input.length == 4) {
-                    code = int.tryParse(input) ?? 0;
-                  }
-                  if (code != 0){
-                    var response = getModelAsync(code, null);
-                    response.then((value) {
-                      if(value == null || value.id == null){
-                        isBadRequest = true;
-                        onInput = false;
-                      } else {
-                        isBadRequest = false;
-                        Navigator.pushNamed(context, "/ar_page", arguments: value);
-                      }
-                      setState(() {});
-                    });
-                  }
-                },
-              ),
-            ),
-          ),
-          const Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 30, horizontal: 40),
-              child: Text('Если вам нет 18, используйте приложение в присутствии родителей. Cледите за своим окружением, AR может искажать объекты.',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontFamily: 'Open Sans',
-                  fontWeight: FontWeight.w400,
-                  height: 1.5,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
           )
         ],
-      );
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.grey,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
-        onPressed: () {
-          Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
-        },
-        child: const Icon(Icons.arrow_back),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      body: layout,
     );
   }
 
