@@ -2,7 +2,7 @@ name: tavrida_flutter
 description: A new Flutter project.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.1+2
+version: 1.0.2+3
 
 environment:
   sdk: '>=3.1.0 <4.0.0'
@@ -44,8 +44,8 @@ flutter:
 
 flutter_launcher_icons:
   android: "launcher_icon"
-  adaptive_icon_background: "#c090fe"
+  adaptive_icon_background: "#560064"
   ios: true
-  adaptive_icon_foreground: "assets/icon_ili.png"
-  image_path: "assets/icon_ili.png"
+  adaptive_icon_foreground: "assets/logo.png"
+  image_path: "assets/logo.png"
   min_sdk_android: 21 # android min sdk min:16, default 21

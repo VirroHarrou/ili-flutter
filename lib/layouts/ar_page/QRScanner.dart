@@ -37,10 +37,14 @@ class _QRViewExampleState extends State<QRViewExample> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    double scanArea = (MediaQuery.of(context).size.width < 400 ||
-        MediaQuery.of(context).size.height < 400)
-        ? 150.0
-        : 300.0;
+    final wight = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    double scanArea = (wight < 400 || height < 400)
+        ? (wight < 300 || height < 300)
+          ? 150
+          : 225
+        : 300;
+    bool isKeyboardOff = MediaQuery.of(context).viewInsets.bottom == 0;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.grey,
@@ -65,7 +69,7 @@ class _QRViewExampleState extends State<QRViewExample> {
           ),
           Align(
             child: SizedBox(
-              height: 350,
+              height: scanArea * 1.2,
               child: Column(
                 children: [
                   Align(

@@ -6,7 +6,7 @@ import 'package:tavrida_flutter/layouts/splash_screen_page.dart';
 import 'package:tavrida_flutter/layouts/ar_page/QRScanner.dart';
 
 final routes = {
-  "/" : (context) => SplashScreen(),
+  "/" : (context) => const SplashScreen(),
   "/auth" : (context) => const AuthPage(),
   "/ForumDetail" : (context) => const ForumDetailPage(),
   "/ar_page" : (context) => ARPage(),
