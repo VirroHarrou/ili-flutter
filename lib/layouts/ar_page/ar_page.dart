@@ -26,6 +26,7 @@ import 'package:flutter/services.dart';
 import 'package:tavrida_flutter/widgets/TalkerWidget.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 import 'package:path/path.dart' as Path;
+import 'dart:io' show Platform;
 
 
 class ARPage extends StatefulWidget {
@@ -35,7 +36,7 @@ class ARPage extends StatefulWidget {
   State<StatefulWidget> createState() => _ARPageState();
 }
 
-class _ARPageState extends State<ARPage> with AutomaticKeepAliveClientMixin {
+class _ARPageState extends State<ARPage> {
   late Model model;
   final _httpClient = HttpClient();
   bool _isFirstBuild = true;
@@ -286,7 +287,6 @@ class _ARPageState extends State<ARPage> with AutomaticKeepAliveClientMixin {
 
   void onTakeScreenshot(){
     //Todo: переделать скриншот
-    var theme = Theme.of(context);
     arSessionManager!.snapshot().then((image) {
       showDialog(
           context: context,
@@ -474,6 +474,7 @@ class _ARPageState extends State<ARPage> with AutomaticKeepAliveClientMixin {
     this.arAnchorManager = arAnchorManager;
 
     this.arSessionManager!.onInitialize(
+      showAnimatedGuide: Platform.isAndroid,
       showFeaturePoints: false,
       showPlanes: false,
       customPlaneTexturePath: "Images/triangle.png",
@@ -514,11 +515,12 @@ class _ARPageState extends State<ARPage> with AutomaticKeepAliveClientMixin {
     }
     if (didAddAnchor!) {
       anchors.add(newAnchor);
+      final double scale = Platform.isAndroid ? 0.2 : 2;
       // Add note to anchor
       var newNode = ARNode(
           type: NodeType.fileSystemAppFolderGLB,
           uri: "${model.id}.glb",
-          scale: Vector3(0.2, 0.2, 0.2) * _scale,
+          scale: Vector3(scale, scale, scale) * _scale,
           position: Vector3(0.0, 0.0, 0.0),
           rotation: Vector4(1.0, 0.0, 0.0, 0.0));
       bool? didAddNodeToAnchor =
@@ -604,7 +606,4 @@ class _ARPageState extends State<ARPage> with AutomaticKeepAliveClientMixin {
       element.scale = Vector3(0.2, 0.2, 0.2) * _scale;
     }
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }

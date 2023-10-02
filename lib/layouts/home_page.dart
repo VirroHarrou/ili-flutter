@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tavrida_flutter/layouts/ar_page/QRScanner.dart';
 import 'package:tavrida_flutter/layouts/forum_page/view.dart';
 import 'package:tavrida_flutter/layouts/models_page/model_favorites_page.dart';
 import 'package:tavrida_flutter/layouts/profile_page/profile_page.dart';
@@ -39,7 +38,6 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     var navigationBar = Container(
-      height: 75,
       child: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
