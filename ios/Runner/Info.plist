@@ -46,8 +46,12 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-    <string></string>
+    <string>Разрешите использование камеры</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>en</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>This app needs access to location when open.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>This app needs access to location when open.</string>
 </dict>
 </plist>
