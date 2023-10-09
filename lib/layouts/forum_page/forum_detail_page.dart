@@ -5,6 +5,7 @@ import 'package:tavrida_flutter/main.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/forum/AddForumHistory.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForumDetail.dart';
+import 'package:tavrida_flutter/repositories/models/GetModel.dart';
 import 'package:tavrida_flutter/repositories/models/GetModelList.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
@@ -20,16 +21,20 @@ class ForumDetailPage extends StatefulWidget {
 class _ForumDetailPageState extends State<ForumDetailPage> {
   Forum? forum;
   Model? model;
+  bool isFirst = true;
   Map<dynamic, dynamic> arguments = <dynamic, dynamic>{};
 
   Future<void> updateData(String id) async {
     forum = await getForumDetailAsync(id);
     addForumHistoryAsync(id);
     setState(() {});
-    // getModelListAsync(id).then((modelListModel) {
-    //   var id = modelListModel?.models?.first.id;
-    //   return;
-    // });
+    String? idModel;
+    getModelListAsync(id).then((modelListModel) async {
+      idModel = modelListModel?.models?.first.id;
+      if (idModel == null) return;
+      model = await getModelAsync(null, idModel);
+      setState(() {});
+    });
   }
 
   @override
@@ -47,7 +52,10 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
     DateTime endedAt = DateTime.parse(forum?.endedAt ?? '12122012');
     arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
-    updateData(arguments['id'] ?? '');
+    if (isFirst) {
+      updateData(arguments['id'] ?? '');
+      isFirst = false;
+    }
     return Scaffold(
         body: SingleChildScrollView(
           child: Column(
@@ -207,6 +215,33 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                 " ${DateFormat('dd.MM.yyyy').format(endedAt)}",
                             style: theme.textTheme.bodySmall)
                     ),
+                    if (model == null) const Center() else Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(context, "/ar_page", arguments: model);
+                        },
+                        child: Container(
+                          height: 70,
+                          decoration: ShapeDecoration(
+                            color: const Color(0xFF333333),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.only(right: 10),
+                                child: Icon(Icons.view_in_ar, color: Colors.white, size: 32,)
+                              ),
+                              Text("Тестовая модель площадки", style: theme.textTheme.headlineMedium,),
+                            ],
+                          ),
+                        )
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -260,11 +295,11 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
               alignment: const Alignment(0.95, -0.97),
               child: FloatingActionButton(
                 onPressed: () => Navigator.pop(context),
-                elevation: 0,
+                elevation: 3,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
-                backgroundColor: Colors.black26,
-                hoverColor: Colors.black26,
-                hoverElevation: 0,
+                backgroundColor: Colors.white,
+                hoverColor: Colors.white,
+                hoverElevation: 3,
                 child: const Icon(Icons.clear),
               )
             ),
@@ -306,11 +341,11 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                     alignment: const Alignment(0.95, -0.97),
                     child: FloatingActionButton(
                       onPressed: () => Navigator.pop(context),
-                      elevation: 0,
+                      elevation: 3,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
-                      backgroundColor: Colors.black26,
-                      hoverColor: Colors.black26,
-                      hoverElevation: 0,
+                      backgroundColor: Colors.white,
+                      hoverColor: Colors.white,
+                      hoverElevation: 3,
                       child: const Icon(Icons.clear),
                     )
                 ),

@@ -16,7 +16,7 @@ class AuthContainer extends StatefulWidget{
 }
 
 class _AuthContainerState extends State<AuthContainer> {
-  bool isLogin = true;
+  bool isLogin = false;
   bool isBadEmail = false;
   bool isBadRequest = false;
   bool isBadPassword = false;
