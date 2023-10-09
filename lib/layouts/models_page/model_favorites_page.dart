@@ -153,7 +153,7 @@ class _ModelFavoritesPageState extends State<ModelFavoritesPage> {
                                 model.logoUrl as String),
                             fit: BoxFit.cover,
                             colorFilter: ColorFilter.mode(
-                                Colors.black.withOpacity(0.7), BlendMode.dstATop)),
+                                Colors.black.withOpacity(0.2), BlendMode.multiply)),
                         borderRadius: const BorderRadius.all(Radius.circular(16)),
                         gradient: LinearGradient(
                           begin: const Alignment(-0.00, 1.00),

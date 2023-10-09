@@ -25,11 +25,19 @@ class _CarouselImagesState extends State<CarouselImages> {
            itemBuilder: (context, index){
              return Container(
                decoration: BoxDecoration(
-                 color: AppColors.grey,
-                   image: DecorationImage(
+                 image: DecorationImage(
                      fit:BoxFit.cover,
                      image: NetworkImage(widget.imageUrls[index]),
-                   )
+                     colorFilter: ColorFilter.mode(
+                       Colors.black.withOpacity(0.2),
+                       BlendMode.multiply,
+                     )
+                 ),
+                 gradient: const LinearGradient(
+                   begin: Alignment(0.00, 1.00),
+                   end: Alignment(0, -1),
+                   colors: [Colors.black, Colors.transparent],
+                 ),
                ),
              );
            },

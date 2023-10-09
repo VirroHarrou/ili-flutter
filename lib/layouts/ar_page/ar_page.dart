@@ -286,7 +286,6 @@ class _ARPageState extends State<ARPage> {
   }
 
   void onTakeScreenshot(){
-    //Todo: переделать скриншот
     arSessionManager!.snapshot().then((image) {
       showDialog(
           context: context,

@@ -1,8 +1,11 @@
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:tavrida_flutter/main.dart';
+import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/forum/AddForumHistory.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForumDetail.dart';
+import 'package:tavrida_flutter/repositories/models/GetModelList.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:tavrida_flutter/widgets/ImagesCarousel.dart';
@@ -16,12 +19,17 @@ class ForumDetailPage extends StatefulWidget {
 
 class _ForumDetailPageState extends State<ForumDetailPage> {
   Forum? forum;
+  Model? model;
   Map<dynamic, dynamic> arguments = <dynamic, dynamic>{};
 
   Future<void> updateData(String id) async {
     forum = await getForumDetailAsync(id);
     addForumHistoryAsync(id);
     setState(() {});
+    // getModelListAsync(id).then((modelListModel) {
+    //   var id = modelListModel?.models?.first.id;
+    //   return;
+    // });
   }
 
   @override
@@ -41,89 +49,169 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
         <String, dynamic>{}) as Map;
     updateData(arguments['id'] ?? '');
     return Scaffold(
-        body: Column(
-          children: [
-            SizedBox(
-              height: 350,
-              child: CarouselImages(
-                  imageUrls: imageUrls.first == ''
-                      ? <String>[]
-                      : imageUrls
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: 350,
+                child: CarouselImages(
+                    imageUrls: imageUrls.first == ''
+                        ? <String>[]
+                        : imageUrls
+                ),
               ),
-            ),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
-              child: Column(
-                children: [
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                          forum?.title ?? '',
-                          style: theme.textTheme.titleLarge)
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(right: 16),
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              Navigator.pushNamed(context, "/QR");
-                            },
-                            icon: const Icon(Icons.view_in_ar, color: AppColors.white,),
-                            label: Text('Начать', style: theme.textTheme.headlineMedium),
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(AppColors.buttonPrimary),
-                              fixedSize: MaterialStateProperty.all(const Size(175, 45)),
-
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
+                child: Column(
+                  children: [
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                            forum?.title ?? '',
+                            style: theme.textTheme.titleLarge)
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 7,
+                            child: MaterialButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, "/QR");
+                              },
+                              padding: EdgeInsets.zero,
+                              child: Container(
+                                height: 48,
+                                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                                decoration: ShapeDecoration(
+                                  color: const Color(0xFF333333),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(28),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Spacer(),
+                                    Container(
+                                      width: 24,
+                                      height: 24,
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: const BoxDecoration(),
+                                      child: const Icon(Icons.view_in_ar_outlined, color: Colors.white,),
+                                    ),
+                                    const Spacer(),
+                                    const Text(
+                                      'Начать',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontFamily: 'Open Sans',
+                                        fontWeight: FontWeight.w600,
+                                        height: 0.09,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                  ],
+                                ),
+                              )
                             ),
                           ),
-                        ),
-                        OutlinedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.map_outlined, color: AppColors.black,),
-                          label: Text('Карта', style: theme.textTheme.headlineLarge),
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(AppColors.buttonSecondary),
-                              fixedSize: MaterialStateProperty.all(const Size(175, 45))
+                          const Spacer(),
+                          Expanded(
+                            flex: 7,
+                            child: MaterialButton(
+                                onPressed: onMapTapped,
+                                padding: EdgeInsets.zero,
+                                child:Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        height: 48,
+                                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                        decoration: ShapeDecoration(
+                                          color: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            side: const BorderSide(width: 1, color: Color(0xFF333333)),
+                                            borderRadius: BorderRadius.circular(28),
+                                          ),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Container(
+                                              width: 24,
+                                              height: 24,
+                                              clipBehavior: Clip.antiAlias,
+                                              decoration: const BoxDecoration(),
+                                              child: const Icon(Icons.map_outlined, color: Colors.black87,)
+                                            ),
+                                            const SizedBox(width: 10),
+                                            const Text(
+                                              'Карта',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                color: Color(0xFF333333),
+                                                fontSize: 16,
+                                                fontFamily: 'Open Sans',
+                                                fontWeight: FontWeight.w600,
+                                                height: 0,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                            ),
                           ),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: Align(
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 5),
+                      child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text('Описание', style: theme.textTheme.labelMedium,)
+                      ),
+                    ),
+                    Align(
                         alignment: Alignment.topLeft,
-                        child: Text('Описание', style: theme.textTheme.labelMedium,)
+                        child: Text(forum?.description ?? '', style: theme.textTheme.bodySmall)
                     ),
-                  ),
-                  Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(forum?.description ?? '', style: theme.textTheme.bodySmall)
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20, bottom: 5),
-                    child: Align(
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20, bottom: 5),
+                      child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text('Даты проведения', style: theme.textTheme.labelMedium,)
+                      ),
+                    ),
+                    Align(
                         alignment: Alignment.centerLeft,
-                        child: Text('Даты проведения', style: theme.textTheme.labelMedium,)
+                        child: Text(
+                            "${DateFormat('dd.MM.yyyy').format(startedAt)} -"
+                                " ${DateFormat('dd.MM.yyyy').format(endedAt)}",
+                            style: theme.textTheme.bodySmall)
                     ),
-                  ),
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                          "${DateFormat('dd.MM.yyyy').format(startedAt)} -"
-                              " ${DateFormat('dd.MM.yyyy').format(endedAt)}",
-                          style: theme.textTheme.bodySmall)),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       floatingActionButton: FloatingActionButton(
@@ -137,6 +225,100 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
         hoverElevation: 0,
         child: const Icon(Icons.arrow_back),
       ),
+    );
+  }
+
+  void onMapTapped(){
+    //Todo: подправить логику в части errorDialog
+    var errorDialog = Dialog(
+      insetPadding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
+      child: SizedBox(
+        height: 600,
+        width: 350,
+        child: Stack(
+          children: [
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: 600,
+                width: 350,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(28),
+                  color: Colors.white,
+                ),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset("assets/icons/no_results_found_icon.svg", height: 128),
+                      Text("Изображение не загрузилось", style: Theme.of(context).textTheme.headlineLarge),
+                    ]
+                ),
+              ),
+            ),
+            Align(
+              alignment: const Alignment(0.95, -0.97),
+              child: FloatingActionButton(
+                onPressed: () => Navigator.pop(context),
+                elevation: 0,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
+                backgroundColor: Colors.black26,
+                hoverColor: Colors.black26,
+                hoverElevation: 0,
+                child: const Icon(Icons.clear),
+              )
+            ),
+          ],
+        ),
+      ),
+    );
+    showDialog(
+      context: context,
+      builder: (_) {
+        final urls = forum?.mapUrls as List<String>;
+        if(urls.isEmpty){
+          return errorDialog;
+        }
+        var imageUrl = forum?.mapUrls?.first;
+        var image = Image.network(imageUrl ?? '', errorBuilder: (context, exc, _) {
+          return errorDialog;
+        },);
+        return Dialog(
+          insetPadding: EdgeInsets.zero,
+          backgroundColor: Colors.transparent,
+          child: SizedBox(
+            height: 600,
+            width: 350,
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    height: 600,
+                    width: 350,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(28),
+                      color: Colors.white,
+                    ),
+                    child: image,
+                  ),),
+                Align(
+                    alignment: const Alignment(0.95, -0.97),
+                    child: FloatingActionButton(
+                      onPressed: () => Navigator.pop(context),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
+                      backgroundColor: Colors.black26,
+                      hoverColor: Colors.black26,
+                      hoverElevation: 0,
+                      child: const Icon(Icons.clear),
+                    )
+                ),
+              ],
+            ),
+          ),
+        );
+      }
     );
   }
 }
