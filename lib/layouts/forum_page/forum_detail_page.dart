@@ -224,19 +224,25 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                         child: Container(
                           height: 70,
                           decoration: ShapeDecoration(
-                            color: const Color(0xFF333333),
+                            color: Colors.transparent,
                             shape: RoundedRectangleBorder(
+                              side: const BorderSide(width: 1, color: Color(0xFF333333)),
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
-                          child: Row(
+                          child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Padding(
+                              Padding(
                                 padding: EdgeInsets.only(right: 10),
-                                child: Icon(Icons.view_in_ar, color: Colors.white, size: 32,)
+                                child: Icon(Icons.view_in_ar, color: Colors.black87, size: 32,)
                               ),
-                              Text("Тестовая модель площадки", style: theme.textTheme.headlineMedium,),
+                              Text("Тестовая 3D-модель", style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: "Open Sans",
+                              )),
                             ],
                           ),
                         )
