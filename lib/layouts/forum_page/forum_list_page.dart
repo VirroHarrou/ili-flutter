@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForums.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForumsSearch.dart';
 
@@ -62,7 +63,7 @@ class _ForumListPageState extends State<ForumListPage> {
                   color: Colors.black,
                   image: DecorationImage(
                       image: NetworkImage(
-                          forums.forumList?[index].logoUrl as String),
+                          forums.forumList?[index].imageUrls?.elementAtOrNull(0) ?? AppSettings.imageNotFoundUrl),
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
                           Colors.black.withOpacity(0.5), BlendMode.dstATop)),

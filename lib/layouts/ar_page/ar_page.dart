@@ -23,6 +23,7 @@ import 'package:tavrida_flutter/repositories/models/LikeModel.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:flutter/services.dart';
+import 'package:image/image.dart' as img;
 import 'package:tavrida_flutter/widgets/TalkerWidget.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 import 'package:path/path.dart' as Path;
@@ -42,6 +43,7 @@ class _ARPageState extends State<ARPage> {
   bool _isFirstBuild = true;
   bool _isShowMessage = false;
   bool _showIcon = false;
+  bool _isPhotoCreating = false;
   double _wightContainer = 0;
   String _messageText = '';
   double _scale = 1.0;
@@ -154,7 +156,9 @@ class _ARPageState extends State<ARPage> {
         child: IconButton(
             onPressed: () => onTakeScreenshot(),
             color: AppColors.white,
-            icon: SvgPicture.asset("assets/icons/solar_camera-linear.svg", color: AppColors.white, width: 24,)
+            icon: _isPhotoCreating
+              ? const Icon(Icons.downloading, weight: 24,)
+              : SvgPicture.asset("assets/icons/solar_camera-linear.svg", color: AppColors.white, width: 24,)
         ),
       ),
     ];
@@ -285,97 +289,129 @@ class _ARPageState extends State<ARPage> {
     );
   }
 
-  void onTakeScreenshot(){
-    arSessionManager!.snapshot().then((image) {
-      showDialog(
-          context: context,
-          builder: (_) {
-            DecorationImage decorationImage = DecorationImage(image: image, fit: BoxFit.cover);
-            return Dialog(
-              insetPadding: EdgeInsets.zero,
-              backgroundColor: Colors.transparent,
-              child: SizedBox(
-                height: 650,
-                width: 374,
-                child: Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(Radius.circular(30)),
-                            image: decorationImage
-                        ),
-                      ),
-                      Align(
-                        alignment: const Alignment(0, 0.95),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 20.0, bottom: 20, right: 7),
-                              child: OutlinedButton.icon(
-                                onPressed: () => Navigator.of(context).pop(),
-                                icon: SvgPicture.asset("assets/icons/restart-fill.svg"),
-                                label: const Text(
-                                    'Переснять',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                    color: Color(0xFF333333),
-                                    fontSize: 16,
-                                    fontFamily: 'Open Sans',
-                                    fontWeight: FontWeight.w500,
-                                    height: 0.09,
-                                  ),
-                                ),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(AppColors.buttonSecondary),
-                                    fixedSize: MaterialStateProperty.all(const Size(160, 48))
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 7, bottom: 20, right: 20),
-                              child: ElevatedButton.icon(
-                                onPressed: () {
-                                  saveImage(image);
-                                  Navigator.of(context).pop();
-                                },
-                                icon: const Icon(Icons.save_alt, color: AppColors.white,),
-                                label: const Text(
-                                  'Сохранить',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontFamily: 'Open Sans',
-                                    fontWeight: FontWeight.w500,
-                                    height: 0.09,
-                                  ),
-                                ),
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all(AppColors.buttonPrimary),
-                                    fixedSize: MaterialStateProperty.all(const Size(160, 48))
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ]
-                ),
-              ),
-            );
-          });
+  void onTakeScreenshot() async {
+    if (_isPhotoCreating) return;
+    setState(() {
+      _isPhotoCreating = true;
     });
+    final photo = await arSessionManager!.snapshot();
+    setState(() {
+      _isPhotoCreating = false;
+    });
+    await showDialog(
+        context: context,
+        builder: (_) {
+          DecorationImage decorationImage = DecorationImage(
+              image: photo,
+              fit: BoxFit.cover
+          );
+          return Dialog(
+            insetPadding: EdgeInsets.zero,
+            backgroundColor: Colors.transparent,
+            child: SizedBox(
+              height: 650,
+              width: 374,
+              child: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.all(Radius.circular(30)),
+                          image: decorationImage
+                      ),
+                    ),
+                    Align(
+                      alignment: const Alignment(0, 0.95),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20.0, bottom: 20, right: 7),
+                            child: OutlinedButton.icon(
+                              onPressed: () => Navigator.of(context).pop(),
+                              icon: SvgPicture.asset("assets/icons/restart-fill.svg"),
+                              label: const Text(
+                                'Переснять',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Color(0xFF333333),
+                                  fontSize: 16,
+                                  fontFamily: 'Open Sans',
+                                  fontWeight: FontWeight.w500,
+                                  height: 0.09,
+                                ),
+                              ),
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(AppColors.buttonSecondary),
+                                  fixedSize: MaterialStateProperty.all(const Size(160, 48))
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 7, bottom: 20, right: 20),
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                saveImage(photo);
+                                Navigator.of(context).pop();
+                              },
+                              icon: const Icon(Icons.save_alt, color: AppColors.white,),
+                              label: const Text(
+                                'Сохранить',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontFamily: 'Open Sans',
+                                  fontWeight: FontWeight.w500,
+                                  height: 0.09,
+                                ),
+                              ),
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(AppColors.buttonPrimary),
+                                  fixedSize: MaterialStateProperty.all(const Size(160, 48))
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ]
+              ),
+            ),
+          );
+        });
+
   }
 
-  Future<void> saveImage(ImageProvider image) async{
-    Uint8List? img = await image.getBytes(context, format: ImageByteFormat.png);
+  Future<void> saveImage(ImageProvider image) async {
+    //Todo: ссылку на логотип приложения
+    final Image networkImage = Image.network(model.forumLogoUrl ?? AppSettings.imageNotFoundUrl);
+
+    final imageBytes = await image.getBytes(context, format: ImageByteFormat.png);
+    final networkBytes = await networkImage.image.getBytes(context, format: ImageByteFormat.png);
+
+    final mainImage = img.decodePng(imageBytes ?? Uint8List(0));
+    final logoImage = img.decodePng(networkBytes ?? Uint8List(0));
+
+    final imageResult = img.compositeImage(mainImage!, logoImage!);
+
     Directory path = await getApplicationDocumentsDirectory();
     File file = File(Path.join(path.path,
         "${DateTime.now().toString().replaceAll(" ", ":")}.png"));
-    await file.writeAsBytes(img!.toList());
+    await file.writeAsBytes(img.encodePng(imageResult));
     await GallerySaver.saveImage(file.path, toDcim: true, albumName: "ili - photos");
     file.delete();
+
+    setState(() {
+      talker = TalkerWidget(
+        text: 'Фото сохранено',
+        icon: const Icon(
+          Icons.check_circle,
+          color: AppColors.black,
+        ),
+        wight: 300,
+        height: 50,
+      );
+    });
   }
 
   Future<void> _onLike() async {

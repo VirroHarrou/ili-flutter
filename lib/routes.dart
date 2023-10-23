@@ -11,5 +11,5 @@ final routes = {
   "/ForumDetail" : (context) => const ForumDetailPage(),
   "/ar_page" : (context) => ARPage(),
   "/home" : (context) => const HomePage(),
-  "/QR" : (context) => const QRViewExample(),
+  "/QR" : (context) => const QRPage(),
 };

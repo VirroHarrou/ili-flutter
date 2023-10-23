@@ -5,14 +5,14 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:tavrida_flutter/repositories/models/GetModel.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 
-class QRViewExample extends StatefulWidget{
-  const QRViewExample({super.key});
+class QRPage extends StatefulWidget{
+  const QRPage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _QRViewExampleState();
+  State<StatefulWidget> createState() => _QRPageState();
 }
 
-class _QRViewExampleState extends State<QRViewExample> {
+class _QRPageState extends State<QRPage> {
   bool isPushed = false;
   bool isBadRequest = false;
   bool isLocked = false;
@@ -183,7 +183,7 @@ class _QRViewExampleState extends State<QRViewExample> {
         var response = await getModelAsync(null, result!.code);
         if(response != null && !isPushed) {
           isPushed = true;
-            Navigator.pushNamed(context, "/ar_page", arguments: response);
+          Navigator.pushNamed(context, "/ar_page", arguments: response);
         }
       }
     });

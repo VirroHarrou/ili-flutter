@@ -202,7 +202,8 @@ class _ProfilePageState extends State<ProfilePage>{
                           color: Colors.black,
                           image: DecorationImage(
                               image: NetworkImage(
-                                  widget.forums[index].logoUrl),
+                                  widget.forums[index].imageUrls?.elementAtOrNull(0) ?? AppSettings.imageNotFoundUrl
+                              ),
                               fit: BoxFit.cover,
                               colorFilter: ColorFilter.mode(
                                   Colors.black.withOpacity(0.5), BlendMode.dstATop)),

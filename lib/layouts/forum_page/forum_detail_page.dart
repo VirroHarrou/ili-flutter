@@ -45,7 +45,6 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
   @override
   Widget build(BuildContext context) {
     List<String> imageUrls = <String>[];
-    imageUrls.add(forum?.logoUrl ?? '');
     imageUrls.addAll(forum?.imageUrls ?? <String>[]);
     var theme = Theme.of(context);
     DateTime startedAt = DateTime.parse(forum?.startedAt ?? '12122012');
@@ -63,8 +62,8 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
               SizedBox(
                 height: 350,
                 child: CarouselImages(
-                    imageUrls: imageUrls.first == ''
-                        ? <String>[]
+                    imageUrls: imageUrls.elementAtOrNull(0) == null
+                        ? <String>[AppSettings.imageNotFoundUrl]
                         : imageUrls
                 ),
               ),
