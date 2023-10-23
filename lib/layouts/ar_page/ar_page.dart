@@ -295,9 +295,6 @@ class _ARPageState extends State<ARPage> {
       _isPhotoCreating = true;
     });
     final photo = await arSessionManager!.snapshot();
-    setState(() {
-      _isPhotoCreating = false;
-    });
     await showDialog(
         context: context,
         builder: (_) {
@@ -402,6 +399,7 @@ class _ARPageState extends State<ARPage> {
     file.delete();
 
     setState(() {
+      _isPhotoCreating = false;
       talker = TalkerWidget(
         text: 'Фото сохранено',
         icon: const Icon(
