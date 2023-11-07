@@ -291,9 +291,7 @@ class _ARPageState extends State<ARPage> {
 
   void onTakeScreenshot() async {
     if (_isPhotoCreating) return;
-    setState(() {
-      _isPhotoCreating = true;
-    });
+
     final photo = await arSessionManager!.snapshot();
     await showDialog(
         context: context,
@@ -347,6 +345,9 @@ class _ARPageState extends State<ARPage> {
                             padding: const EdgeInsets.only(left: 7, bottom: 20, right: 20),
                             child: ElevatedButton.icon(
                               onPressed: () {
+                                setState(() {
+                                  _isPhotoCreating = true;
+                                });
                                 saveImage(photo);
                                 Navigator.of(context).pop();
                               },
@@ -380,6 +381,7 @@ class _ARPageState extends State<ARPage> {
   }
 
   Future<void> saveImage(ImageProvider image) async {
+
     //Todo: ссылку на логотип приложения
     final Image networkImage = Image.network(model.forumLogoUrl ?? AppSettings.imageNotFoundUrl);
 
@@ -388,8 +390,10 @@ class _ARPageState extends State<ARPage> {
 
     final mainImage = img.decodePng(imageBytes ?? Uint8List(0));
     final logoImage = img.decodePng(networkBytes ?? Uint8List(0));
+    final resizedImage = img.copyResize(logoImage!, width: (mainImage!.width / 3).floor());
 
-    final imageResult = img.compositeImage(mainImage!, logoImage!);
+    print("ssdasd");
+    final imageResult = img.compositeImage(mainImage, resizedImage, dstX: 40, dstY: 40);
 
     Directory path = await getApplicationDocumentsDirectory();
     File file = File(Path.join(path.path,
@@ -548,7 +552,7 @@ class _ARPageState extends State<ARPage> {
     }
     if (didAddAnchor!) {
       anchors.add(newAnchor);
-      final double scale = Platform.isAndroid ? 0.2 : 4;
+      final double scale = Platform.isAndroid ? 0.4 : 6;
       // Add note to anchor
       var newNode = ARNode(
           type: NodeType.fileSystemAppFolderGLB,
@@ -617,9 +621,9 @@ class _ARPageState extends State<ARPage> {
   }
 
   void _upscaleModel() {
-    final double scale = Platform.isAndroid ? 0.2 : 4;
+    final double scale = Platform.isAndroid ? 0.4 : 6;
     setState(() {
-      if(_scale >= 3.71) {
+      if(_scale >= 4.71) {
         return;
       }
       _scale += 0.3;
@@ -630,7 +634,7 @@ class _ARPageState extends State<ARPage> {
   }
 
   void _downscaleModel() {
-    final double scale = Platform.isAndroid ? 0.2 : 4;
+    final double scale = Platform.isAndroid ? 0.4 : 6;
     setState(() {
       if(_scale <= 0.33) {
         return;
