@@ -555,7 +555,7 @@ class _ARPageState extends State<ARPage> {
     }
     if (didAddAnchor!) {
       anchors.add(newAnchor);
-      final double scale = Platform.isAndroid ? 0.4 : 6;
+      final double scale = Platform.isAndroid ? 1 : 10;
       // Add note to anchor
       var newNode = ARNode(
           type: NodeType.fileSystemAppFolderGLB,
@@ -624,7 +624,7 @@ class _ARPageState extends State<ARPage> {
   }
 
   void _upscaleModel() {
-    final double scale = Platform.isAndroid ? 0.4 : 6;
+    final double scale = Platform.isAndroid ? 1 : 10;
     setState(() {
       if(_scale >= 3.71) {
         return;
@@ -637,7 +637,7 @@ class _ARPageState extends State<ARPage> {
   }
 
   void _downscaleModel() {
-    final double scale = Platform.isAndroid ? 0.4 : 6;
+    final double scale = Platform.isAndroid ? 1 : 10;
     setState(() {
       if(_scale <= 0.33) {
         return;
