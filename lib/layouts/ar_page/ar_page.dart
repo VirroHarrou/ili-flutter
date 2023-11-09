@@ -293,7 +293,8 @@ class _ARPageState extends State<ARPage> {
     if (_isPhotoCreating) return;
 
     final photo = await arSessionManager!.snapshot();
-    await showDialog(
+    if(context.mounted) {
+      await showDialog(
         context: context,
         builder: (_) {
           DecorationImage decorationImage = DecorationImage(
@@ -377,22 +378,24 @@ class _ARPageState extends State<ARPage> {
             ),
           );
         });
+    }
 
   }
 
   Future<void> saveImage(ImageProvider image) async {
-
     //Todo: ссылку на логотип приложения
-    final Image networkImage = Image.network(model.forumLogoUrl ?? AppSettings.imageNotFoundUrl);
+    Uint8List? networkBytes;
+    final networkImage = Image.network(model.forumLogoUrl ?? AppSettings.imageNotFoundUrl);
 
     final imageBytes = await image.getBytes(context, format: ImageByteFormat.png);
-    final networkBytes = await networkImage.image.getBytes(context, format: ImageByteFormat.png);
+    if(context.mounted) {
+      networkBytes = await networkImage.image.getBytes(context, format: ImageByteFormat.png);
+    }
 
     final mainImage = img.decodePng(imageBytes ?? Uint8List(0));
     final logoImage = img.decodePng(networkBytes ?? Uint8List(0));
     final resizedImage = img.copyResize(logoImage!, width: (mainImage!.width / 3).floor());
 
-    print("ssdasd");
     final imageResult = img.compositeImage(mainImage, resizedImage, dstX: 40, dstY: 40);
 
     Directory path = await getApplicationDocumentsDirectory();
@@ -623,7 +626,7 @@ class _ARPageState extends State<ARPage> {
   void _upscaleModel() {
     final double scale = Platform.isAndroid ? 0.4 : 6;
     setState(() {
-      if(_scale >= 4.71) {
+      if(_scale >= 3.71) {
         return;
       }
       _scale += 0.3;
