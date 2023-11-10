@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Tavrida Flutter</string>
+	<string>ili.art</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -46,7 +46,7 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-    <string>Разрешите использование камеры</string>
+    <string>Разрешите использование камеры для сканирования QR кода и демонстрации функций AR</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>en</string>
     <key>NSLocationWhenInUseUsageDescription</key>
