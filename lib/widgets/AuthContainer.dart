@@ -34,7 +34,7 @@ class _AuthContainerState extends State<AuthContainer> {
     var list = [
       Padding(
         padding: const EdgeInsets.only(bottom: 30, top: 40),
-        child: Image.asset("assets/logo2.png", height: 30),
+        child: Image.asset("assets/icon.png", height: 30),
       ),
           Text(
             isLogin ? "Добро пожаловать!"

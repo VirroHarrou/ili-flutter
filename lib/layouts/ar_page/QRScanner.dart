@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:tavrida_flutter/repositories/metrics/AddMetric.dart';
 import 'package:tavrida_flutter/repositories/models/GetModel.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 
@@ -36,6 +37,7 @@ class _QRPageState extends State<QRPage> {
 
   @override
   Widget build(BuildContext context) {
+    MetricRepos.createRecord("11111111-1111-1111-1111-111111111111", MetricType.qrScreen, 1);
     var theme = Theme.of(context);
     final wight = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;

@@ -40,7 +40,8 @@ flutter:
     - assets/icons/horizon-alt.svg
     - assets/icons/solar_camera-linear.svg
     - assets/icon.png
-    - assets/logo2.png
+    - assets/logo.png
+    - assets/no_results_found.png
     - assets/no_results_found.svg
 
 flutter_launcher_icons:

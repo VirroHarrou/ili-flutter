@@ -22,10 +22,19 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     _storageRead();
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: Image.asset('assets/logo2.png', width: 200,),
+      body: Stack(
+        children: [
+          Center(
+            child: Image.asset('assets/icon.png', width: 200,),
+          ),
+          Align(
+            alignment: const Alignment(0, 0.95),
+            child: Text("© Created by Virro Harrou", style: Theme.of(context).textTheme.displaySmall),
+          )
+        ],
       ),
     );
   }
@@ -49,7 +58,8 @@ class _SplashScreenState extends State<SplashScreen> {
         storage.setBool('isNoName', true);
       });
     }
-
-    Navigator.of(context).pushNamedAndRemoveUntil("/QR", (r) => false);
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.of(context).pushNamedAndRemoveUntil("/QR", (r) => false);
+    });
   }
 }

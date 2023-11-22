@@ -127,7 +127,8 @@ class _ModelFavoritesPageState extends State<ModelFavoritesPage> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(left: 16.0, bottom: 8.0),
-                              child: Text(model.forumTitle!, style: theme.textTheme.headlineLarge),
+                              child: Text(model.forumTitle!.length > 23 ? '${model.forumTitle!.substring(0,20)}...' : model.forumTitle!,
+                                  style: theme.textTheme.headlineLarge),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 16.0),

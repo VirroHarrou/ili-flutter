@@ -18,6 +18,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
+import 'package:tavrida_flutter/repositories/metrics/AddMetric.dart';
 import 'package:tavrida_flutter/repositories/models/GetModel.dart';
 import 'package:tavrida_flutter/repositories/models/LikeModel.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
@@ -245,7 +246,7 @@ class _ARPageState extends State<ARPage> {
               child: SizedBox(
                 child: Text(
                   _messageText,
-                  maxLines: 2,
+                  maxLines: 3,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.white,
@@ -383,6 +384,7 @@ class _ARPageState extends State<ARPage> {
   }
 
   Future<void> saveImage(ImageProvider image) async {
+    MetricRepos.createRecord(model.id.toString(), MetricType.modelPhotos, 1);
     //Todo: ссылку на логотип приложения
     Uint8List? networkBytes;
     final networkImage = Image.network(model.forumLogoUrl ?? AppSettings.imageNotFoundUrl);
@@ -447,10 +449,7 @@ class _ARPageState extends State<ARPage> {
             child: Container(
               decoration: const BoxDecoration(
                 color: AppColors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
+                borderRadius: BorderRadius.all(Radius.circular(20)),
               ),
               height: model.description == null ? 200 : model.description!.length <= 200 ? 200 : 400,
               width: 400,
@@ -485,7 +484,8 @@ class _ARPageState extends State<ARPage> {
               ),
             ),
           ),
-        ));
+        ),
+    );
   }
 
   Future<File> _downloadFile(String url, String filename) async {
@@ -620,6 +620,8 @@ class _ARPageState extends State<ARPage> {
     setState(() {
       model = result ?? model;
     });
+    MetricRepos.createRecord("11111111-1111-1111-1111-111111111111", MetricType.arScreen, 1);
+    MetricRepos.createRecord(model.id.toString(), MetricType.modelViews, 1);
     _downloadFile(model.valueUrl ?? '', "${model.id}.glb");
   }
 

@@ -8,20 +8,25 @@ class AuthPage extends StatelessWidget{
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
 
-    return const Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: Padding(
-        padding: EdgeInsets.only(
-          left: 40.0,
-          right: 40.0,
-        ),
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: AuthContainer(),
-            ),
-          ],
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: const Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: Padding(
+          padding: EdgeInsets.only(
+            left: 40.0,
+            right: 40.0,
+          ),
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: AuthContainer(),
+              ),
+            ],
+          ),
         ),
       ),
     );
