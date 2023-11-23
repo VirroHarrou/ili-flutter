@@ -3,7 +3,7 @@ import 'package:tavrida_flutter/layouts/auth_page/auth_page_view.dart';
 import 'package:tavrida_flutter/layouts/forum_page/view.dart';
 import 'package:tavrida_flutter/layouts/home_page.dart';
 import 'package:tavrida_flutter/layouts/splash_screen_page.dart';
-import 'package:tavrida_flutter/layouts/ar_page/QRScanner.dart';
+import 'package:tavrida_flutter/layouts/qr_page/QRScanner.dart';
 
 final routes = {
   "/" : (context) => const SplashScreen(),

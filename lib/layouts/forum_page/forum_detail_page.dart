@@ -291,7 +291,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset("assets/icons/no_results_found_icon.svg", height: 128),
-                      Text("Изображение не загрузилось", style: Theme.of(context).textTheme.headlineLarge),
+                      Text("Изображение отсутсвует", style: Theme.of(context).textTheme.headlineLarge),
                     ]
                 ),
               ),

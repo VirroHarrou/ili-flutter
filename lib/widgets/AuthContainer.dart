@@ -314,7 +314,7 @@ class _AuthContainerState extends State<AuthContainer> {
               });
               AppSettings.isLogin = true;
             }
-            Navigator.pushNamed(context, "/home");
+            Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
             break;
           case ResponseType.bad:
             setState(() {
@@ -400,7 +400,7 @@ class _AuthContainerState extends State<AuthContainer> {
             });
             AppSettings.isLogin = true;
           }
-          Navigator.of(context).pushNamed("/home");
+          Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
         }
       });
     }

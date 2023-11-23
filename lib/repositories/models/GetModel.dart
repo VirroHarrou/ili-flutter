@@ -25,5 +25,5 @@ Future<Model?> getModelAsync(int? code, String? id) async {
       ),
     );
 
-  return Model.fromJson(response.data);
+  return response.statusCode! >= 300 ? null : Model.fromJson(response.data);
 }

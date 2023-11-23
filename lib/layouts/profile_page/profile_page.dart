@@ -187,11 +187,7 @@ class _ProfilePageState extends State<ProfilePage>{
                 DateTime startedAt = DateTime.parse(widget.forums[index].startedAt ?? '12122012');
                 DateTime endedAt = DateTime.parse(widget.forums[index].endedAt ?? '12122012');
                 var inkWell = InkWell(
-                    onTap: () {
-                      var id = widget.forums[index].id;
-                      Navigator.pushNamed(context, "/ForumDetail",
-                          arguments: {"id": id});
-                    },
+                    onTap: () {},
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 20, left: 24, right: 24),
                       child: Container(
