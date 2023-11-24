@@ -52,7 +52,7 @@ class _QRPageState extends State<QRPage> {
         backgroundColor: AppColors.grey,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
         onPressed: () {
-          Navigator.of(context).pushNamed("/home");
+          Navigator.of(context).pop();
         },
         child: const Icon(Icons.arrow_back),
       ),
@@ -124,7 +124,7 @@ class _QRPageState extends State<QRPage> {
                         isBadRequest = true;
                       } else {
                         isBadRequest = false;
-                        Navigator.pushNamed(context, "/ar_page", arguments: value);
+                        Navigator.pushReplacementNamed(context, "/ar_page", arguments: value);
                       }
                       setState(() {});
                     });
@@ -141,7 +141,7 @@ class _QRPageState extends State<QRPage> {
                         isBadRequest = true;
                       } else {
                         isBadRequest = false;
-                        Navigator.pushNamed(context, "/ar_page", arguments: value);
+                        Navigator.pushReplacementNamed(context, "/ar_page", arguments: value);
                       }
                       setState(() {});
                     });
@@ -185,7 +185,7 @@ class _QRPageState extends State<QRPage> {
         var response = await getModelAsync(null, result!.code);
         if(response != null && !isPushed) {
           isPushed = true;
-          Navigator.pushNamed(context, "/ar_page", arguments: response);
+          Navigator.pushReplacementNamed(context, "/ar_page", arguments: response);
         }
       }
     });

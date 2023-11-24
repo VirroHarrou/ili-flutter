@@ -59,7 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
       });
     }
     Future.delayed(const Duration(seconds: 1), () {
-      Navigator.of(context).pushNamedAndRemoveUntil("/QR", (r) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil("/home", (r) => false);
     });
   }
 }
