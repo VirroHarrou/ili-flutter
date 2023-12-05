@@ -56,6 +56,7 @@ Future<void> tryDeleteUser() async {
   //Todo: сделать с проверкой пароля
   final connectionString = "${AppSettings.baseUri}api/1.0/auth/";
   Dio dio = Dio();
+  dio.options.headers["Authorization"] = "Bearer ${AppSettings.authToken}";
   var response = await dio.delete(connectionString,
       options: Options(
         validateStatus: (status) => status! < 500,
@@ -75,7 +76,7 @@ Future<JwtResponse> tryUpdate(String email, String password) async {
         followRedirects: false,
       ));
   if (response.statusCode == 200) {
-
+    return JwtResponse(ResponseType.success, response.data);
   }
   return JwtResponse(ResponseType.bad, '');
 }

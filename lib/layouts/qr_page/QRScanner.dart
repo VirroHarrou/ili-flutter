@@ -16,6 +16,7 @@ class QRPage extends StatefulWidget{
 class _QRPageState extends State<QRPage> {
   bool isPushed = false;
   bool isBadRequest = false;
+  bool isFirstBuild = true;
   bool isLocked = false;
   int code = 0;
 
@@ -37,7 +38,10 @@ class _QRPageState extends State<QRPage> {
 
   @override
   Widget build(BuildContext context) {
-    MetricRepos.createRecord("11111111-1111-1111-1111-111111111111", MetricType.qrScreen, 1);
+    if(isFirstBuild) {
+      MetricRepos.createRecord("11111111-1111-1111-1111-111111111111", MetricType.qrScreen, 1);
+      isFirstBuild = false;
+    }
     var theme = Theme.of(context);
     final wight = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;

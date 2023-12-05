@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
+import 'package:tavrida_flutter/repositories/metrics/AddMetric.dart';
 import 'package:tavrida_flutter/repositories/user/user_repository.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
 
@@ -47,6 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
     AppSettings.isLogin = storage.getBool('isLogin') ?? false;
     AppSettings.isNoName = storage.getBool('isNoName') ?? true;
     User.email = storage.getString('userEmail');
+    User.id = storage.getString('userId');
 
     if(AppSettings.isNoName && AppSettings.isLogin == false){
       tryCreateNoNameUser().then((response) {
@@ -58,7 +60,8 @@ class _SplashScreenState extends State<SplashScreen> {
         storage.setBool('isNoName', true);
       });
     }
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1, milliseconds: 300), () {
+      MetricRepos.createRecord(User.id ?? '11111111-1111-1111-1111-111111111111', MetricType.users, 1);
       Navigator.of(context).pushNamedAndRemoveUntil("/home", (r) => false);
     });
   }

@@ -304,6 +304,7 @@ class _AuthContainerState extends State<AuthContainer> {
             AppSettings.authToken = value.data ?? '';
             var data = AppSettings().parseJwt(AppSettings.authToken);
             User.email = data["email"];
+            User.id = data["nameid"];
             if(AppSettings.authToken != ''){
               AppSettings.isNoName = false;
               SharedPreferences.getInstance().then((storage) {
@@ -311,6 +312,7 @@ class _AuthContainerState extends State<AuthContainer> {
                 storage.setBool("isLogin", true);
                 storage.setBool("isNoName", false);
                 storage.setString("userEmail", User.email!);
+                storage.setString("userId", User.id!);
               });
               AppSettings.isLogin = true;
             }
@@ -371,11 +373,13 @@ class _AuthContainerState extends State<AuthContainer> {
           } else {
             AppSettings.authToken = value.data!;
             User.email = AppSettings().parseJwt(AppSettings.authToken)['email'];
+            User.id = AppSettings().parseJwt(AppSettings.authToken)['nameid'];
             SharedPreferences.getInstance().then((storage) {
               storage.setString("authUserToken", AppSettings.authToken);
               storage.setBool("isLogin", true);
               storage.setBool("isNoName", false);
               storage.setString("userEmail", User.email!);
+              storage.setString("userId", User.id!);
             });
           }
         });
@@ -390,6 +394,7 @@ class _AuthContainerState extends State<AuthContainer> {
         } else {
           AppSettings.authToken = value.data!;
           User.email = AppSettings().parseJwt(AppSettings.authToken)['email'];
+          User.id = AppSettings().parseJwt(AppSettings.authToken)['nameid'];
           isLogin = true;
           if(AppSettings.authToken != ''){
             SharedPreferences.getInstance().then((storage) {
@@ -397,6 +402,7 @@ class _AuthContainerState extends State<AuthContainer> {
               storage.setBool("isLogin", true);
               storage.setBool("isNoName", false);
               storage.setString("userEmail", User.email!);
+              storage.setString("userId", User.id!);
             });
             AppSettings.isLogin = true;
           }

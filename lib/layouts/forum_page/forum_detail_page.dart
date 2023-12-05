@@ -1,14 +1,13 @@
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:tavrida_flutter/main.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/forum/AddForumHistory.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForumDetail.dart';
+import 'package:tavrida_flutter/repositories/metrics/AddMetric.dart';
 import 'package:tavrida_flutter/repositories/models/GetModel.dart';
 import 'package:tavrida_flutter/repositories/models/GetModelList.dart';
 import 'package:tavrida_flutter/repositories/views/models.dart';
-import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:tavrida_flutter/widgets/ImagesCarousel.dart';
 
 class ForumDetailPage extends StatefulWidget {
@@ -25,6 +24,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
   Map<dynamic, dynamic> arguments = <dynamic, dynamic>{};
 
   Future<void> updateData(String id) async {
+    MetricRepos.createRecord(id, MetricType.forums, 1);
     forum = await getForumDetailAsync(id);
     addForumHistoryAsync(id);
     setState(() {});
