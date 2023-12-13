@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class AppSettings{
   static String authToken = '';
-  static String baseUri = 'http://185.233.187.109/';
+  static String baseUri = 'https://ili-art.space/';
   static String imageNotFound = 'assets/no_results_found.svg';
   static String imageNotFoundUrl = 'https://yt3.googleusercontent.com/iRLpuvr-WoAkDmOmXQiVnk7Gf4knJ6_OmIqZRmal4FeFxwbPLkMwIWm4QZlvH9t2GojQWZ4P=s900-c-k-c0x00ffffff-no-rj';
 

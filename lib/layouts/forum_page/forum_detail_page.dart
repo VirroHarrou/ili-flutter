@@ -114,7 +114,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                       decoration: const BoxDecoration(),
                                       child: const Icon(Icons.view_in_ar_outlined, color: Colors.white,),
                                     ),
-                                    const Spacer(),
+                                    const SizedBox(width: 10),
                                     const Text(
                                       'Начать',
                                       textAlign: TextAlign.center,
@@ -213,39 +213,6 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                             "${DateFormat('dd.MM.yyyy').format(startedAt)} -"
                                 " ${DateFormat('dd.MM.yyyy').format(endedAt)}",
                             style: theme.textTheme.bodySmall)
-                    ),
-                    if (model == null) const Center() else Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(context, "/ar_page", arguments: model);
-                        },
-                        child: Container(
-                          height: 70,
-                          decoration: ShapeDecoration(
-                            color: Colors.transparent,
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(width: 1, color: Color(0xFF333333)),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(right: 10),
-                                child: Icon(Icons.view_in_ar, color: Colors.black87, size: 32,)
-                              ),
-                              Text("Тестовая 3D-модель", style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black87,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: "Open Sans",
-                              )),
-                            ],
-                          ),
-                        )
-                      ),
                     ),
                   ],
                 ),

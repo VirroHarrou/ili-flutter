@@ -291,134 +291,21 @@ class _ARPageState extends State<ARPage> {
   }
 
   void onTakeScreenshot() async {
-    if (_isPhotoCreating) return;
-
-    final photo = await arSessionManager!.snapshot();
-    if(context.mounted) {
-      await showDialog(
-        context: context,
-        builder: (_) {
-          DecorationImage decorationImage = DecorationImage(
-              image: photo,
-              fit: BoxFit.cover
-          );
-          return Dialog(
-            insetPadding: EdgeInsets.zero,
-            backgroundColor: Colors.transparent,
-            child: SizedBox(
-              height: 650,
-              width: 374,
-              child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(Radius.circular(30)),
-                          image: decorationImage
-                      ),
-                    ),
-                    Align(
-                      alignment: const Alignment(0, 0.95),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20.0, bottom: 20, right: 7),
-                            child: OutlinedButton.icon(
-                              onPressed: () => Navigator.of(context).pop(),
-                              icon: SvgPicture.asset("assets/icons/restart-fill.svg"),
-                              label: const Text(
-                                'Переснять',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Color(0xFF333333),
-                                  fontSize: 16,
-                                  fontFamily: 'Open Sans',
-                                  fontWeight: FontWeight.w500,
-                                  height: 0.09,
-                                ),
-                              ),
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(AppColors.buttonSecondary),
-                                  fixedSize: MaterialStateProperty.all(const Size(160, 48))
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 7, bottom: 20, right: 20),
-                            child: ElevatedButton.icon(
-                              onPressed: () {
-                                setState(() {
-                                  _isPhotoCreating = true;
-                                });
-                                saveImage(photo);
-                                Navigator.of(context).pop();
-                              },
-                              icon: const Icon(Icons.save_alt, color: AppColors.white,),
-                              label: const Text(
-                                'Сохранить',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontFamily: 'Open Sans',
-                                  fontWeight: FontWeight.w500,
-                                  height: 0.09,
-                                ),
-                              ),
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(AppColors.buttonPrimary),
-                                  fixedSize: MaterialStateProperty.all(const Size(160, 48))
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ]
-              ),
-            ),
-          );
-        });
-    }
-
+    final image = await arSessionManager!.snapshot();
+    saveImage(image);
   }
 
   Future<void> saveImage(ImageProvider image) async {
     MetricRepos.createRecord(model.id.toString(), MetricType.modelPhotos, 1);
-    //Todo: ссылку на логотип приложения
-    Uint8List? networkBytes;
-    final networkImage = Image.network(model.forumLogoUrl ?? AppSettings.imageNotFoundUrl);
 
     final imageBytes = await image.getBytes(context, format: ImageByteFormat.png);
-    if(context.mounted) {
-      networkBytes = await networkImage.image.getBytes(context, format: ImageByteFormat.png);
-    }
-
-    final mainImage = img.decodePng(imageBytes ?? Uint8List(0));
-    final logoImage = img.decodePng(networkBytes ?? Uint8List(0));
-    final resizedImage = img.copyResize(logoImage!, width: (mainImage!.width / 3).floor());
-
-    final imageResult = img.compositeImage(mainImage, resizedImage, dstX: 40, dstY: 40);
 
     Directory path = await getApplicationDocumentsDirectory();
     File file = File(Path.join(path.path,
         "${DateTime.now().toString().replaceAll(" ", ":")}.png"));
-    await file.writeAsBytes(img.encodePng(imageResult));
+    await file.writeAsBytes(imageBytes ?? Uint8List(0));
     await GallerySaver.saveImage(file.path, toDcim: true, albumName: "ili - photos");
-    file.delete();
-
-    setState(() {
-      _isPhotoCreating = false;
-      talker = TalkerWidget(
-        text: 'Фото сохранено',
-        icon: const Icon(
-          Icons.check_circle,
-          color: AppColors.black,
-        ),
-        wight: 300,
-        height: 50,
-      );
-    });
+    await file.delete();
   }
 
   Future<void> _onLike() async {
@@ -555,7 +442,7 @@ class _ARPageState extends State<ARPage> {
     }
     if (didAddAnchor!) {
       anchors.add(newAnchor);
-      final double scale = Platform.isAndroid ? 1 : 10;
+      final double scale = Platform.isAndroid ? 1 : 20;
       // Add note to anchor
       var newNode = ARNode(
           type: NodeType.fileSystemAppFolderGLB,
@@ -626,7 +513,7 @@ class _ARPageState extends State<ARPage> {
   }
 
   void _upscaleModel() {
-    final double scale = Platform.isAndroid ? 1 : 10;
+    final double scale = Platform.isAndroid ? 1 : 20;
     setState(() {
       if(_scale >= 3.71) {
         return;
@@ -639,7 +526,7 @@ class _ARPageState extends State<ARPage> {
   }
 
   void _downscaleModel() {
-    final double scale = Platform.isAndroid ? 1 : 10;
+    final double scale = Platform.isAndroid ? 1 : 20;
     setState(() {
       if(_scale <= 0.33) {
         return;
