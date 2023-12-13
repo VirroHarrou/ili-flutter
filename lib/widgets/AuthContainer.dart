@@ -284,7 +284,7 @@ class _AuthContainerState extends State<AuthContainer> {
   }
 
   void _launchUrl() async {
-          final url = Uri.parse("http://185.233.187.109/policy.html");
+          final url = Uri.parse("${AppSettings.baseUri}privacy-policy");
           if(!await launchUrl(url)) {
             throw Exception('Could not launch $url');
           }
