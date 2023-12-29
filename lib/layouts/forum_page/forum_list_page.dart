@@ -163,12 +163,6 @@ class _ForumListPageState extends State<ForumListPage> {
             },
             icon: customIcon
         ),
-        IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed("/QR");
-            },
-            icon: const Icon(Icons.qr_code_scanner, size: 32,)
-        ),
         const Icon(Icons.save_alt, color: Colors.transparent, size: 14,),
       ],
     );

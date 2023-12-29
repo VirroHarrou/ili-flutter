@@ -41,7 +41,6 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _storageRead() async {
-
     final storage = await SharedPreferences.getInstance();
     AppSettings.isWarning = storage.getBool('isWarning') ?? true;
     AppSettings.authToken = storage.getString('authUserToken') ?? '';
@@ -60,9 +59,6 @@ class _SplashScreenState extends State<SplashScreen> {
         storage.setBool('isNoName', true);
       });
     }
-    Future.delayed(const Duration(seconds: 1, milliseconds: 300), () {
-      MetricRepos.createRecord(User.id ?? '11111111-1111-1111-1111-111111111111', MetricType.users, 1);
-      Navigator.of(context).pushNamedAndRemoveUntil("/home", (r) => false);
-    });
+    Navigator.of(context).pushNamedAndRemoveUntil("/home", (r) => false);
   }
 }

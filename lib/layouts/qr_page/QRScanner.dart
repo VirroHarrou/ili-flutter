@@ -7,7 +7,8 @@ import 'package:tavrida_flutter/repositories/models/GetModel.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 
 class QRPage extends StatefulWidget{
-  const QRPage({super.key});
+  final bool mainNav;
+  const QRPage({super.key, this.mainNav = false});
 
   @override
   State<StatefulWidget> createState() => _QRPageState();
@@ -52,7 +53,7 @@ class _QRPageState extends State<QRPage> {
         : 300;
     bool isKeyboardOff = MediaQuery.of(context).viewInsets.bottom == 0;
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: widget.mainNav ? null : FloatingActionButton(
         backgroundColor: AppColors.grey,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
         onPressed: () {
@@ -128,7 +129,7 @@ class _QRPageState extends State<QRPage> {
                         isBadRequest = true;
                       } else {
                         isBadRequest = false;
-                        Navigator.pushReplacementNamed(context, "/ar_page", arguments: value);
+                        Navigator.pushNamed(context, "/ar_page", arguments: value);
                       }
                       setState(() {});
                     });
@@ -145,7 +146,7 @@ class _QRPageState extends State<QRPage> {
                         isBadRequest = true;
                       } else {
                         isBadRequest = false;
-                        Navigator.pushReplacementNamed(context, "/ar_page", arguments: value);
+                        Navigator.pushNamed(context, "/ar_page", arguments: value);
                       }
                       setState(() {});
                     });
@@ -189,7 +190,7 @@ class _QRPageState extends State<QRPage> {
         var response = await getModelAsync(null, result!.code);
         if(response != null && !isPushed) {
           isPushed = true;
-          Navigator.pushReplacementNamed(context, "/ar_page", arguments: response);
+          Navigator.pushNamed(context, "/ar_page", arguments: response);
         }
       }
     });
