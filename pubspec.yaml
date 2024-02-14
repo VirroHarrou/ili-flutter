@@ -23,6 +23,11 @@ dependencies:
   url_launcher: ^6.1.14
   flutter_svg: ^2.0.7
   image: ^4.1.3
+  arkit_plugin: ^1.0.7
+  arcore_flutter_plugin:
+    git:
+      url: https://github.com/giandifra/arcore_flutter_plugin.git
+      ref: android-upgrading
 
 dev_dependencies:
   flutter_test:
