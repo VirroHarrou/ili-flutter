@@ -17,79 +17,36 @@ class HomePage extends StatefulWidget{
 }
 
 class HomePageState extends State<HomePage> {
-  static final List<Widget> _widgetOptions = <Widget>[
-    const ForumListPage(),
-    const QRPage(mainNav: true),
-    ProfilePage(),
-  ];
-
-  int _selectedIndex = 1;
-  Widget _currentWidget = const QRPage(mainNav: true);
-
-  Widget getCurrentWidget(){
-    return _currentWidget;
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      _currentWidget = _widgetOptions[index];
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: getCurrentWidget(),
-      bottomNavigationBar: ConvexAppBar(
-        style: TabStyle.fixed,
-        items: const [
-          TabItem(
-            icon: Icon(
-              Icons.home,
-              size: 28,
-              color: AppColors.grey,
-            ),
-            title: 'Площадки',
-            activeIcon: Icon(
-              Icons.home,
-              size: 30,
-              color: AppColors.black,
-            ),
+      body: const ForumListPage(),
+      floatingActionButton: InkWell(
+        onTap: () => Navigator.pushNamed(context, "/QR"),
+        child: Container(
+          width: 64,
+          height: 64,
+          decoration: BoxDecoration(
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black54,
+                offset: Offset(0, 2),
+                spreadRadius: 1,
+                blurRadius: 4,
+              ),
+            ],
+            color: Colors.white.withOpacity(0.75),
+            borderRadius:  BorderRadius.circular(90),
           ),
-          TabItem(
-            icon: Icon(
-                Icons.qr_code_scanner,
-                size: 35,
-                color: AppColors.grey,
-            ),
-            title: 'Сканер',
-            activeIcon: Icon(
-              Icons.qr_code_scanner,
-              size: 40,
-              color: AppColors.black,
-            ),
+          child: const Icon(
+            Icons.qr_code_2,
+            size: 48,
+            color: Colors.black,
           ),
-          TabItem(
-            icon: Icon(
-              Icons.history,
-              size: 28,
-              color: AppColors.grey,
-            ),
-            title: 'История',
-            activeIcon: Icon(
-              Icons.history,
-              size: 30,
-              color: AppColors.black,
-            ),
-          ),
-        ],
-        backgroundColor: AppColors.white,
-        color: AppColors.grey,
-        activeColor: AppColors.black,
-        initialActiveIndex: 1,
-        onTap: _onItemTapped,
+        ),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

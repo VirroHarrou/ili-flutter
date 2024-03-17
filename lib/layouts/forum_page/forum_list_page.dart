@@ -1,16 +1,13 @@
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForums.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForumsSearch.dart';
 import 'package:tavrida_flutter/repositories/metrics/AddMetric.dart';
 
 import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
-import 'package:tavrida_flutter/widgets/CodeDialog.dart';
 
 class ForumListPage extends StatefulWidget {
   const ForumListPage({super.key});

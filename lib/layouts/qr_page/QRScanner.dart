@@ -129,7 +129,7 @@ class _QRPageState extends State<QRPage> {
                         isBadRequest = true;
                       } else {
                         isBadRequest = false;
-                        Navigator.pushNamed(context, "/ar_page", arguments: value);
+                        Navigator.popAndPushNamed(context, "/Load", arguments: value);
                       }
                       setState(() {});
                     });
@@ -146,7 +146,7 @@ class _QRPageState extends State<QRPage> {
                         isBadRequest = true;
                       } else {
                         isBadRequest = false;
-                        Navigator.pushNamed(context, "/ar_page", arguments: value);
+                        Navigator.popAndPushNamed(context, "/Load", arguments: value);
                       }
                       setState(() {});
                     });
@@ -190,7 +190,7 @@ class _QRPageState extends State<QRPage> {
         var response = await getModelAsync(null, result!.code);
         if(response != null && !isPushed) {
           isPushed = true;
-          Navigator.pushNamed(context, "/ar_page", arguments: response);
+          Navigator.popAndPushNamed(context, "/Load", arguments: response);
         }
       }
     });
@@ -198,7 +198,7 @@ class _QRPageState extends State<QRPage> {
 
   @override
   void dispose() {
-    controller?.dispose();
     super.dispose();
+    controller?.dispose();
   }
 }

@@ -41,7 +41,6 @@ class ARPage extends StatefulWidget {
 
 class _ARPageState extends State<ARPage> {
   late Model model;
-  final _httpClient = HttpClient();
   bool _isFirstBuild = true;
   bool _isShowMessage = false;
   bool _showIcon = false;
@@ -490,18 +489,9 @@ class _ARPageState extends State<ARPage> {
     );
   }
 
-  Future<File> _downloadFile(String url, String filename) async {
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = File('$dir/$filename');
-    if(await file.exists()) {
-      return file;
-    }
-
-    var request = await _httpClient.getUrl(Uri.parse(url));
-    var response = await request.close();
-    var bytes = await consolidateHttpClientResponseBytes(response);
-
-    await file.writeAsBytes(bytes);
+  Future<File> _downloadFile(String filename) async {
+    final dir = await getApplicationDocumentsDirectory();
+    File file = File('${dir.path}/$filename.glb');
 
     return file;
   }
@@ -565,6 +555,7 @@ class _ARPageState extends State<ARPage> {
           scale: Vector3(scale, scale, scale) * _scale,
           position: Vector3(0.0, 0.0, 0.0),
           rotation: Vector4(1.0, 0.0, 0.0, 0.0));
+      print(newNode.uri);
       bool? didAddNodeToAnchor =
       await arObjectManager!.addNode(newNode, planeAnchor: newAnchor);
       if (didAddNodeToAnchor!) {
@@ -624,7 +615,7 @@ class _ARPageState extends State<ARPage> {
     });
     MetricRepos.createRecord("11111111-1111-1111-1111-111111111111", MetricType.arScreen, 1);
     MetricRepos.createRecord(model.id.toString(), MetricType.modelViews, 1);
-    _downloadFile(model.valueUrl ?? '', "${model.id}.glb");
+    _downloadFile(model.id ?? '');
   }
 
   void _upscaleModel() {
