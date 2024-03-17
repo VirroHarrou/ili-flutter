@@ -24,6 +24,7 @@ class HomePageState extends State<HomePage> {
       body: const ForumListPage(),
       floatingActionButton: InkWell(
         onTap: () => Navigator.pushNamed(context, "/QR"),
+        onLongPress: () => Navigator.pushNamed(context, "/ModelList"),
         child: Container(
           width: 64,
           height: 64,
