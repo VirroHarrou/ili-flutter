@@ -1,8 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tavrida_flutter/repositories/models/GetModel.dart';
+import 'package:tavrida_flutter/themes/app_colors.dart';
+import 'package:tavrida_flutter/widgets/DataEmpty.dart';
 
 import '../../repositories/views/models.dart';
 
@@ -24,7 +27,9 @@ class ModelListPageState extends State<ModelListPage> {
   }
 
   Future<void> _findLoadingModels() async {
-    models = [];
+    setState(() {
+      models = [];
+    });
     var dir = await getApplicationDocumentsDirectory();
     var ids = <String>[];
     await dir.list().forEach((element) {
@@ -48,7 +53,7 @@ class ModelListPageState extends State<ModelListPage> {
     var dir = await getApplicationDocumentsDirectory();
     final file = File('${dir.path}/$filename');
     await file.delete();
-    _findLoadingModels();
+    await _findLoadingModels();
   }
   
   @override
@@ -56,15 +61,16 @@ class ModelListPageState extends State<ModelListPage> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 66,
-        centerTitle: true,
+        centerTitle: false,
         backgroundColor: theme.colorScheme.background,
         title: Text("Сохраненные модели", style: theme.textTheme.titleLarge),
+        titleSpacing: 20,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: ListView.separated(
-            itemBuilder: (context, iterator) {
-              final model = models[iterator];
+        padding: const EdgeInsets.only(right: 20, left: 20, bottom: 16),
+        child: models.isNotEmpty ? ListView.separated(
+            itemBuilder: (context, i) {
+              final model = models[i];
               return InkWell(
                 onTap: () => Navigator.pushNamed(context, '/Load', arguments: model),
                   child: Container(
@@ -93,11 +99,16 @@ class ModelListPageState extends State<ModelListPage> {
                         ),
                         Align(
                           alignment: Alignment.topRight,
-                          child: IconButton(
-                            iconSize: 40,
-                            color: Colors.black,
+                          child: FloatingActionButton(
+                            elevation: 0,
+                            shape: const CircleBorder(),
+                            backgroundColor: const Color.fromRGBO(255, 255, 255, 0.4),
+                            enableFeedback: false,
                             onPressed: () => _deleteModelFile('${model.id}.glb'),
-                            icon: const Icon(Icons.playlist_remove, color: Colors.white,)
+                            child: const Icon(Icons.delete_forever_rounded,
+                              size: 32,
+                              color: AppColors.black,
+                            ),
                           ),
                         ),
                       ],
@@ -107,7 +118,7 @@ class ModelListPageState extends State<ModelListPage> {
               },
             separatorBuilder: (context, iterator) => const SizedBox(height: 16,),
             itemCount: models.length,
-        ),
+        ) : generateDataEmpty(context, 'Скачивайте модели, и они появятся здесь'),
       ),
     );
   }
