@@ -10,6 +10,22 @@
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		601AB9FF2BC5494600BC25CC /* FLNativeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601AB9FE2BC5494600BC25CC /* FLNativeView.swift */; };
+		601ABA012BC5498800BC25CC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601ABA002BC5498800BC25CC /* ContentView.swift */; };
+		60562CA82BC6C044009FB9EC /* ScenePersistenceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60562CA72BC6C044009FB9EC /* ScenePersistenceHelper.swift */; };
+		60562CAA2BC6DE28009FB9EC /* BrowseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60562CA92BC6DE28009FB9EC /* BrowseView.swift */; };
+		60562CAC2BC6DF0B009FB9EC /* ControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60562CAB2BC6DF0B009FB9EC /* ControlView.swift */; };
+		60562CAE2BC6DF37009FB9EC /* DeletionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60562CAD2BC6DF37009FB9EC /* DeletionView.swift */; };
+		60E0357C2BC68E7300527F9D /* ARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E0357B2BC68E7300527F9D /* ARViewContainer.swift */; };
+		60E0357E2BC68FC700527F9D /* CustomARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E0357D2BC68FC700527F9D /* CustomARView.swift */; };
+		60E035812BC6900D00527F9D /* FocusEntity in Frameworks */ = {isa = PBXBuildFile; productRef = 60E035802BC6900D00527F9D /* FocusEntity */; };
+		60E035832BC6906200527F9D /* PlacementSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E035822BC6906200527F9D /* PlacementSettings.swift */; };
+		60E035852BC6908600527F9D /* ModelDeletionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E035842BC6908600527F9D /* ModelDeletionManager.swift */; };
+		60E035872BC6909E00527F9D /* PlacementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E035862BC6909E00527F9D /* PlacementView.swift */; };
+		60E035892BC690DD00527F9D /* SessionSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E035882BC690DD00527F9D /* SessionSettings.swift */; };
+		60E0358B2BC690F000527F9D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E0358A2BC690F000527F9D /* SettingsView.swift */; };
+		60E0358D2BC6913100527F9D /* ModelsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E0358C2BC6913100527F9D /* ModelsViewModel.swift */; };
+		60E0358F2BC691FA00527F9D /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60E0358E2BC691FA00527F9D /* Model.swift */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		8D7282CBD1DE92FC1FAFB3C4 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 156AA67FADB51BCD4F46AE3D /* Pods_Runner.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
@@ -50,6 +66,21 @@
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		53395F38DCA5DBE6350C71FC /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		601AB9FE2BC5494600BC25CC /* FLNativeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FLNativeView.swift; sourceTree = "<group>"; };
+		601ABA002BC5498800BC25CC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		60562CA72BC6C044009FB9EC /* ScenePersistenceHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenePersistenceHelper.swift; sourceTree = "<group>"; };
+		60562CA92BC6DE28009FB9EC /* BrowseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseView.swift; sourceTree = "<group>"; };
+		60562CAB2BC6DF0B009FB9EC /* ControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlView.swift; sourceTree = "<group>"; };
+		60562CAD2BC6DF37009FB9EC /* DeletionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeletionView.swift; sourceTree = "<group>"; };
+		60E0357B2BC68E7300527F9D /* ARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewContainer.swift; sourceTree = "<group>"; };
+		60E0357D2BC68FC700527F9D /* CustomARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomARView.swift; sourceTree = "<group>"; };
+		60E035822BC6906200527F9D /* PlacementSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacementSettings.swift; sourceTree = "<group>"; };
+		60E035842BC6908600527F9D /* ModelDeletionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelDeletionManager.swift; sourceTree = "<group>"; };
+		60E035862BC6909E00527F9D /* PlacementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacementView.swift; sourceTree = "<group>"; };
+		60E035882BC690DD00527F9D /* SessionSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSettings.swift; sourceTree = "<group>"; };
+		60E0358A2BC690F000527F9D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		60E0358C2BC6913100527F9D /* ModelsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelsViewModel.swift; sourceTree = "<group>"; };
+		60E0358E2BC691FA00527F9D /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AA4EE1F0A2D2B7345D3744B /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
@@ -72,6 +103,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60E035812BC6900D00527F9D /* FocusEntity in Frameworks */,
 				8D7282CBD1DE92FC1FAFB3C4 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -147,6 +179,21 @@
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
+				601AB9FE2BC5494600BC25CC /* FLNativeView.swift */,
+				601ABA002BC5498800BC25CC /* ContentView.swift */,
+				60E0357B2BC68E7300527F9D /* ARViewContainer.swift */,
+				60E0357D2BC68FC700527F9D /* CustomARView.swift */,
+				60E035862BC6909E00527F9D /* PlacementView.swift */,
+				60E035822BC6906200527F9D /* PlacementSettings.swift */,
+				60E035842BC6908600527F9D /* ModelDeletionManager.swift */,
+				60E035882BC690DD00527F9D /* SessionSettings.swift */,
+				60E0358A2BC690F000527F9D /* SettingsView.swift */,
+				60E0358C2BC6913100527F9D /* ModelsViewModel.swift */,
+				60E0358E2BC691FA00527F9D /* Model.swift */,
+				60562CA72BC6C044009FB9EC /* ScenePersistenceHelper.swift */,
+				60562CA92BC6DE28009FB9EC /* BrowseView.swift */,
+				60562CAB2BC6DF0B009FB9EC /* ControlView.swift */,
+				60562CAD2BC6DF37009FB9EC /* DeletionView.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -198,13 +245,16 @@
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				8F55A5930473CB9DB949B61D /* [CP] Embed Pods Frameworks */,
-				7798FD66117500000DC7DFE6 /* [CP] Copy Pods Resources */,
+				F80F71051C4870BD455E1803 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = Runner;
+			packageProductDependencies = (
+				60E035802BC6900D00527F9D /* FocusEntity */,
+			);
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
 			productType = "com.apple.product-type.application";
@@ -238,6 +288,9 @@
 				Base,
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
+			packageReferences = (
+				60E0357F2BC6900D00527F9D /* XCRemoteSwiftPackageReference "FocusEntity" */,
+			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -308,23 +361,6 @@
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
 		};
-		7798FD66117500000DC7DFE6 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		8F55A5930473CB9DB949B61D /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -356,6 +392,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
+		};
+		F80F71051C4870BD455E1803 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		FE7EC2E5150008D681D57DF9 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -395,7 +448,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
+				60E035892BC690DD00527F9D /* SessionSettings.swift in Sources */,
+				60562CA82BC6C044009FB9EC /* ScenePersistenceHelper.swift in Sources */,
+				60E035832BC6906200527F9D /* PlacementSettings.swift in Sources */,
+				60E035872BC6909E00527F9D /* PlacementView.swift in Sources */,
+				60E0358D2BC6913100527F9D /* ModelsViewModel.swift in Sources */,
+				601AB9FF2BC5494600BC25CC /* FLNativeView.swift in Sources */,
+				60562CAA2BC6DE28009FB9EC /* BrowseView.swift in Sources */,
+				60562CAC2BC6DF0B009FB9EC /* ControlView.swift in Sources */,
+				60E0358F2BC691FA00527F9D /* Model.swift in Sources */,
+				601ABA012BC5498800BC25CC /* ContentView.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
+				60E035852BC6908600527F9D /* ModelDeletionManager.swift in Sources */,
+				60E0357E2BC68FC700527F9D /* CustomARView.swift in Sources */,
+				60E0357C2BC68E7300527F9D /* ARViewContainer.swift in Sources */,
+				60562CAE2BC6DF37009FB9EC /* DeletionView.swift in Sources */,
+				60E0358B2BC690F000527F9D /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -470,7 +538,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
@@ -598,7 +666,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -647,7 +715,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
@@ -737,6 +805,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		60E0357F2BC6900D00527F9D /* XCRemoteSwiftPackageReference "FocusEntity" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/maxxfrazer/FocusEntity";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		60E035802BC6900D00527F9D /* FocusEntity */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 60E0357F2BC6900D00527F9D /* XCRemoteSwiftPackageReference "FocusEntity" */;
+			productName = FocusEntity;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 97C146E61CF9000F007C117D /* Project object */;
 }
