@@ -4,7 +4,7 @@ import 'package:tavrida_flutter/repositories/views/models.dart';
 
 
 Future<Forums?> getForumHistoryAsync() async {
-  final connectionString = "${AppSettings.baseUri}api/1.0/forum/history";
+  final connectionString = "${AppSettings.baseUri}api/2.0/platform/history";
   Dio dio = Dio();
 
   dio.options.headers["Authorization"] = "Bearer ${AppSettings.authToken}";

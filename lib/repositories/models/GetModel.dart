@@ -7,9 +7,9 @@ import 'package:tavrida_flutter/repositories/views/model.dart';
 Future<Model?> getModelAsync(int? code, String? id) async {
   String connectionString;
   if (id != null) {
-    connectionString = "${AppSettings.baseUri}api/1.0/model/id=$id";
+    connectionString = "${AppSettings.baseUri}api/2.0/model/id=$id";
   } else if (code != null) {
-    connectionString = "${AppSettings.baseUri}api/1.0/model/code=$code";
+    connectionString = "${AppSettings.baseUri}api/2.0/model/code=$code";
   } else {
     return null;
   }

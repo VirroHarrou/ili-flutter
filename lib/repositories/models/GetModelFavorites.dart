@@ -5,9 +5,9 @@ import 'package:tavrida_flutter/repositories/views/model.dart';
 Future<Favorites?> getModelFavoritesAsync(String? search) async{
   String connectionString;
   if(search == null || search == '') {
-    connectionString = "${AppSettings.baseUri}api/1.0/model/favorites";
+    connectionString = "${AppSettings.baseUri}api/2.0/model/favorites";
   } else {
-    connectionString = "${AppSettings.baseUri}api/1.0/model/favorites/$search";
+    connectionString = "${AppSettings.baseUri}api/2.0/model/favorites/$search";
   }
 
   Dio dio = Dio();

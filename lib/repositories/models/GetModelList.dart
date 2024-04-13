@@ -3,7 +3,7 @@ import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/views/model.dart';
 
 Future<ModelList?> getModelListAsync(String id) async{
-  String connectionString = "${AppSettings.baseUri}api/1.0/model/list/$id";
+  String connectionString = "${AppSettings.baseUri}api/2.0/model/list/$id";
 
   Dio dio = Dio();
 

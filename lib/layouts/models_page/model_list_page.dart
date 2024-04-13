@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:injector/injector.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:tavrida_flutter/repositories/models/GetModel.dart';
+import 'package:tavrida_flutter/services/model_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:tavrida_flutter/widgets/DataEmpty.dart';
 
-import '../../repositories/views/models.dart';
+import '../../services/models/model.dart';
 
 class ModelListPage extends StatefulWidget{
   const ModelListPage({super.key});
@@ -17,6 +17,7 @@ class ModelListPage extends StatefulWidget{
 }
 
 class ModelListPageState extends State<ModelListPage> {
+  final modelService = Injector.appInstance.get<ModelService>();
   late final theme = Theme.of(context);
   List<Model> models = [];
 
@@ -40,7 +41,7 @@ class ModelListPageState extends State<ModelListPage> {
 
   Future<void> _getListModel(List<String> ids) async {
     for (var element in ids) {
-      final model = await getModelAsync(null, element.split('.').first);
+      final model = await modelService.getModelDetail(id: element.split('.').first);
       if (model != null) {
         setState(() {
          models.add(model);

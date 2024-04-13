@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 
 Future<void> likeModelAsync(String id) async {
-  final connectionString = "${AppSettings.baseUri}api/1.0/model/$id";
+  final connectionString = "${AppSettings.baseUri}api/2.0/model/$id";
   Dio dio = Dio();
 
   dio.options.headers["Authorization"] = "Bearer ${AppSettings.authToken}";

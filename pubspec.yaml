@@ -2,7 +2,7 @@ name: tavrida_flutter
 description: A new Flutter project.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.1.0+18
+version: 1.2.0+20
 
 environment:
   sdk: '>=3.1.0 <4.0.0'
@@ -10,8 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  dart_extensions: ^2.2.2
   cupertino_icons: ^1.0.2
-  convex_bottom_bar: ^3.2.0
+  flutter_bloc: ^8.1.5
+  injector: ^3.0.0
   dio: ^5.3.2
   ar_flutter_plugin: ^0.7.3
   path_provider: ^2.1.0

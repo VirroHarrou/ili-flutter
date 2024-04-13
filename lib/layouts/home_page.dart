@@ -1,10 +1,6 @@
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:tavrida_flutter/layouts/forum_page/view.dart';
-import 'package:tavrida_flutter/layouts/models_page/model_favorites_page.dart';
 import 'package:tavrida_flutter/layouts/models_page/model_list_page.dart';
-import 'package:tavrida_flutter/layouts/profile_page/profile_page.dart';
-import 'package:tavrida_flutter/layouts/qr_page/QRScanner.dart';
 
 import '../themes/app_colors.dart';
 
@@ -89,30 +85,3 @@ class HomePageState extends State<HomePage> {
     );
   }
 }
-
-// BottomAppBar(
-// height: 64,
-// shadowColor: Colors.transparent,
-// color: AppColors.black,
-// surfaceTintColor: Colors.transparent,
-// shape: const CircularNotchedRectangle(),
-// child: Row(
-// mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-// children: [
-// IconButton(
-// icon: const Icon(Icons.home),
-// onPressed: () {
-// setState(() {
-// _selectedWidget = const ForumListPage();
-// });
-// },
-// ),
-// const SizedBox(width: 40), // The dummy child
-// IconButton(icon: const Icon(Icons.favorite_outline), onPressed: () {
-// setState(() {
-// _selectedWidget = const ModelListPage();
-// });
-// }),
-// ],
-// ),
-// ),
