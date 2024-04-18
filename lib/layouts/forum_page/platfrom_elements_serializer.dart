@@ -5,10 +5,14 @@ class PlatformServicesModel {
     this.description,
     this.location,
     this.logoUrl,
+    this.url,
+    this.urlName,
   });
 
   String? logoUrl;
   String? title;
+  String? url;
+  String? urlName;
   String? location;
   String? description;
   String? union;
@@ -19,6 +23,8 @@ class PlatformServicesModel {
     description = json['description'];
     location = json['location'];
     logoUrl = json['logoUrl'];
+    urlName = json['urlName'];
+    url = json['url'];
   }
 }
 

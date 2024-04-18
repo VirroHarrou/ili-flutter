@@ -1,6 +1,8 @@
+import 'package:dart_extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:tavrida_flutter/layouts/forum_page/platfrom_elements_serializer.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PlatformServices extends StatefulWidget {
   final List<PlatformServicesModel> elements;
@@ -125,7 +127,7 @@ class _PlatformServicesState extends State<PlatformServices> {
                               alignment: Alignment.centerLeft,
                               child: SizedBox(
                                 height: 48,
-                                child: Image.network(selectedElements[i].logoUrl ?? '', fit: BoxFit.cover,)
+                                child: Image.network(selectedElements[i].logoUrl ?? '', fit: BoxFit.contain,)
                               ),
                             ),
                             Align(
@@ -245,6 +247,35 @@ class _PlatformServicesState extends State<PlatformServices> {
                   alignment: Alignment.topLeft,
                   child: Text(model.location ?? '', style: theme.textTheme.bodySmall),
                 ),
+                if (!model.url.isEmptyOrNull) ... [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Align(
+                        alignment: Alignment.topLeft,
+                        child: InkWell(
+                          onTap: () async {
+                            final Uri url = Uri.parse(model.url!);
+                            if (!await launchUrl(url)) {
+                              throw Exception('Could not launch $url');
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              const Icon(Icons.link_outlined, color: Color(0xFF6EB3F2),),
+                              const SizedBox(width: 4,),
+                              Text(model.urlName ?? 'Полезная ссылка',
+                                style: const TextStyle(
+                                  color: Color(0xFF6EB3F2),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                    ),
+                  ),
+                ],
               ],
             ),
           )

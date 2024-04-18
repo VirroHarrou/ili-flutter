@@ -63,7 +63,7 @@ class HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite_outline),
             activeIcon: Icon(Icons.favorite),
-            label: 'Избранное',
+            label: 'Сохраненные',
           ),
         ],
         type: BottomNavigationBarType.fixed,

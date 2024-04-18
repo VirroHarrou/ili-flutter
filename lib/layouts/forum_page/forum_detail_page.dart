@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:injector/injector.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:tavrida_flutter/layouts/forum_page/image_viewer.dart';
 import 'package:tavrida_flutter/layouts/forum_page/platform_news.dart';
 import 'package:tavrida_flutter/layouts/forum_page/platfrom_elements_serializer.dart';
 import 'package:tavrida_flutter/layouts/forum_page/platfrom_services.dart';
@@ -36,7 +37,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
   Model? model;
   bool isFirst = true;
   Map<dynamic, dynamic> arguments = <dynamic, dynamic>{};
-  bool _showAdditionalInfo = false;
+  bool _showAdditionalInfo = true;
 
   void _toggleAdditionalInfo() {
     setState(() {
@@ -400,150 +401,105 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                 )
             ),
           ),
-          const Spacer(),
-          Expanded(
-            flex: 7,
-            child: MaterialButton(
-                onPressed: onMapTapped,
-                padding: EdgeInsets.zero,
-                child:Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 48,
-                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                        decoration: ShapeDecoration(
-                          color: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(width: 1, color: Color(0xFF333333)),
-                            borderRadius: BorderRadius.circular(28),
+          if (platform != null && !platform!.mapUrls.isEmptyOrNull) ...[
+            const Spacer(),
+            Expanded(
+              flex: 7,
+              child: MaterialButton(
+                  onPressed: onMapTapped,
+                  padding: EdgeInsets.zero,
+                  child:Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 48,
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          decoration: ShapeDecoration(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              side: const BorderSide(width: 1, color: Color(0xFF333333)),
+                              borderRadius: BorderRadius.circular(28),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                  width: 24,
+                                  height: 24,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: const BoxDecoration(),
+                                  child: const Icon(Icons.map_outlined, color: Colors.black87,)
+                              ),
+                              const SizedBox(width: 10),
+                              const Text(
+                                'Карта',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Color(0xFF333333),
+                                  fontSize: 16,
+                                  fontFamily: 'Open Sans',
+                                  fontWeight: FontWeight.w600,
+                                  height: 0,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                                width: 24,
-                                height: 24,
-                                clipBehavior: Clip.antiAlias,
-                                decoration: const BoxDecoration(),
-                                child: const Icon(Icons.map_outlined, color: Colors.black87,)
-                            ),
-                            const SizedBox(width: 10),
-                            const Text(
-                              'Карта',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: Color(0xFF333333),
-                                fontSize: 16,
-                                fontFamily: 'Open Sans',
-                                fontWeight: FontWeight.w600,
-                                height: 0,
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
-                    ),
-                  ],
-                )
+                    ],
+                  )
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
   }
 
   void onMapTapped(){
-    //Todo: подправить логику в части errorDialog
-    var errorDialog = Dialog(
-      insetPadding: EdgeInsets.zero,
-      backgroundColor: Colors.transparent,
-      child: SizedBox(
-        height: 600,
-        width: 350,
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                height: 600,
-                width: 350,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(28),
-                  color: Colors.white,
-                ),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset("assets/icons/no_results_found_icon.svg", height: 128),
-                      Text("Изображение отсутсвует", style: Theme.of(context).textTheme.headlineLarge),
-                    ]
-                ),
-              ),
-            ),
-            Align(
-              alignment: const Alignment(0.95, -0.97),
-              child: FloatingActionButton(
-                onPressed: () => Navigator.pop(context),
-                elevation: 3,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
-                backgroundColor: Colors.white,
-                hoverColor: Colors.white,
-                hoverElevation: 3,
-                child: const Icon(Icons.clear),
-              )
-            ),
-          ],
-        ),
-      ),
-    );
     showDialog(
       context: context,
       builder: (_) {
-        final urls = platform?.mapUrls as List<String>;
-        if(urls.isEmpty){
-          return errorDialog;
-        }
-        var imageUrl = platform?.mapUrls?.first;
-        var image = Image.network(imageUrl ?? '', errorBuilder: (context, exc, _) {
-          return errorDialog;
-        },);
         return Dialog(
           insetPadding: EdgeInsets.zero,
           backgroundColor: Colors.transparent,
-          child: SizedBox(
-            height: 600,
-            width: 350,
-            child: Stack(
+          surfaceTintColor: Colors.transparent,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    height: 600,
-                    width: 350,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(28),
-                      color: Colors.white,
-                    ),
-                    child: image,
-                  ),),
                 Align(
                     alignment: const Alignment(0.95, -0.97),
                     child: FloatingActionButton(
                       onPressed: () => Navigator.pop(context),
-                      elevation: 3,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
-                      backgroundColor: Colors.white,
+                      backgroundColor: Colors.white.withOpacity(0.6),
                       hoverColor: Colors.white,
                       hoverElevation: 3,
                       child: const Icon(Icons.clear),
                     )
+                ),
+                const SizedBox(height: 12,),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.white,
+                    ),
+                    child: ImageViewer(
+                      imageUrls: platform?.mapUrls ?? [''],
+                    ),
+                  ),
                 ),
               ],
             ),

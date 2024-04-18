@@ -16,13 +16,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gallery_saver/gallery_saver.dart';
+import 'package:injector/injector.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/metrics/AddMetric.dart';
-import 'package:tavrida_flutter/repositories/models/GetModel.dart';
-import 'package:tavrida_flutter/repositories/models/LikeModel.dart';
-import 'package:tavrida_flutter/repositories/views/models.dart';
+import 'package:tavrida_flutter/services/model_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
@@ -30,6 +29,8 @@ import 'package:tavrida_flutter/widgets/TalkerWidget.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 import 'package:path/path.dart' as Path;
 import 'dart:io' show Platform;
+
+import '../../services/models/model.dart';
 
 
 class ARPage extends StatefulWidget {
@@ -40,6 +41,7 @@ class ARPage extends StatefulWidget {
 }
 
 class _ARPageState extends State<ARPage> {
+  final modelService = Injector.appInstance.get<ModelService>();
   late Model model;
   bool _isFirstBuild = true;
   bool _isShowMessage = false;
@@ -435,7 +437,6 @@ class _ARPageState extends State<ARPage> {
         height: 50,
       );
     });
-    await likeModelAsync(model.id!);
   }
 
   Future<void> _onInfo() async {
@@ -609,7 +610,7 @@ class _ARPageState extends State<ARPage> {
   }
 
   Future<void> _updateModel() async {
-    var result = await getModelAsync(null, model.id);
+    var result = await modelService.getModelDetail(id: model.id);
     setState(() {
       model = result ?? model;
     });

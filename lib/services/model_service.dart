@@ -15,6 +15,19 @@ class ModelService {
     if (code == null && id == null) throw ArgumentError('Code or id must be initialized');
     Response? response;
     if (code != null) {
+      switch (code.length){
+        case 1:
+          code = '000$code';
+          break;
+        case 2:
+          code = '00$code';
+          break;
+        case 3:
+          code = '0$code';
+          break;
+        default:
+          break;
+      }
       response = await ApiService.sendRequest(
         request: "model/code=$code",
       );

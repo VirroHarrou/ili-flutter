@@ -51,7 +51,7 @@ class _CarouselImagesState extends State<CarouselImages> {
               borderRadius: BorderRadius.circular(10),
               color: const Color.fromRGBO(0, 0, 0, 180),
             ),
-            child: widget.imageUrls != null ? Row(
+            child: (widget.imageUrls != null) ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: widget.imageUrls!.map((item) {
                 int index = widget.imageUrls!.indexOf(item);

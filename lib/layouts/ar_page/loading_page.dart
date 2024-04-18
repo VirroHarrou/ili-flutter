@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../repositories/views/models.dart';
+import '../../services/models/model.dart';
 import 'CustomDownloadIndicator.dart';
 
 class LoadingPage extends StatefulWidget{
