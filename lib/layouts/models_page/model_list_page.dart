@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tavrida_flutter/services/model_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:tavrida_flutter/widgets/DataEmpty.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../services/models/model.dart';
 
@@ -18,6 +20,7 @@ class ModelListPage extends StatefulWidget{
 
 class ModelListPageState extends State<ModelListPage> {
   final modelService = Injector.appInstance.get<ModelService>();
+  final info = Injector.appInstance.get<PackageInfo>();
   late final theme = Theme.of(context);
   List<Model> models = [];
 
@@ -66,6 +69,58 @@ class ModelListPageState extends State<ModelListPage> {
         backgroundColor: theme.colorScheme.background,
         title: Text("Сохраненные модели", style: theme.textTheme.titleLarge),
         titleSpacing: 20,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 0),
+            child: SubmenuButton(
+                menuStyle: MenuStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.white),
+                  elevation: MaterialStateProperty.all(30),
+                  shadowColor: MaterialStateProperty.all(Colors.black),
+                  surfaceTintColor: MaterialStateProperty.all(Colors.transparent),
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  )),
+                ),
+                menuChildren: [
+                  ListTile(
+                    leading: const Icon(Icons.link),
+                    title: Text("Политика конфиденциальности", style: theme.textTheme.bodySmall),
+                    onTap: () async {
+                      final Uri url = Uri.parse('https://ili-art.space/policy.html');
+                      if (!await launchUrl(url)) {
+                        throw Exception('Could not launch $url');
+                      }
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.contact_support,),
+                    title: Text("Связаться с нами", style: theme.textTheme.bodySmall),
+                    onTap: () async {
+                      final Uri url = Uri.parse('https://t.me/mahad_structura');
+                      if (!await launchUrl(url)) {
+                        throw Exception('Could not launch $url');
+                      }
+                    },
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 12.0),
+                      child: Text('Версия: ${info.version}',
+                        style:  const TextStyle(
+                          color: AppColors.grey,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+                child: const Icon(Icons.more_horiz, color: AppColors.black,)
+            ),
+          )
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.only(right: 20, left: 20, bottom: 16),
