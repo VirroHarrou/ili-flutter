@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 
 Future<JwtResponse> tryLoginAsync(String email, String password) async {
-  final connectionString = "${AppSettings.baseUri}api/1.0/auth/login";
+  final connectionString = "${AppSettings.baseUri}api/2.0/auth/login";
   Dio dio = Dio();
   Response<dynamic> response;
   try {
@@ -35,7 +35,7 @@ Future<JwtResponse> tryLoginAsync(String email, String password) async {
 }
 
 Future<JwtResponse> tryRegister(String email, String password) async {
-  final connectionString = "${AppSettings.baseUri}api/1.0/auth/signup";
+  final connectionString = "${AppSettings.baseUri}api/2.0/auth/signup";
   Dio dio = Dio();
   var response = await dio.post(connectionString, data: {
     "userName": email,
@@ -54,7 +54,7 @@ Future<JwtResponse> tryRegister(String email, String password) async {
 
 Future<void> tryDeleteUser() async {
   //Todo: сделать с проверкой пароля
-  final connectionString = "${AppSettings.baseUri}api/1.0/auth/";
+  final connectionString = "${AppSettings.baseUri}api/2.0/auth/";
   Dio dio = Dio();
   dio.options.headers["Authorization"] = "Bearer ${AppSettings.authToken}";
   var response = await dio.delete(connectionString,
@@ -64,7 +64,7 @@ Future<void> tryDeleteUser() async {
 }
 
 Future<JwtResponse> tryUpdate(String email, String password) async {
-  final connectionString = "${AppSettings.baseUri}api/1.0/auth/signup";
+  final connectionString = "${AppSettings.baseUri}api/2.0/auth/signup";
   Dio dio = Dio();
   var response = await dio.post(connectionString, data: {
     "userName": email,
@@ -83,7 +83,7 @@ Future<JwtResponse> tryUpdate(String email, String password) async {
 
 Future<JwtResponse> tryCreateNoNameUser() async {
   //Todo: сделать с проверкой пароля
-  final connectionString = "${AppSettings.baseUri}api/1.0/auth/noname";
+  final connectionString = "${AppSettings.baseUri}api/2.0/auth/noname";
   Dio dio = Dio();
   var response = await dio.get(connectionString,
       options: Options(

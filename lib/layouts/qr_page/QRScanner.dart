@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:injector/injector.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:tavrida_flutter/repositories/metrics/AddMetric.dart';
 import 'package:tavrida_flutter/repositories/models/GetModel.dart';
+import 'package:tavrida_flutter/services/model_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 
 class QRPage extends StatefulWidget{
@@ -15,6 +17,7 @@ class QRPage extends StatefulWidget{
 }
 
 class _QRPageState extends State<QRPage> {
+  final modelService = Injector.appInstance.get<ModelService>();
   bool isPushed = false;
   bool isBadRequest = false;
   bool isFirstBuild = true;
@@ -123,13 +126,13 @@ class _QRPageState extends State<QRPage> {
                     code = int.tryParse(input) ?? 0;
                   }
                   if (code != 0 && input.length == 4){
-                    var response = getModelAsync(code, null);
-                    response.then((value) {
+                    modelService.getModelDetail(code: code.toString())
+                      .then((value) {
                       if(value == null || value.id == null){
                         isBadRequest = true;
                       } else {
                         isBadRequest = false;
-                        Navigator.pushNamed(context, "/ar_page", arguments: value);
+                        Navigator.popAndPushNamed(context, "/Load", arguments: value);
                       }
                       setState(() {});
                     });
@@ -140,13 +143,13 @@ class _QRPageState extends State<QRPage> {
                     code = int.tryParse(input) ?? 0;
                   }
                   if (code != 0){
-                    var response = getModelAsync(code, null);
-                    response.then((value) {
+                    modelService.getModelDetail(code: code.toString())
+                      .then((value) {
                       if(value == null || value.id == null){
                         isBadRequest = true;
                       } else {
                         isBadRequest = false;
-                        Navigator.pushNamed(context, "/ar_page", arguments: value);
+                        Navigator.popAndPushNamed(context, "/Load", arguments: value);
                       }
                       setState(() {});
                     });
@@ -187,10 +190,10 @@ class _QRPageState extends State<QRPage> {
         result = scanData;
       });
       if(result != null) {
-        var response = await getModelAsync(null, result!.code);
+        var response = await modelService.getModelDetail(id: result!.code);
         if(response != null && !isPushed) {
           isPushed = true;
-          Navigator.pushNamed(context, "/ar_page", arguments: response);
+          Navigator.popAndPushNamed(context, "/Load", arguments: response);
         }
       }
     });
@@ -198,7 +201,7 @@ class _QRPageState extends State<QRPage> {
 
   @override
   void dispose() {
-    controller?.dispose();
     super.dispose();
+    controller?.dispose();
   }
 }

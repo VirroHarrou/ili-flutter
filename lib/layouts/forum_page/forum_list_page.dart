@@ -1,16 +1,16 @@
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:injector/injector.dart';
 import 'package:intl/intl.dart';
-import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForums.dart';
 import 'package:tavrida_flutter/repositories/forum/GetForumsSearch.dart';
 import 'package:tavrida_flutter/repositories/metrics/AddMetric.dart';
 
 import 'package:tavrida_flutter/repositories/views/models.dart';
+import 'package:tavrida_flutter/services/models/platform.dart';
+import 'package:tavrida_flutter/services/platform_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
-import 'package:tavrida_flutter/widgets/CodeDialog.dart';
 
 class ForumListPage extends StatefulWidget {
   const ForumListPage({super.key});
@@ -20,7 +20,8 @@ class ForumListPage extends StatefulWidget {
 }
 
 class _ForumListPageState extends State<ForumListPage> {
-  Forums forums = Forums();
+  final platformService = Injector.appInstance.get<PlatformService>();
+  List<Platform>? platforms = [];
 
   late dynamic theme;
   Icon customIcon = const Icon(Icons.search, size: 32,);
@@ -28,16 +29,15 @@ class _ForumListPageState extends State<ForumListPage> {
 
   Future<void> updateData(String? query) async {
     if (query == null) {
-      forums = await getForumsAsync(10, 0);
+      platforms = await platformService.getPlatformList();
     } else {
-      forums = await getForumsSearchAsync(query);
+      platforms = await platformService.getPlatformListSearch(query: query);
     }
     setState(() {});
   }
 
   @override
   initState() {
-    MetricRepos.createRecord("11111111-1111-1111-1111-111111111111", MetricType.forumListScreen, 1);
     updateData(null);
     super.initState();
   }
@@ -46,13 +46,13 @@ class _ForumListPageState extends State<ForumListPage> {
   Widget build(BuildContext context) {
     theme = Theme.of(context);
     ListView listView = ListView.builder(
-      itemCount: forums.forumList?.length ?? 0,
+      itemCount: platforms?.length ?? 0,
       itemBuilder: (context, index) {
-        DateTime startedAt = DateTime.parse(forums.forumList?[index].startedAt ?? '12122012');
-        DateTime endedAt = DateTime.parse(forums.forumList?[index].endedAt ?? '12122012');
+        DateTime startedAt = DateTime.parse(platforms?[index].startedAt ?? '12122012');
+        DateTime endedAt = DateTime.parse(platforms?[index].endedAt ?? '12122012');
         return InkWell(
             onTap: () {
-              var id = forums.forumList?[index].id;
+              var id = platforms?[index].id;
               Navigator.pushNamed(context, "/ForumDetail",
                   arguments: {"id": id});
             },
@@ -67,7 +67,7 @@ class _ForumListPageState extends State<ForumListPage> {
                   image: DecorationImage(
                     image: FadeInImage.assetNetwork(
                         placeholder: "assets/no_results_found.png",
-                        image: forums.forumList?[index].imageUrls?.elementAtOrNull(0) ?? "").image,
+                        image: platforms?[index].mediaUrls?.elementAtOrNull(0) ?? "").image,
                       fit: BoxFit.cover,
                       colorFilter: ColorFilter.mode(
                           Colors.black.withOpacity(0.5), BlendMode.dstATop)),
@@ -84,7 +84,7 @@ class _ForumListPageState extends State<ForumListPage> {
                     children: [
                       Text(
                         textAlign: TextAlign.left,
-                        "${forums.forumList?[index].title}",
+                        "${platforms?[index].title}",
                         style: theme.textTheme.titleMedium,
                       ),
                       Padding(
@@ -107,7 +107,7 @@ class _ForumListPageState extends State<ForumListPage> {
                       Text(
                         maxLines: 4,
                         textAlign: TextAlign.start,
-                        "${forums.forumList?[index].description}",
+                        "${platforms?[index].description}",
                         style: theme.textTheme.bodyMedium,
                       )
                     ]),

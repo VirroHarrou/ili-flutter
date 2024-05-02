@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tavrida_flutter/layouts/forum_page/view.dart';
-import 'package:tavrida_flutter/layouts/models_page/model_favorites_page.dart';
-import 'package:tavrida_flutter/layouts/profile_page/profile_page.dart';
+import 'package:tavrida_flutter/layouts/models_page/model_list_page.dart';
 
 import '../themes/app_colors.dart';
 
@@ -15,52 +14,74 @@ class HomePage extends StatefulWidget{
 }
 
 class HomePageState extends State<HomePage> {
-  static final List<Widget> _widgetOptions = <Widget>[
-    const ForumListPage(),
-    const ModelFavoritesPage(),
-    ProfilePage(),
+
+  List<StatefulWidget> get widgets => const [
+    ForumListPage(),
+    ModelListPage(),
   ];
-
-  int _selectedIndex = 0;
-  Widget _currentWidget = const ForumListPage();
-
-  Widget getCurrentWidget(){
-    return _currentWidget;
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-      _currentWidget = _widgetOptions[index];
-    });
-  }
+  int _selectedWidget = 0;
 
   @override
   Widget build(BuildContext context) {
-    var navigationBar = Container(
-      child: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
+    final fab = InkWell(
+      onTap: () => Navigator.pushNamed(context, "/QR"),
+      //onLongPress: () => Navigator.pushNamed(context, "/ModelList"),
+      child: Container(
+        width: 64,
+        height: 64,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius:  BorderRadius.circular(90),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black54,
+              offset: Offset(0, 0),
+              spreadRadius: 0.5,
+              blurRadius: 8,
+            )
+          ]
+        ),
+        child: const Icon(
+          Icons.qr_code_2,
+          size: 48,
+          color: AppColors.black,
+        ),
+      ),
+    );
+
+    return Scaffold(
+      body: widgets[_selectedWidget],
+      floatingActionButton: fab,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
-            label: 'Площадки',
             activeIcon: Icon(Icons.home),
+            label: 'Главная',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            label: 'Избранное',
+            icon: Icon(Icons.favorite_outline),
             activeIcon: Icon(Icons.favorite),
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.access_time_outlined),
-              label: 'История',
-              activeIcon: Icon(Icons.access_time_filled_outlined),
+            label: 'Сохраненные',
           ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: AppColors.buttonPrimary,
-        onTap: _onItemTapped,
-      ),
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) => setState(() {
+          _selectedWidget = index;
+        }),
+        currentIndex: _selectedWidget,
+        fixedColor: AppColors.black,
+        selectedLabelStyle: const TextStyle(
+          fontFamily: 'Open Sans',
+        ),
+        unselectedLabelStyle: const TextStyle(
+          fontFamily: 'Open Sans',
+        ),
+        selectedFontSize: 14,
+        unselectedFontSize: 14,
+        iconSize: 26,
+      )
     );
 
     return Scaffold(

@@ -17,17 +17,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gallery_saver/gallery_saver.dart';
+import 'package:injector/injector.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/metrics/AddMetric.dart';
-import 'package:tavrida_flutter/repositories/models/GetModel.dart';
-import 'package:tavrida_flutter/repositories/models/LikeModel.dart';
-import 'package:tavrida_flutter/repositories/views/models.dart';
+import 'package:tavrida_flutter/services/model_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:flutter/services.dart';
 import 'package:tavrida_flutter/widgets/TalkerWidget.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 import 'package:path/path.dart' as Path;
+
+import '../../services/models/model.dart';
 
 
 class ARPage extends StatefulWidget {
@@ -38,8 +39,8 @@ class ARPage extends StatefulWidget {
 }
 
 class _ARPageState extends State<ARPage> {
+  final modelService = Injector.appInstance.get<ModelService>();
   late Model model;
-  final _httpClient = HttpClient();
   bool _isFirstBuild = true;
   bool _isShowMessage = false;
   bool _showIcon = false;
@@ -434,7 +435,6 @@ class _ARPageState extends State<ARPage> {
         height: 50,
       );
     });
-    await likeModelAsync(model.id!);
   }
 
   Future<void> _onInfo() async {
@@ -488,18 +488,9 @@ class _ARPageState extends State<ARPage> {
     );
   }
 
-  Future<File> _downloadFile(String url, String filename) async {
-    String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = File('$dir/$filename');
-    if(await file.exists()) {
-      return file;
-    }
-
-    var request = await _httpClient.getUrl(Uri.parse(url));
-    var response = await request.close();
-    var bytes = await consolidateHttpClientResponseBytes(response);
-
-    await file.writeAsBytes(bytes);
+  Future<File> _downloadFile(String filename) async {
+    final dir = await getApplicationDocumentsDirectory();
+    File file = File('${dir.path}/$filename.glb');
 
     return file;
   }
@@ -562,6 +553,7 @@ class _ARPageState extends State<ARPage> {
           scale: Vector3(scale, scale, scale) * _scale,
           position: Vector3(0.0, 0.0, 0.0),
           rotation: Vector4(1.0, 0.0, 0.0, 0.0));
+      print(newNode.uri);
       bool? didAddNodeToAnchor =
       await arObjectManager!.addNode(newNode, planeAnchor: newAnchor);
       if (didAddNodeToAnchor!) {
@@ -615,13 +607,13 @@ class _ARPageState extends State<ARPage> {
   }
 
   Future<void> _updateModel() async {
-    var result = await getModelAsync(null, model.id);
+    var result = await modelService.getModelDetail(id: model.id);
     setState(() {
       model = result ?? model;
     });
     MetricRepos.createRecord("11111111-1111-1111-1111-111111111111", MetricType.arScreen, 1);
     MetricRepos.createRecord(model.id.toString(), MetricType.modelViews, 1);
-    _downloadFile(model.valueUrl ?? '', "${model.id}.glb");
+    _downloadFile(model.id ?? '');
   }
 
   void _upscaleModel() {

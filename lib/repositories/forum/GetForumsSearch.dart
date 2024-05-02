@@ -4,7 +4,7 @@ import 'package:tavrida_flutter/repositories/views/models.dart';
 
 
 Future<Forums> getForumsSearchAsync(String query) async {
-  final connectionString = "${AppSettings.baseUri}api/1.0/forum/list/$query";
+  final connectionString = "${AppSettings.baseUri}api/2.0/platform/list/$query";
   Dio dio = Dio();
 
   var response = await dio.get(connectionString);

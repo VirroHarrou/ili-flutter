@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:injector/injector.dart';
+import 'package:tavrida_flutter/common/injector_initializer.dart';
 import 'package:tavrida_flutter/routes.dart';
 import 'package:tavrida_flutter/themes/src/theme_default.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await InjectorInitializer.initialize(Injector.appInstance);
+
   runApp(const TavridaApp());
 }
 
