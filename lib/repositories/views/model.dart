@@ -2,6 +2,7 @@ class Model {
   String? id;
   String? code;
   String? valueUrl;
+  String? valueUrlUSDZ;
   String? title;
   String? description;
   String? logoUrl;
@@ -18,6 +19,7 @@ class Model {
       {this.id,
         this.code,
         this.valueUrl,
+        this.valueUrlUSDZ,
         this.title,
         this.logoUrl,
         this.createdAt,
@@ -28,6 +30,7 @@ class Model {
     id = json['id'];
     code = json['code'];
     valueUrl = json['valueUrl'];
+    valueUrlUSDZ = json['valueUrlUSDZ'] ?? 'https://developer.apple.com/augmented-reality/quick-look/models/vintagerobot2k/robot_walk_idle.usdz';
     title = json['title'];
     description = json['description'];
     logoUrl = json['logoUrl'];
@@ -46,6 +49,7 @@ class Model {
     data['id'] = id;
     data['code'] = code;
     data['valueUrl'] = valueUrl;
+    data['valueUrlUSDZ'] = valueUrlUSDZ;
     data['title'] = title;
     data['logoUrl'] = logoUrl;
     data['createdAt'] = createdAt;

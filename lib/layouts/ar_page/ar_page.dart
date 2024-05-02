@@ -1,34 +1,32 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:ar_flutter_plugin/ar_flutter_plugin.dart';
-import 'package:ar_flutter_plugin/datatypes/config_planedetection.dart';
-import 'package:ar_flutter_plugin/datatypes/hittest_result_types.dart';
-import 'package:ar_flutter_plugin/datatypes/node_types.dart';
-import 'package:ar_flutter_plugin/managers/ar_anchor_manager.dart';
-import 'package:ar_flutter_plugin/managers/ar_location_manager.dart';
-import 'package:ar_flutter_plugin/managers/ar_object_manager.dart';
-import 'package:ar_flutter_plugin/managers/ar_session_manager.dart';
-import 'package:ar_flutter_plugin/models/ar_anchor.dart';
-import 'package:ar_flutter_plugin/models/ar_hittest_result.dart';
-import 'package:ar_flutter_plugin/models/ar_node.dart';
+
+import 'package:ar_flutter_plugin_flutterflow/datatypes/config_planedetection.dart';
+import 'package:ar_flutter_plugin_flutterflow/datatypes/hittest_result_types.dart';
+import 'package:ar_flutter_plugin_flutterflow/datatypes/node_types.dart';
+import 'package:ar_flutter_plugin_flutterflow/managers/ar_anchor_manager.dart';
+import 'package:ar_flutter_plugin_flutterflow/managers/ar_location_manager.dart';
+import 'package:ar_flutter_plugin_flutterflow/managers/ar_object_manager.dart';
+import 'package:ar_flutter_plugin_flutterflow/managers/ar_session_manager.dart';
+import 'package:ar_flutter_plugin_flutterflow/models/ar_anchor.dart';
+import 'package:ar_flutter_plugin_flutterflow/models/ar_hittest_result.dart';
+import 'package:ar_flutter_plugin_flutterflow/models/ar_node.dart';
+import 'package:ar_flutter_plugin_flutterflow/widgets/ar_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:injector/injector.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/metrics/AddMetric.dart';
 import 'package:tavrida_flutter/services/model_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:flutter/services.dart';
-import 'package:image/image.dart' as img;
 import 'package:tavrida_flutter/widgets/TalkerWidget.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 import 'package:path/path.dart' as Path;
-import 'dart:io' show Platform;
 
 import '../../services/models/model.dart';
 
@@ -505,7 +503,6 @@ class _ARPageState extends State<ARPage> {
     this.arSessionManager = arSessionManager;
     this.arObjectManager = arObjectManager;
     this.arAnchorManager = arAnchorManager;
-
     this.arSessionManager!.onInitialize(
       showAnimatedGuide: Platform.isAndroid,
       showFeaturePoints: false,
@@ -562,10 +559,10 @@ class _ARPageState extends State<ARPage> {
       if (didAddNodeToAnchor!) {
         nodes.add(newNode);
       } else {
-        arSessionManager!.onError("Adding Node to Anchor failed");
+        arSessionManager!.onError!("Adding Node to Anchor failed");
       }
     } else {
-      arSessionManager!.onError("Adding Anchor failed");
+      arSessionManager!.onError!("Adding Anchor failed");
     }
     }
 

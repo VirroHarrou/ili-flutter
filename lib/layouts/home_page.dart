@@ -83,5 +83,10 @@ class HomePageState extends State<HomePage> {
         iconSize: 26,
       )
     );
+
+    return Scaffold(
+      body: getCurrentWidget(),
+      bottomNavigationBar: navigationBar,
+    );
   }
 }
