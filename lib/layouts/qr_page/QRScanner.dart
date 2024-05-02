@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:tavrida_flutter/repositories/metrics/AddMetric.dart';
-import 'package:tavrida_flutter/repositories/models/GetModel.dart';
 import 'package:tavrida_flutter/services/model_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 

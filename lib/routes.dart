@@ -1,16 +1,13 @@
-import 'package:tavrida_flutter/layouts/ar_page/ar_kit_page.dart';
 import 'package:tavrida_flutter/layouts/ar_page/ar_page.dart';
 import 'package:tavrida_flutter/layouts/ar_page/loading_page.dart';
 import 'package:tavrida_flutter/layouts/auth_page/auth_page_view.dart';
 import 'package:tavrida_flutter/layouts/forum_page/view.dart';
 import 'package:tavrida_flutter/layouts/home_page.dart';
 import 'package:tavrida_flutter/layouts/models_page/model_list_page.dart';
-import 'package:tavrida_flutter/layouts/splash_screen_page.dart';
 import 'package:tavrida_flutter/layouts/qr_page/QRScanner.dart';
-import 'dart:io' show Platform;
 
 final routes = {
-  "/" : (context) => const SplashScreen(),
+  "/" : (context) => const HomePage(),
   "/auth" : (context) => const AuthPage(),
   "/ForumDetail" : (context) => const ForumDetailPage(),
   "/ar_page" : (context) => ARPage(),

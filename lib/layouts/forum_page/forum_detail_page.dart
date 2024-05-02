@@ -9,7 +9,6 @@ import 'package:tavrida_flutter/layouts/forum_page/platfrom_elements_serializer.
 import 'package:tavrida_flutter/layouts/forum_page/platfrom_services.dart';
 import 'package:tavrida_flutter/layouts/forum_page/question_controller.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
-import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/services/models/platform.dart';
 import 'package:tavrida_flutter/services/models/questionnaire.dart';
 import 'package:tavrida_flutter/services/platform_service.dart';
@@ -34,7 +33,6 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
   List<PlatformLinksModel> platformLinks = [];
   List<Questionnaire> questionnaires = [];
   List<QuestionController> controllers = [];
-  Model? model;
   bool isFirst = true;
   Map<dynamic, dynamic> arguments = <dynamic, dynamic>{};
   bool _showAdditionalInfo = true;

@@ -3,11 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
 import 'package:intl/intl.dart';
-import 'package:tavrida_flutter/repositories/forum/GetForums.dart';
-import 'package:tavrida_flutter/repositories/forum/GetForumsSearch.dart';
 import 'package:tavrida_flutter/repositories/metrics/AddMetric.dart';
 
-import 'package:tavrida_flutter/repositories/views/models.dart';
 import 'package:tavrida_flutter/services/models/platform.dart';
 import 'package:tavrida_flutter/services/platform_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
