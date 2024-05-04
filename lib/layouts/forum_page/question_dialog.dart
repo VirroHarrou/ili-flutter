@@ -1,6 +1,7 @@
 import 'package:dart_extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tavrida_flutter/layouts/forum_page/question_controller.dart';
 import 'package:tavrida_flutter/services/models/questionnaire.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
@@ -41,7 +42,7 @@ class _QuestionDialogState extends State<QuestionDialog> {
           Align(
             alignment: Alignment.topRight,
             child: FloatingActionButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => context.pop(),
               shape: const CircleBorder(),
               backgroundColor: AppColors.white.withOpacity(0.6),
               child: const Icon(Icons.close, color: Colors.black,),

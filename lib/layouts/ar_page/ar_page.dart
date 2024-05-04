@@ -16,15 +16,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gallery_saver/gallery_saver.dart';
+import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/repositories/metrics/AddMetric.dart';
 import 'package:tavrida_flutter/services/model_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:flutter/services.dart';
-import 'package:image/image.dart' as img;
 import 'package:tavrida_flutter/widgets/TalkerWidget.dart';
 import 'package:vector_math/vector_math_64.dart' hide Colors;
 import 'package:path/path.dart' as Path;
@@ -309,7 +308,7 @@ class _ARPageState extends State<ARPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pop(context);
+          context.pop();
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
         elevation: 0,
@@ -350,7 +349,7 @@ class _ARPageState extends State<ARPage> {
                     backgroundColor: Colors.grey.withOpacity(0.5),
                     elevation: 0,
                     enableFeedback: false,
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () => context.pop(),
                     child: Icon(Icons.close, color: AppColors.black,),
                     shape: OvalBorder(),
                   ),
@@ -370,7 +369,7 @@ class _ARPageState extends State<ARPage> {
                           wight: 300,
                           height: 50,
                         );
-                        Navigator.pop(context);
+                        context.pop();
                       });
                     },
                     child: Container(

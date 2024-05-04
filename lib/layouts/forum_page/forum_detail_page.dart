@@ -1,5 +1,5 @@
 import 'package:dart_extensions/dart_extensions.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -313,7 +313,6 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                                         decoration: TextDecoration.underline,
                                         decorationColor: Color(0xFF6EB3F2),
                                       ),
-
                                     ),
                                   ),
                                 );
@@ -332,7 +331,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pop(context);
+          context.pop();
         },
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
@@ -356,7 +355,8 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
             flex: 7,
             child: MaterialButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, "/QR");
+                  // Navigator.pushNamed(context, "/QR");
+                  context.push('/QR');
                 },
                 padding: EdgeInsets.zero,
                 child: Container(
@@ -477,7 +477,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                 Align(
                     alignment: const Alignment(0.95, -0.97),
                     child: FloatingActionButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => context.pop(),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
                       backgroundColor: Colors.white.withOpacity(0.6),
                       hoverColor: Colors.white,

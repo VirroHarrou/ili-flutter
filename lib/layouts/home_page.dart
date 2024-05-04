@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tavrida_flutter/layouts/forum_page/view.dart';
 import 'package:tavrida_flutter/layouts/models_page/model_list_page.dart';
 
@@ -24,7 +25,8 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final fab = InkWell(
-      onTap: () => Navigator.pushNamed(context, "/QR"),
+      onTap: () => context.go('/QR'),
+          // Navigator.pushNamed(context, "/QR"),
       //onLongPress: () => Navigator.pushNamed(context, "/ModelList"),
       child: Container(
         width: 64,

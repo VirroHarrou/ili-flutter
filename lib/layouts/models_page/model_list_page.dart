@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tavrida_flutter/layouts/models_page/bloc/model_list_bloc.dart';
@@ -63,7 +64,8 @@ class ModelListPageState extends State<ModelListPage> {
         itemBuilder: (context, i) {
           final model = models[i];
           return InkWell(
-            onTap: () => Navigator.pushNamed(context, '/Load', arguments: model),
+            onTap: () => context.go(Uri(path: '/Load', queryParameters: {'model': model}).toString()),
+            // Navigator.pushNamed(context, '/Load', arguments: model),
             child: Container(
               padding: const EdgeInsets.all(8),
               height: 360,

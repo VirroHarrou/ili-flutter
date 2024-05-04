@@ -1,9 +1,9 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
 import 'package:intl/intl.dart';
-import 'package:tavrida_flutter/repositories/metrics/AddMetric.dart';
 
 import 'package:tavrida_flutter/services/models/platform.dart';
 import 'package:tavrida_flutter/services/platform_service.dart';
@@ -50,8 +50,9 @@ class _ForumListPageState extends State<ForumListPage> {
         return InkWell(
             onTap: () {
               var id = platforms?[index].id;
-              Navigator.pushNamed(context, "/ForumDetail",
-                  arguments: {"id": id});
+              // Navigator.pushNamed(context, "/ForumDetail",
+              //     arguments: {"id": id});
+              context.go(Uri(path: '/ForumDetail', queryParameters: {'id': id}).toString());
             },
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20, left: 24, right: 24),

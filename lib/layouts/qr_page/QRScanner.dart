@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:tavrida_flutter/repositories/metrics/AddMetric.dart';
@@ -50,8 +51,8 @@ class _QRPageState extends State<QRPage> {
     final height = MediaQuery.of(context).size.height;
     double scanArea = (wight < 400 || height < 400)
         ? (wight < 300 || height < 300)
-          ? 150
-          : 225
+        ? 150
+        : 225
         : 300;
     bool isKeyboardOff = MediaQuery.of(context).viewInsets.bottom == 0;
     return Scaffold(
@@ -59,7 +60,7 @@ class _QRPageState extends State<QRPage> {
         backgroundColor: AppColors.grey,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
         onPressed: () {
-          Navigator.of(context).pop();
+          context.pop();
         },
         child: const Icon(Icons.arrow_back),
       ),
@@ -126,12 +127,14 @@ class _QRPageState extends State<QRPage> {
                   }
                   if (code != 0 && input.length == 4){
                     modelService.getModelDetail(code: code.toString())
-                      .then((value) {
+                        .then((value) {
                       if(value == null || value.id == null){
                         isBadRequest = true;
                       } else {
                         isBadRequest = false;
-                        Navigator.popAndPushNamed(context, "/Load", arguments: value);
+                        // Navigator.popAndPushNamed(context, "/Load", arguments: value);
+                        context.pop();
+                        context.go(Uri(path: '/Load', queryParameters: {'model': value}).toString());
                       }
                       setState(() {});
                     });
@@ -143,12 +146,14 @@ class _QRPageState extends State<QRPage> {
                   }
                   if (code != 0){
                     modelService.getModelDetail(code: code.toString())
-                      .then((value) {
+                        .then((value) {
                       if(value == null || value.id == null){
                         isBadRequest = true;
                       } else {
                         isBadRequest = false;
-                        Navigator.popAndPushNamed(context, "/Load", arguments: value);
+                        // Navigator.popAndPushNamed(context, "/Load", arguments: value);
+                        context.pop();
+                        context.go(Uri(path: '/Load', queryParameters: {'model': value}).toString());
                       }
                       setState(() {});
                     });
@@ -192,7 +197,9 @@ class _QRPageState extends State<QRPage> {
         var response = await modelService.getModelDetail(id: result!.code);
         if(response != null && !isPushed) {
           isPushed = true;
-          Navigator.popAndPushNamed(context, "/Load", arguments: response);
+          // Navigator.popAndPushNamed(context, "/Load", arguments: response);
+          context.pop();
+          context.go(Uri(path: '/Load', queryParameters: {'model': response}).toString());
         }
       }
     });

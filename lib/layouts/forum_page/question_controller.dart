@@ -1,5 +1,6 @@
 import 'package:dart_extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
 import 'package:tavrida_flutter/layouts/forum_page/question_dialog.dart';
 import 'package:tavrida_flutter/services/models/questionnaire.dart';
@@ -50,7 +51,7 @@ class QuestionController {
     _iterator++;
     answersCountCallback({questionnaire.id! : _iterator});
     if (context.mounted) {
-      Navigator.pop(context);
+      context.pop();
     }
     if(i >= questions.length){
       showDialog(context: context, builder: (context) => _buildEndDialog(context));
@@ -72,7 +73,7 @@ class QuestionController {
           Align(
             alignment: Alignment.topRight,
             child: FloatingActionButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => context.pop(),
               shape: const CircleBorder(),
               backgroundColor: AppColors.white.withOpacity(0.6),
               child: const Icon(Icons.close, color: Colors.black,),
@@ -116,7 +117,7 @@ class QuestionController {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: buildButton("Ок", () {
-                      Navigator.pop(context);
+                      context.pop();
                     }),
                   ),
                 ),

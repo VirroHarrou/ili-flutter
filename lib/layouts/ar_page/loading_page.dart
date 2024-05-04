@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../services/models/model.dart';
 import 'CustomDownloadIndicator.dart';
@@ -25,12 +26,13 @@ class LoadingPageState extends State<LoadingPage> {
               url: model.valueUrl ?? '',
               filename: '${model.id}.glb' ?? '',
               onDownloadComplete: (file) {
-                Navigator.pushReplacementNamed(context, "/ar_page", arguments: model);
+                // Navigator.pushReplacementNamed(context, "/ar_page", arguments: model);
+                context.go(Uri(path: '/ar_page', queryParameters: {'model': model}).toString());
               },
             ),
             const SizedBox(height: 32,),
             InkWell(
-              onTap: () => Navigator.of(context).pop(),
+              onTap: () => context.pop(),
               child: Container(
                 height: 32,
                 width: 96,
