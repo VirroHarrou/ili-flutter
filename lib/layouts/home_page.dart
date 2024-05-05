@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tavrida_flutter/layouts/forum_page/view.dart';
 import 'package:tavrida_flutter/layouts/models_page/model_list_page.dart';
+import 'package:tavrida_flutter/layouts/platform/view.dart';
 
 import '../themes/app_colors.dart';
 
@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget{
 class HomePageState extends State<HomePage> {
 
   List<StatefulWidget> get widgets => const [
-    ForumListPage(),
+    PlatformListPage(),
     ModelListPage(),
   ];
   int _selectedWidget = 0;

@@ -40,6 +40,12 @@ class ModelListBloc extends Bloc<ModelListEvent, ModelListState> {
 
         models.add(model);
       }
+      if (models.isEmpty){
+        emit(ModelListFailureState(
+          message: 'При обновлении данных произошла ошибка, пожалуйста попробуйте позже',
+        ));
+        return;
+      }
       emit(ModelListLoadedState(models: models));
     });
 
@@ -65,11 +71,8 @@ class ModelListBloc extends Bloc<ModelListEvent, ModelListState> {
     return ids;
   }
 
-  Future<Model?> _getModelData(String id) async {
-    var model = await modelService.getModelDetail(id: id);
-    if (model != null) return model;
-    return null;
-  }
+  Future<Model?> _getModelData(String id) async =>
+      await modelService.getModelDetail(id: id);
 
   Future<void> _deleteModelFile(String id) async {
     var dir = await getApplicationDocumentsDirectory();

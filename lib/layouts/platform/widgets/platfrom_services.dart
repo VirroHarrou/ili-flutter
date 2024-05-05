@@ -1,8 +1,9 @@
 import 'package:dart_extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:tavrida_flutter/layouts/forum_page/platfrom_elements_serializer.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'view.dart';
 
 class PlatformServices extends StatefulWidget {
   final List<PlatformServicesModel> elements;

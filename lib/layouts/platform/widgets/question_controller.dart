@@ -1,10 +1,11 @@
 import 'package:dart_extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:injector/injector.dart';
-import 'package:tavrida_flutter/layouts/forum_page/question_dialog.dart';
 import 'package:tavrida_flutter/services/models/questionnaire.dart';
 import 'package:tavrida_flutter/services/questionnaire_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
+
+import 'view.dart';
 
 class QuestionController {
   final Questionnaire questionnaire;

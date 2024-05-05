@@ -1,10 +1,11 @@
 import 'package:dart_extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tavrida_flutter/layouts/forum_page/question_controller.dart';
 import 'package:tavrida_flutter/services/models/questionnaire.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:tavrida_flutter/widgets/CustomTextField.dart';
+
+import 'view.dart';
 
 class QuestionDialog extends StatefulWidget{
   final QuestionController questionController;

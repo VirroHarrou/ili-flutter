@@ -1,13 +1,7 @@
 import 'package:dart_extensions/dart_extensions.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:injector/injector.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:tavrida_flutter/layouts/forum_page/image_viewer.dart';
-import 'package:tavrida_flutter/layouts/forum_page/platform_news.dart';
-import 'package:tavrida_flutter/layouts/forum_page/platfrom_elements_serializer.dart';
-import 'package:tavrida_flutter/layouts/forum_page/platfrom_services.dart';
-import 'package:tavrida_flutter/layouts/forum_page/question_controller.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/services/models/platform.dart';
 import 'package:tavrida_flutter/services/models/questionnaire.dart';
@@ -16,6 +10,8 @@ import 'package:tavrida_flutter/services/questionnaire_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:tavrida_flutter/widgets/ImagesCarousel.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'widgets/view.dart';
 
 class ForumDetailPage extends StatefulWidget {
   const ForumDetailPage({super.key});

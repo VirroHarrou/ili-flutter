@@ -1,10 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:tavrida_flutter/layouts/forum_page/platfrom_elements_serializer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../themes/app_colors.dart';
+import '../../../themes/app_colors.dart';
+import 'view.dart';
 
 class PlatformNews extends StatefulWidget {
   final List<PlatformNewsModel> elements;

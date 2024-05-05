@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injector/injector.dart';
@@ -9,6 +6,7 @@ import 'package:tavrida_flutter/layouts/models_page/bloc/model_list_bloc.dart';
 import 'package:tavrida_flutter/services/models/model.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:tavrida_flutter/widgets/DataEmpty.dart';
+import 'package:tavrida_flutter/widgets/loading_state_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 part 'widgets/app_bar.dart';
@@ -110,14 +108,6 @@ class ModelListPageState extends State<ModelListPage> {
         separatorBuilder: (context, iterator) => const SizedBox(height: 16,),
         itemCount: models.length,
       ),
-    );
-  }
-
-  Widget buildLoading(BuildContext context) {
-    return Center(
-      child: Platform.isIOS
-          ? const CupertinoActivityIndicator()
-          : const CircularProgressIndicator(),
     );
   }
 }
