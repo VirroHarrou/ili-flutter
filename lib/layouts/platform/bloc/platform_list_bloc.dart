@@ -14,7 +14,6 @@ class PlatformListBloc extends Bloc<PlatformListEvent, PlatformListState> {
   PlatformListBloc() : super(PlatformListEmpty()) {
     on<PlatformListUpdateEvent>((event, emit) async {
       if (platforms.isEmpty) emit(PlatformListLoading());
-      print(event.count);
       var result = await updateData(skip: event.skip, count: event.count);
 
       if (result.isEmptyOrNull) {
@@ -24,7 +23,7 @@ class PlatformListBloc extends Bloc<PlatformListEvent, PlatformListState> {
         return;
       }
 
-      platforms.addAll(result!);
+      await addPlatforms(result!);
       emit(PlatformListLoaded(platforms: platforms));
     });
 
@@ -42,6 +41,16 @@ class PlatformListBloc extends Bloc<PlatformListEvent, PlatformListState> {
 
       emit(PlatformListEmpty());
     });
+  }
+
+  Future<void> addPlatforms(List<Platform> platforms) async {
+    for (var el in platforms){
+      if (this.platforms
+          .where((element) => element.id == el.id)
+          .firstOrNull == null) {
+        this.platforms.add(el);
+      }
+    }
   }
 
   Future<List<Platform>?> updateData({skip, count}) async =>

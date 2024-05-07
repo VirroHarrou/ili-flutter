@@ -31,7 +31,7 @@ class PlatformService {
     if (response == null) return null;
     if (response.statusCode! >= 400) return null;
     try {
-      List jsonPlatformList = response.data;
+      List jsonPlatformList = response.data['platformList'];
       List<Platform> platformList = [];
       for (var element in jsonPlatformList) {
         platformList.add(Platform.fromJson(element));

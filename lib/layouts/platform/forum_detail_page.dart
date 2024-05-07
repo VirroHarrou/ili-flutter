@@ -491,6 +491,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                       color: Colors.white,
                     ),
                     child: ImageViewer(
+                      height: MediaQuery.of(context).size.height * 0.65,
                       imageUrls: platform?.mapUrls ?? [''],
                     ),
                   ),

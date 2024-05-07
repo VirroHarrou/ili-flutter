@@ -6,8 +6,9 @@ import 'package:photo_view/photo_view_gallery.dart';
 
 class ImageViewer extends StatefulWidget{
   final List<String> imageUrls;
+  final double height;
 
-  const ImageViewer({super.key, required this.imageUrls});
+  const ImageViewer({super.key, required this.imageUrls, this.height = 300});
 
   @override
   State<ImageViewer> createState() => _ImageViewerState();
@@ -29,7 +30,7 @@ class _ImageViewerState extends State<ImageViewer> {
     return Column(
       children: [
         SizedBox(
-          height: 300,
+          height: widget.height,
           child: PhotoViewGallery.builder(
             scrollPhysics: const BouncingScrollPhysics(),
             backgroundDecoration: BoxDecoration(

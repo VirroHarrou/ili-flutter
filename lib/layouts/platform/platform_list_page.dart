@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:tavrida_flutter/layouts/platform/bloc/platform_list_bloc.dart';
 import 'package:tavrida_flutter/services/models/platform.dart';
@@ -43,10 +44,46 @@ class _PlatformListPageState extends State<PlatformListPage> {
             case PlatformListLoaded():
               return buildLoadedList(state.platforms);
             case PlatformListFailure():
+              return buildFailure(message: state.message,);
             default:
               return Container();
           }
         },
+      ),
+    );
+  }
+
+  Widget buildFailure({required String message}) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            SvgPicture.asset('assets/images/something_went_wrong.svg', height: 200, fit: BoxFit.cover,),
+            const SizedBox(height: 24,),
+            const Text(
+              'Упс! Что-то пошло не так...',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppColors.black,
+              ),
+            ),
+            const SizedBox(height: 8,),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: AppColors.grey,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -162,6 +199,7 @@ class _PlatformListPageState extends State<PlatformListPage> {
               if (!isSearching) {
                 customIcon = const Icon(Icons.clear, size: 32,);
                 isSearching = true;
+                bloc.add(PlatformListUpdateEvent());
               } else {
                 customIcon = const Icon(Icons.search, size: 32,);
                 isSearching = false;
