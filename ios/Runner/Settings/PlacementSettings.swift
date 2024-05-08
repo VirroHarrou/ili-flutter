@@ -14,7 +14,9 @@ class PlacementSettings: ObservableObject {
             print("Setting selectedModel to \(String(describing: newValue?.name)).")
         }
     }
-    @Published var recentlyPlaced: [Model] = [] // NOTE: Last element is most recent
+    
+    @Published var recentlyPlaced: [Model] = []
+    @Published var isTextField: Bool = true
 
     var modelsConfirmedForPlacement: [ModelAnchor] = []
     var sceneObserver: Cancellable?

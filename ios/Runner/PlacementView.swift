@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PlacementView: View {
     @EnvironmentObject var placementSettings: PlacementSettings
+    @EnvironmentObject var modelsViewModel: ModelsViewModel
     
     var body: some View {
         HStack {
@@ -17,10 +18,10 @@ struct PlacementView: View {
             PlacementButton(systemIconName: "checkmark.circle.fill") {
                 print("Confirm Placement button pressed.")
                 
+                self.placementSettings.selectedModel = self.modelsViewModel.model
+                
                 let modelAnchor = ModelAnchor(model: self.placementSettings.selectedModel!, anchor: nil)
                 self.placementSettings.modelsConfirmedForPlacement.append(modelAnchor)
-                
-                self.placementSettings.selectedModel = nil
             }
             
             Spacer()

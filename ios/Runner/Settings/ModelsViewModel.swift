@@ -1,10 +1,12 @@
 import Foundation
 
 class ModelsViewModel: ObservableObject {
-    @Published var models: [Model] = [Model(name: "frame (1)", category: ModelCategory.chair, scaleCompensation: 1.0)]
+    @Published var model: Model = Model(name: "1", category: ModelCategory.chair, scaleCompensation: 0.1)
     
     func fetchData(path: String) {
-        self.models.first?.path = path
+        self.model.path = path
+        self.model.asyncLoadModelEntity { completed, error in
+        }
     }
     
 //    private let db = Firestore.firestore()
@@ -28,10 +30,4 @@ class ModelsViewModel: ObservableObject {
 //            }
 //        }
 //    }
-    
-    func clearModelEntitiesFromMemory() {
-        for model in models {
-            model.modelEntity = nil
-        }
-    }
 }

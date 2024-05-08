@@ -1,13 +1,10 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
-import '../../repositories/views/model.dart';
+import '../../services/models/model.dart';
 
 class ARKitPage extends StatefulWidget {
-  const ARKitPage({super.key,});
+  const ARKitPage({super.key});
 
   @override
   State<ARKitPage> createState() => _MyHomePageState();
@@ -15,56 +12,36 @@ class ARKitPage extends StatefulWidget {
 
 class _MyHomePageState extends State<ARKitPage> {
   bool isLoading = true;
-  late Model model;
   String path = '';
 
   @override
   void initState() {
-    da();
+    getFile();
     super.initState();
   }
 
-  void da() async {
-    // model = (await getModelAsync(null, widget.model.id))!;
-    // print(model.valueUrlUSDZ);
-    final file = await _downloadFile('https://developer.apple.com/augmented-reality/quick-look/models/vintagerobot2k/robot_walk_idle.usdz', 'robot_walk_idle.usdz');
-    path = file.path;
-    print(file.path);
-    isLoading = false;
-    setState(() {
-
-    });
-  }
-
-  Future<File> _downloadFile(String url, String filename) async {
+  void getFile() async {
     String dir = (await getApplicationDocumentsDirectory()).path;
-    File file = File('$dir/$filename');
-    if(await file.exists()) {
-      return file;
+    if (mounted) {
+      path = "$dir/${(ModalRoute.of(context)?.settings.arguments as Model).id!}.usdz";
     }
-
-    var request = await HttpClient().getUrl(Uri.parse(url));
-    var response = await request.close();
-    var bytes = await consolidateHttpClientResponseBytes(response);
-
-    await file.writeAsBytes(bytes);
-
-    return file;
+    isLoading = false;
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading ? Center(
+      body: isLoading ? const Center(
         child: CircularProgressIndicator(),
       ) : Stack(
         children: [
           UiKitView(
             viewType: 'MySwiftUIView',
             creationParams: path,
-            creationParamsCodec: StandardMessageCodec(),
+            creationParamsCodec: const StandardMessageCodec(),
           ),
-          Positioned(
+          const Positioned(
             top: 30,
             left: 10,
             child: BackButton(),

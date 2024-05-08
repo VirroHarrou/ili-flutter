@@ -1,5 +1,5 @@
+import 'package:flutter/material.dart';
 import 'package:tavrida_flutter/layouts/ar_page/ar_kit_page.dart';
-import 'package:tavrida_flutter/layouts/ar_page/ar_page.dart';
 import 'package:tavrida_flutter/layouts/ar_page/loading_page.dart';
 import 'package:tavrida_flutter/layouts/auth_page/auth_page_view.dart';
 import 'package:tavrida_flutter/layouts/forum_page/view.dart';
@@ -13,7 +13,7 @@ final routes = {
   "/" : (context) => const SplashScreen(),
   "/auth" : (context) => const AuthPage(),
   "/ForumDetail" : (context) => const ForumDetailPage(),
-  "/ar_page" : (context) => ARPage(),
+  "/ar_page" : (context) => Platform.isIOS ? const ARKitPage() : const Scaffold(),
   "/home" : (context) => const HomePage(),
   "/QR" : (context) => const QRPage(),
   "/Load" : (context) => const LoadingPage(),

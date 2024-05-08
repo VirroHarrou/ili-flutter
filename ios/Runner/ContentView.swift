@@ -28,18 +28,28 @@ struct ContentView: View {
     @State private var showBrowse: Bool = false
     @State private var showSettings: Bool = false
     
+    @State private var text: String = ""
+    @FocusState private var focused: Bool
+    
     var body: some View {
         ZStack(alignment: .bottom) {
             
             ARViewContainer()
             
-            if self.placementSettings.selectedModel != nil {
-                //PlacementView()
-            } else if self.modelDeletionManager.entitySelectedForDeletion != nil {
-                DeletionView()
-            } else {
-//                ControlView(selectedControlMode: $selectedControlMode, isControlsVisible: $isControlsVisible, showBrowse: $showBrowse, showSettings: $showSettings)
+            if self.placementSettings.selectedModel == nil {
+                PlacementView()
             }
+            else {
+                //DeletionView()
+            }
+            
+//            if self.placementSettings.selectedModel != nil {
+//                PlacementView()
+//            } else if self.modelDeletionManager.entitySelectedForDeletion != nil {
+//                DeletionView()
+//            } else {
+////                ControlView(selectedControlMode: $selectedControlMode, isControlsVisible: $isControlsVisible, showBrowse: $showBrowse, showSettings: $showSettings)
+//            }
         }
         .edgesIgnoringSafeArea(.all)
         .onAppear() {

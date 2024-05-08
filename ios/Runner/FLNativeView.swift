@@ -44,6 +44,8 @@ class FLNativeView: NSObject, FlutterPlatformView {
         
         let unwrappedOptional = args as? Optional<String>
         
+        print("ыппыпы \(unwrappedOptional)")
+        
         let vc = UIHostingController(rootView: ContentView1(path: unwrappedOptional!!))
         let swiftUIView = vc.view!
         swiftUIView.translatesAutoresizingMaskIntoConstraints = false

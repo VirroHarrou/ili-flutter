@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../services/models/model.dart';
 import 'CustomDownloadIndicator.dart';
+import 'dart:io' show Platform;
 
 class LoadingPage extends StatefulWidget{
   const LoadingPage({super.key});
@@ -22,8 +23,8 @@ class LoadingPageState extends State<LoadingPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             DownloadProgressIndicator(
-              url: model.valueUrl ?? '',
-              filename: '${model.id}.glb' ?? '',
+              url: (Platform.isIOS ? model.valueUrlUSDZ : model.valueUrl) ?? '',
+              filename: '${model.id}.${Platform.isIOS ? 'usdz' : 'glb'}',
               onDownloadComplete: (file) {
                 Navigator.pushReplacementNamed(context, "/ar_page", arguments: model);
               },

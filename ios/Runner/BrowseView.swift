@@ -48,24 +48,6 @@ struct RecentsGrid: View {
     }
 }
 
-struct ModelsByCategoryGrid: View {
-    @EnvironmentObject var modelsViewModel: ModelsViewModel
-    @Binding var showBrowse: Bool
-    
-    var body: some View {
-        VStack {
-            ForEach(ModelCategory.allCases, id: \.self) { category in
-                
-                // Only display grid if category contains items
-                let modelsByCategory = modelsViewModel.models.filter({$0.category == category})
-                if !modelsByCategory.isEmpty {
-                    HorizontalGrid(showBrowse: $showBrowse, title: category.label, items: modelsByCategory)
-                }
-            }
-        }
-    }
-}
-
 struct HorizontalGrid: View {
     @EnvironmentObject var placementSettings: PlacementSettings
     @Binding var showBrowse: Bool

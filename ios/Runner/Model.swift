@@ -70,6 +70,7 @@ class Model: ObservableObject, Identifiable {
                 case .failure(let error): print("Unable to load modelEntity for \(self.name). Error: \(error.localizedDescription)")
                     handler(false, error)
                 case .finished:
+                    print("Эщкере")
                     break
                 }
                 

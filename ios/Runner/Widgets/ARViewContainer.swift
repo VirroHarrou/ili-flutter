@@ -25,19 +25,8 @@ struct ARViewContainer: UIViewRepresentable {
             self.updatePersistenceAvailability(for: arView)
             self.handlePersistence(for: arView)
         }
-        
-        if let trackingImages = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: nil) {
-                    let configuration = ARImageTrackingConfiguration()
-                    configuration.trackingImages = trackingImages
-                    arView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
-                }
-        
-        guard let trackerImage = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: nil) else {
-            fatalError("Missing expected asset catalog resources.")
-        }
 
         let configuration = ARWorldTrackingConfiguration()
-        configuration.detectionImages = trackerImage
         arView.session.run(configuration)
         
         return arView
@@ -49,10 +38,6 @@ struct ARViewContainer: UIViewRepresentable {
         
         // Only display focusEntity when in "placement mode"
         arView.focusEntity?.isEnabled = self.placementSettings.selectedModel == nil
-        
-        guard let referenceImages = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: nil) else {
-            fatalError("Missing expected asset catalog resources.")
-        }
         
 //        for anchor in anchors {
 //            guard let imageAnchor = anchor as? ARImageAnchor else { return }
@@ -171,7 +156,7 @@ extension ARViewContainer {
                 return
             }
                         
-            self.modelsViewModel.clearModelEntitiesFromMemory()
+            //self.modelsViewModel.clearModelEntitiesFromMemory()
             
             self.sceneManager.anchorEntities.removeAll(keepingCapacity: true)
                         
@@ -196,20 +181,13 @@ extension ARViewContainer {
         }
         
         func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-            guard let referenceImages = ARReferenceImage.referenceImages(inGroupNamed: "AR Resources", bundle: nil) else {
-                fatalError("Missing expected asset catalog resources.")
-            }
-            
             for anchor in anchors {
                 if let anchorName = anchor.name, anchorName.hasPrefix(anchorNamePrefix) {
                     let modelName = anchorName.dropFirst(anchorNamePrefix.count)
                     
                     print("ARSession: didAdd anchor for modelName: \(modelName).")
                     
-                    guard let model = self.parent.modelsViewModel.models.first(where: { $0.name == modelName }) else {
-                        print("Unable to retrieve model from modelsViewModel.")
-                        return
-                    }
+                    let model = self.parent.modelsViewModel.model
                                         
                     // IMPORTANT: This should only run when loading anchors from a persisted scene. If the user places a model, the modelAnchor should be already appended to modelsConfirmedForPlacement.
                     if model.modelEntity == nil {
@@ -224,32 +202,32 @@ extension ARViewContainer {
                     }
                 }
                 
-                if let anchorName = anchor.name, anchor.name == "frame (1)" {
-                    print("Эщкере")
-                    
-//                    let modelName = "armyanin"
+//                if let anchorName = anchor.name {
+//                    print("Эщкере")
 //                    
-//                    print("ARSession: didAdd anchor for modelName: \(modelName).")
+////                    let modelName = "armyanin"
+////                    
+////                    print("ARSession: didAdd anchor for modelName: \(modelName).")
+////                    
+////                    guard let model = self.parent.modelsViewModel.models.first(where: { $0.name == modelName }) else {
+////                        print("Unable to retrieve model from modelsViewModel.")
+////                        return
+////                    }
 //                    
-//                    guard let model = self.parent.modelsViewModel.models.first(where: { $0.name == modelName }) else {
-//                        print("Unable to retrieve model from modelsViewModel.")
-//                        return
+//                    let model = self.parent.modelsViewModel.models.first!
+//                    
+//                    if model.modelEntity == nil {
+//                        model.asyncLoadModelEntity { completed, error in
+//                            //print("ARSession: loaded modelEntity for anchor - \(modelName)")
+//                            if completed {
+//                                let modelAnchor = ModelAnchor(model: model, anchor: anchor)
+//                                self.parent.placementSettings.modelsConfirmedForPlacement.append(modelAnchor)
+//                                self.parent.placementSettings.selectedModel = model
+//                                print("Adding modelAnchor with name: \(model.name)")
+//                            }
+//                        }
 //                    }
-                    
-                    let model = self.parent.modelsViewModel.models.first!
-                    
-                    if model.modelEntity == nil {
-                        model.asyncLoadModelEntity { completed, error in
-                            //print("ARSession: loaded modelEntity for anchor - \(modelName)")
-                            if completed {
-                                let modelAnchor = ModelAnchor(model: model, anchor: anchor)
-                                self.parent.placementSettings.modelsConfirmedForPlacement.append(modelAnchor)
-                                self.parent.placementSettings.selectedModel = model
-                                print("Adding modelAnchor with name: \(model.name)")
-                            }
-                        }
-                    }
-                }
+//                }
             }
             
 //            for anchor in anchors {
