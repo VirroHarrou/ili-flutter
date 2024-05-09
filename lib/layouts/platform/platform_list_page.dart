@@ -35,7 +35,6 @@ class _PlatformListPageState extends State<PlatformListPage> {
       body: BlocBuilder<PlatformListBloc, PlatformListState>(
         bloc: bloc,
         builder: (context, state) {
-          debugPrint(state.toString());
           switch (state) {
             case PlatformListEmpty():
               return generateDataEmpty(context, 'Здесь появятся форумы, но пока здесь пусто');

@@ -4,7 +4,7 @@ import 'package:tavrida_flutter/layouts/auth_page/auth_page_view.dart';
 import 'package:tavrida_flutter/layouts/home_page.dart';
 import 'package:tavrida_flutter/layouts/models_page/model_list_page.dart';
 import 'package:tavrida_flutter/layouts/platform/view.dart';
-import 'package:tavrida_flutter/layouts/qr_page/QRScanner.dart';
+import 'package:tavrida_flutter/layouts/qr_page/qr_page.dart';
 
 final routes = {
   "/" : (context) => const HomePage(),

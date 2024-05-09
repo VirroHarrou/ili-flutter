@@ -35,7 +35,6 @@ class ModelListBloc extends Bloc<ModelListEvent, ModelListState> {
         model ??= Model(
           id: '',
           title: 'Сломанная модель',
-          logoUrl: 'https://i1.sndcdn.com/artworks-000610006042-grtxxe-t500x500.jpg',
         );
 
         models.add(model);
