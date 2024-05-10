@@ -1,5 +1,6 @@
 import 'package:dart_extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -180,7 +181,7 @@ class _PlatformServicesState extends State<PlatformServices> {
           Align(
             alignment: Alignment.topRight,
             child: FloatingActionButton(
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => context.pop(),
               shape: const CircleBorder(),
               backgroundColor: AppColors.white.withOpacity(0.6),
               child: const Icon(Icons.close, color: Colors.black,),

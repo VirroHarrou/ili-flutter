@@ -1,5 +1,7 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
 import 'package:tavrida_flutter/services/model_service.dart';
 
@@ -24,7 +26,7 @@ class QRBloc extends Bloc<QREvent, QRState> {
         return;
       }
       if (event.context.mounted) {
-        Navigator.pushNamed(event.context, "/Load", arguments: model);
+        event.context.push('/Load', extra: model);
       }
     });
 
@@ -36,7 +38,7 @@ class QRBloc extends Bloc<QREvent, QRState> {
         return;
       }
       if (event.context.mounted) {
-        Navigator.pushNamed(event.context, "/Load", arguments: model);
+        event.context.push('/Load', extra: model);
       }
     });
   }

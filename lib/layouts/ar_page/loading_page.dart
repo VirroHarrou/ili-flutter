@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io' show Platform;
 import '../../services/models/model.dart';
@@ -6,7 +7,9 @@ import 'CustomDownloadIndicator.dart';
 import 'package:flutter/services.dart';
 
 class LoadingPage extends StatefulWidget{
-  const LoadingPage({super.key});
+  const LoadingPage({super.key, required this.model});
+
+  final Model model;
 
   @override
   State<LoadingPage> createState() => LoadingPageState();
@@ -16,7 +19,7 @@ class LoadingPageState extends State<LoadingPage> {
 
   Future<String> navigateToNative() async {
     try {
-      final model = ModalRoute.of(context)?.settings.arguments as Model;
+      final model = widget.model;
       final dir = (await getApplicationDocumentsDirectory());
       var data = await const MethodChannel('com.hendrick.navigateChannel').invokeMethod('flutterNavigate', {"argKey": '${dir.path}/${model.id}.glb'});
       return data;
@@ -26,7 +29,7 @@ class LoadingPageState extends State<LoadingPage> {
   }
   @override
   Widget build(BuildContext context) {
-    final model = ModalRoute.of(context)?.settings.arguments as Model;
+    final model = widget.model;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -39,7 +42,7 @@ class LoadingPageState extends State<LoadingPage> {
               filename: '${model.id}.glb' ?? '',
               onDownloadComplete: (file) {
                 if (Platform.isAndroid) {
-                  Navigator.of(context).pop();
+                  context.pop();
                   navigateToNative();
                 }
                 else {
@@ -49,7 +52,7 @@ class LoadingPageState extends State<LoadingPage> {
             ),
             const SizedBox(height: 32,),
             InkWell(
-              onTap: () => Navigator.of(context).pop(),
+              onTap: () => context.pop(),
               child: Container(
                 height: 32,
                 width: 96,

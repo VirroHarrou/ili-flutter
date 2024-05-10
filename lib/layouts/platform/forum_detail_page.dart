@@ -1,4 +1,5 @@
 import 'package:dart_extensions/dart_extensions.dart';
+import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'widgets/view.dart';
 
 class ForumDetailPage extends StatefulWidget {
-  const ForumDetailPage({super.key});
+  const ForumDetailPage({super.key, required this.id});
+
+  final String id;
 
   @override
   State<StatefulWidget> createState() => _ForumDetailPageState();
@@ -98,10 +101,8 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
     var theme = Theme.of(context);
     DateTime startedAt = DateTime.parse(platform?.startedAt ?? '12122012');
     DateTime endedAt = DateTime.parse(platform?.endedAt ?? '12122012');
-    arguments = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
     if (isFirst) {
-      updateData(arguments['id'] ?? '');
+      updateData(widget.id);
       isFirst = false;
     }
     return Scaffold(
@@ -328,7 +329,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pop(context);
+          context.pop();
         },
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
@@ -352,7 +353,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
             flex: 7,
             child: MaterialButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, "/QR");
+                  context.push('/QR');
                 },
                 padding: EdgeInsets.zero,
                 child: Container(
@@ -473,7 +474,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                 Align(
                     alignment: const Alignment(0.95, -0.97),
                     child: FloatingActionButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => context.pop(),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(90)),
                       backgroundColor: Colors.white.withOpacity(0.6),
                       hoverColor: Colors.white,
