@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-
+import 'package:path_provider/path_provider.dart';
+import 'dart:io' show Platform;
 import '../../services/models/model.dart';
 import 'CustomDownloadIndicator.dart';
-import 'dart:io' show Platform;
+import 'package:flutter/services.dart';
 
 class LoadingPage extends StatefulWidget{
   const LoadingPage({super.key});
@@ -12,6 +13,17 @@ class LoadingPage extends StatefulWidget{
 }
 
 class LoadingPageState extends State<LoadingPage> {
+
+  Future<String> navigateToNative() async {
+    try {
+      final model = ModalRoute.of(context)?.settings.arguments as Model;
+      final dir = (await getApplicationDocumentsDirectory());
+      var data = await const MethodChannel('com.hendrick.navigateChannel').invokeMethod('flutterNavigate', {"argKey": '${dir.path}/${model.id}.glb'});
+      return data;
+    } on PlatformException catch (e) {
+      return 'Failed to invoke: ${e.message}';
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final model = ModalRoute.of(context)?.settings.arguments as Model;
@@ -23,10 +35,16 @@ class LoadingPageState extends State<LoadingPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             DownloadProgressIndicator(
-              url: (Platform.isIOS ? model.valueUrlUSDZ : model.valueUrl) ?? '',
-              filename: '${model.id}.${Platform.isIOS ? 'usdz' : 'glb'}',
+              url: model.valueUrl ?? '',
+              filename: '${model.id}.glb' ?? '',
               onDownloadComplete: (file) {
-                Navigator.pushReplacementNamed(context, "/ar_page", arguments: model);
+                if (Platform.isAndroid) {
+                  Navigator.of(context).pop();
+                  navigateToNative();
+                }
+                else {
+                  Navigator.pushReplacementNamed(context, "/ar_page", arguments: model);
+                }
               },
             ),
             const SizedBox(height: 32,),

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
-import 'package:tavrida_flutter/repositories/user/user_repository.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../repositories/views/user.dart';
 
 class AuthContainer extends StatefulWidget{
   const AuthContainer({super.key});
@@ -177,7 +174,7 @@ class _AuthContainerState extends State<AuthContainer> {
               ),
             ),
           ElevatedButton(
-              onPressed: onButtonPressed,
+              onPressed: null, //onButtonPressed,
               style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(AppColors.black),
                   minimumSize: MaterialStateProperty.all(const Size(300, 50)),
@@ -290,125 +287,125 @@ class _AuthContainerState extends State<AuthContainer> {
           }
         }
 
-  void onButtonPressed() {
-    if(isLogin){
-      var response = tryLoginAsync(email, password);
-      response.then((value) {
-        setState(() {
-          isBadRequest = false;
-          isBadEmail = false;
-          errorMessage = '';
-        });
-        switch (value.type ?? ResponseType.bad) {
-          case ResponseType.success:
-            AppSettings.authToken = value.data ?? '';
-            var data = AppSettings().parseJwt(AppSettings.authToken);
-            User.email = data["email"];
-            User.id = data["nameid"];
-            if(AppSettings.authToken != ''){
-              AppSettings.isNoName = false;
-              SharedPreferences.getInstance().then((storage) {
-                storage.setString("authUserToken", AppSettings.authToken);
-                storage.setBool("isLogin", true);
-                storage.setBool("isNoName", false);
-                storage.setString("userEmail", User.email!);
-                storage.setString("userId", User.id!);
-              });
-              AppSettings.isLogin = true;
-            }
-            Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
-            break;
-          case ResponseType.bad:
-            setState(() {
-              isBadEmail = true;
-              errorMessage = value.data!;
-            });
-            break;
-          case ResponseType.notFound:
-            setState(() {
-              isBadEmail = true;
-              isBadRequest = true;
-              errorMessage = value.data!;
-            });
-            break;
-          default:
-            break;
-        }
-      });
-    } else {
-      setState(() {
-        isBadPassword = false;
-        isBadRequest = false;
-        isBadEmail = false;
-        errorMessage = '';
-      });
-
-      if(!RegExp(r"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$").hasMatch(email)){
-        setState(() {
-          isBadEmail = true;
-          errorMessage = 'Почта введена не коректно';
-        });
-        return;
-      }
-      if(!RegExp(r"^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$").hasMatch(password)){
-        setState(() {
-          isBadRequest = true;
-          errorMessage = 'Неверный пароль';
-        });
-        return;
-      }
-      if(password != passwordRepeat){
-        setState(() {
-          isBadPassword = true;
-          errorMessage = 'Пароли не совпадают';
-        });
-        return;
-      }
-      if(AppSettings.isNoName){
-        tryUpdate(email, password).then((value) {
-          if(value.type != ResponseType.success){
-            setState(() {
-              errorMessage = 'Пользователь уже существует';
-            });
-          } else {
-            AppSettings.authToken = value.data!;
-            User.email = AppSettings().parseJwt(AppSettings.authToken)['email'];
-            User.id = AppSettings().parseJwt(AppSettings.authToken)['nameid'];
-            SharedPreferences.getInstance().then((storage) {
-              storage.setString("authUserToken", AppSettings.authToken);
-              storage.setBool("isLogin", true);
-              storage.setBool("isNoName", false);
-              storage.setString("userEmail", User.email!);
-              storage.setString("userId", User.id!);
-            });
-          }
-        });
-        return;
-      }
-      var result = tryRegister(email, password);
-      result.then((value) {
-        if(value.type != ResponseType.success){
-          setState(() {
-            errorMessage = 'Пользователь уже существует';
-          });
-        } else {
-          AppSettings.authToken = value.data!;
-          User.email = AppSettings().parseJwt(AppSettings.authToken)['email'];
-          User.id = AppSettings().parseJwt(AppSettings.authToken)['nameid'];
-          isLogin = true;
-          if(AppSettings.authToken != ''){
-            SharedPreferences.getInstance().then((storage) {
-              storage.setString("authUserToken", AppSettings.authToken);
-              storage.setBool("isLogin", true);
-              storage.setBool("isNoName", false);
-              storage.setString("userEmail", User.email!);
-              storage.setString("userId", User.id!);
-            });
-            AppSettings.isLogin = true;
-          }
-          Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
-        }
-      });
-    }
-  }
+  // void onButtonPressed() {
+  //   if(isLogin){
+  //     var response = tryLoginAsync(email, password);
+  //     response.then((value) {
+  //       setState(() {
+  //         isBadRequest = false;
+  //         isBadEmail = false;
+  //         errorMessage = '';
+  //       });
+  //       switch (value.type ?? ResponseType.bad) {
+  //         case ResponseType.success:
+  //           AppSettings.authToken = value.data ?? '';
+  //           var data = AppSettings().parseJwt(AppSettings.authToken);
+  //           User.email = data["email"];
+  //           User.id = data["nameid"];
+  //           if(AppSettings.authToken != ''){
+  //             AppSettings.isNoName = false;
+  //             SharedPreferences.getInstance().then((storage) {
+  //               storage.setString("authUserToken", AppSettings.authToken);
+  //               storage.setBool("isLogin", true);
+  //               storage.setBool("isNoName", false);
+  //               storage.setString("userEmail", User.email!);
+  //               storage.setString("userId", User.id!);
+  //             });
+  //             AppSettings.isLogin = true;
+  //           }
+  //           Navigator.pushNamedAndRemoveUntil(context, "/home", (route) => false);
+  //           break;
+  //         case ResponseType.bad:
+  //           setState(() {
+  //             isBadEmail = true;
+  //             errorMessage = value.data!;
+  //           });
+  //           break;
+  //         case ResponseType.notFound:
+  //           setState(() {
+  //             isBadEmail = true;
+  //             isBadRequest = true;
+  //             errorMessage = value.data!;
+  //           });
+  //           break;
+  //         default:
+  //           break;
+  //       }
+  //     });
+  //   } else {
+  //     setState(() {
+  //       isBadPassword = false;
+  //       isBadRequest = false;
+  //       isBadEmail = false;
+  //       errorMessage = '';
+  //     });
+  //
+  //     if(!RegExp(r"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$").hasMatch(email)){
+  //       setState(() {
+  //         isBadEmail = true;
+  //         errorMessage = 'Почта введена не коректно';
+  //       });
+  //       return;
+  //     }
+  //     if(!RegExp(r"^(?=.*[0-9])(?=.*[a-zA-Z]).{8,}$").hasMatch(password)){
+  //       setState(() {
+  //         isBadRequest = true;
+  //         errorMessage = 'Неверный пароль';
+  //       });
+  //       return;
+  //     }
+  //     if(password != passwordRepeat){
+  //       setState(() {
+  //         isBadPassword = true;
+  //         errorMessage = 'Пароли не совпадают';
+  //       });
+  //       return;
+  //     }
+  //     if(AppSettings.isNoName){
+  //       tryUpdate(email, password).then((value) {
+  //         if(value.type != ResponseType.success){
+  //           setState(() {
+  //             errorMessage = 'Пользователь уже существует';
+  //           });
+  //         } else {
+  //           AppSettings.authToken = value.data!;
+  //           User.email = AppSettings().parseJwt(AppSettings.authToken)['email'];
+  //           User.id = AppSettings().parseJwt(AppSettings.authToken)['nameid'];
+  //           SharedPreferences.getInstance().then((storage) {
+  //             storage.setString("authUserToken", AppSettings.authToken);
+  //             storage.setBool("isLogin", true);
+  //             storage.setBool("isNoName", false);
+  //             storage.setString("userEmail", User.email!);
+  //             storage.setString("userId", User.id!);
+  //           });
+  //         }
+  //       });
+  //       return;
+  //     }
+  //     var result = tryRegister(email, password);
+  //     result.then((value) {
+  //       if(value.type != ResponseType.success){
+  //         setState(() {
+  //           errorMessage = 'Пользователь уже существует';
+  //         });
+  //       } else {
+  //         AppSettings.authToken = value.data!;
+  //         User.email = AppSettings().parseJwt(AppSettings.authToken)['email'];
+  //         User.id = AppSettings().parseJwt(AppSettings.authToken)['nameid'];
+  //         isLogin = true;
+  //         if(AppSettings.authToken != ''){
+  //           SharedPreferences.getInstance().then((storage) {
+  //             storage.setString("authUserToken", AppSettings.authToken);
+  //             storage.setBool("isLogin", true);
+  //             storage.setBool("isNoName", false);
+  //             storage.setString("userEmail", User.email!);
+  //             storage.setString("userId", User.id!);
+  //           });
+  //           AppSettings.isLogin = true;
+  //         }
+  //         Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+  //       }
+  //     });
+  //   }
+  // }
 }
