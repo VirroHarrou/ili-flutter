@@ -87,7 +87,7 @@ class ComposeActivity : ComponentActivity() {
                     val view = rememberView(engine)
                     val collisionSystem = rememberCollisionSystem(view)
 
-                    var planeRenderer by remember { mutableStateOf(true) }
+                    var planeRenderer by remember { mutableStateOf(false) }
 
                     val modelInstances = remember { mutableListOf<ModelInstance>() }
                     var trackingFailureReason by remember {
