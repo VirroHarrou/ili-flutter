@@ -9,22 +9,22 @@ class ApiService{
   static final authService = Injector.appInstance.get<AuthService>();
 
   static var _dio = Dio(BaseOptions(
-      baseUrl: baseUrl,
-      headers: {"Authorization": "Bearer ${authService.accessToken}"},
-      validateStatus: (code) => code! <= 500,
-      connectTimeout: const Duration(seconds: 5),
-      receiveTimeout: const Duration(seconds: 3),
-    ),
+    baseUrl: baseUrl,
+    headers: {"Authorization": "Bearer ${authService.accessToken}"},
+    validateStatus: (code) => code! <= 500,
+    connectTimeout: const Duration(seconds: 5),
+    receiveTimeout: const Duration(seconds: 3),
+  ),
   );
 
   static Future<void> restartService() async =>
       _dio = Dio(BaseOptions(
-          baseUrl: baseUrl,
-          headers: {"Authorization": "Bearer ${authService.accessToken}"},
-          validateStatus: (code) => code! <= 500,
-          connectTimeout: const Duration(seconds: 5),
-          receiveTimeout: const Duration(seconds: 3),
-        ),
+        baseUrl: baseUrl,
+        headers: {"Authorization": "Bearer ${authService.accessToken}"},
+        validateStatus: (code) => code! <= 500,
+        connectTimeout: const Duration(seconds: 5),
+        receiveTimeout: const Duration(seconds: 3),
+      ),
       );
 
   static Future<Response?> sendRequest({
@@ -60,21 +60,6 @@ class ApiService{
       debugPrint('Exception on request: $ex');
     }
     return null;
-  }
-
-  //Todo: implement more usability version
-  static Future<void> checkApiVersion(String request) async {
-    debugPrint('im called!');
-    var response =
-        await ApiService.sendRequest(
-          request: request,
-        );
-    if (response == null || response.statusCode == null) return;
-    if (response.statusCode! > 405 || response.statusCode! < 400) return;
-    if (response.data['error']['code'] == 'UnsupportedApiVersion'){
-      baseUrl = 'http://80.90.185.153:7054/api/2.0/';
-      await restartService();
-    }
   }
 }
 
