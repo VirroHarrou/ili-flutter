@@ -21,12 +21,13 @@ class LoadingPageState extends State<LoadingPage> {
     try {
       final model = widget.model;
       final dir = (await getApplicationDocumentsDirectory());
-      var data = await const MethodChannel('com.hendrick.navigateChannel').invokeMethod('flutterNavigate', {"argKey": '${dir.path}/${model.id}.glb'});
+      var data = await const MethodChannel('com.hendrick.navigateChannel').invokeMethod('flutterNavigate', {"access_token": '${dir.path}/${model.id}.${Platform.isIOS ? 'usdz' : 'glb'}'});
       return data;
     } on PlatformException catch (e) {
       return 'Failed to invoke: ${e.message}';
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final model = widget.model;
@@ -38,15 +39,16 @@ class LoadingPageState extends State<LoadingPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             DownloadProgressIndicator(
-              url: model.valueUrl ?? '',
-              filename: '${model.id}.glb' ?? '',
+              url: (Platform.isIOS ? model.valueUrlUSDZ : model.valueUrl) ?? '',
+              filename: '${model.id}.${Platform.isIOS ? 'usdz' : 'glb'}',
               onDownloadComplete: (file) {
+                context.pop();
                 if (Platform.isAndroid) {
-                  context.pop();
                   navigateToNative();
                 }
                 else {
-                  Navigator.pushReplacementNamed(context, "/ar_page", arguments: model);
+                  navigateToNative();
+                  //context.push("/ar_page", extra: model);
                 }
               },
             ),

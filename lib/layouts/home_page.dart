@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tavrida_flutter/layouts/models_page/model_list_page.dart';
 import 'package:tavrida_flutter/layouts/platform/view.dart';
-
 import '../themes/app_colors.dart';
 
 class HomePage extends StatefulWidget{
@@ -25,7 +25,9 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final fab = InkWell(
-      onTap: () => context.push('/QR'),
+      onTap: () {
+        context.push('/QR');
+      },
       //onLongPress: () => Navigator.pushNamed(context, "/ModelList"),
       child: Container(
         width: 64,

@@ -1,8 +1,10 @@
 import 'package:dart_extensions/dart_extensions.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/services/models/platform.dart';
 import 'package:tavrida_flutter/services/models/questionnaire.dart';
@@ -11,7 +13,6 @@ import 'package:tavrida_flutter/services/questionnaire_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:tavrida_flutter/widgets/ImagesCarousel.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import 'widgets/view.dart';
 
 class ForumDetailPage extends StatefulWidget {
@@ -94,6 +95,24 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  Future<String> navigateToNative() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      print(prefs.getString("refresh_token"));
+      var data = await const MethodChannel('com.hendrick.navigateChannel')
+          .invokeMethod(
+          'flutterNavigate',
+          {
+            "access_token": prefs.getString("access_token"),
+            "refresh_token": prefs.getString("refresh_token"),
+          }
+      );
+      return data;
+    } on PlatformException catch (e) {
+      return 'Failed to invoke: ${e.message}';
+    }
   }
 
   @override
