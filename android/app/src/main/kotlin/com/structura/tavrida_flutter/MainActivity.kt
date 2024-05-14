@@ -22,7 +22,7 @@ class MainActivity : FlutterActivity() {
             methodChannelResult = result
 
             if (call.method == navigateFunctionName) {
-                val argument = call.argument<String>("argKey")
+                val argument = call.argument<String>("access_token")
                 val intent = Intent(this, ComposeActivity::class.java)
                 intent.putExtra("argKey", argument)
                 startActivityForResult(intent, composeActivityRequestCode)
