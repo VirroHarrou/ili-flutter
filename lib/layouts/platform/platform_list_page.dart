@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:tavrida_flutter/layouts/platform/bloc/platform_list_bloc.dart';
 import 'package:tavrida_flutter/services/models/platform.dart';
@@ -96,8 +97,7 @@ class _PlatformListPageState extends State<PlatformListPage> {
         return InkWell(
             onTap: () {
               var id = platforms[index].id;
-              Navigator.pushNamed(context, "/ForumDetail",
-                  arguments: {"id": id});
+              context.push('/ForumDetail', extra: id);
             },
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20, left: 24, right: 24),

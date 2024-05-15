@@ -1,6 +1,7 @@
 import 'package:dart_extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:tavrida_flutter/layouts/qr_page/bloc/qr_bloc.dart';
 import 'package:tavrida_flutter/layouts/qr_page/widgets/code_widget.dart';
@@ -93,7 +94,7 @@ class _QRPageState extends State<QRPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(12),
                         child: FloatingActionButton(
-                          onPressed: ()  => Navigator.pop(context),
+                          onPressed: ()  => context.pop(),
                           shape: const CircleBorder(),
                           backgroundColor: AppColors.grey,
                           child: const Icon(Icons.arrow_back),

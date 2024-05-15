@@ -1,19 +1,38 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../services/models/model.dart';
 import 'CustomDownloadIndicator.dart';
 
 class LoadingPage extends StatefulWidget{
-  const LoadingPage({super.key});
+  const LoadingPage({super.key, required this.model});
+
+  final Model model;
 
   @override
   State<LoadingPage> createState() => LoadingPageState();
 }
 
 class LoadingPageState extends State<LoadingPage> {
+
+  Future<String> navigateToNative() async {
+    try {
+      final model = widget.model;
+      final dir = (await getApplicationDocumentsDirectory());
+      var data = await const MethodChannel('com.hendrick.navigateChannel').invokeMethod('flutterNavigate', {"access_token": '${dir.path}/${model.id}.${Platform.isIOS ? 'usdz' : 'glb'}'});
+      return data;
+    } on PlatformException catch (e) {
+      return 'Failed to invoke: ${e.message}';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final model = ModalRoute.of(context)?.settings.arguments as Model;
+    final model = widget.model;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -22,15 +41,16 @@ class LoadingPageState extends State<LoadingPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             DownloadProgressIndicator(
-              url: model.valueUrl ?? '',
-              filename: '${model.id}.glb' ?? '',
+              url: (Platform.isIOS ? model.valueUrlUSDZ : model.valueUrl) ?? '',
+              filename: '${model.id}.${Platform.isIOS ? 'usdz' : 'glb'}',
               onDownloadComplete: (file) {
-                Navigator.pushReplacementNamed(context, "/ar_page", arguments: model);
+                context.pop();
+                navigateToNative();
               },
             ),
             const SizedBox(height: 32,),
             InkWell(
-              onTap: () => Navigator.of(context).pop(),
+              onTap: () => context.pop(),
               child: Container(
                 height: 32,
                 width: 96,
