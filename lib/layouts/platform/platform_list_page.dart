@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:tavrida_flutter/common/routes.dart';
 import 'package:tavrida_flutter/layouts/platform/bloc/platform_list_bloc.dart';
 import 'package:tavrida_flutter/services/models/platform.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
-import 'package:tavrida_flutter/widgets/DataEmpty.dart';
+import 'package:tavrida_flutter/widgets/failures/failure.dart';
 import 'package:tavrida_flutter/widgets/loading_state_widget.dart';
 
 class PlatformListPage extends StatefulWidget {
@@ -38,7 +38,10 @@ class _PlatformListPageState extends State<PlatformListPage> {
         builder: (context, state) {
           switch (state) {
             case PlatformListEmpty():
-              return generateDataEmpty(context, 'Здесь появятся форумы, но пока здесь пусто');
+              return const EmptyContent(
+                title: 'Площадок пока нет',
+                message: 'Здесь появятся площадки, но пока здесь пусто',
+              );
             case PlatformListLoading():
               return buildLoading(context);
             case PlatformListLoaded():
@@ -54,37 +57,9 @@ class _PlatformListPageState extends State<PlatformListPage> {
   }
 
   Widget buildFailure({required String message}) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            SvgPicture.asset('assets/images/something_went_wrong.svg', height: 200, fit: BoxFit.cover,),
-            const SizedBox(height: 24,),
-            const Text(
-              'Упс! Что-то пошло не так...',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.black,
-              ),
-            ),
-            const SizedBox(height: 8,),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: AppColors.grey,
-              ),
-            ),
-          ],
-        ),
-      ),
+    return FailureContent(
+      title: 'Упс! Что-то пошло не так...',
+      message: message,
     );
   }
 
@@ -97,7 +72,7 @@ class _PlatformListPageState extends State<PlatformListPage> {
         return InkWell(
             onTap: () {
               var id = platforms[index].id;
-              context.push('/ForumDetail', extra: id);
+              context.push(Routes.platform, extra: id);
             },
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20, left: 24, right: 24),

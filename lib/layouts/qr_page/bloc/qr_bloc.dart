@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
+import 'package:tavrida_flutter/common/routes.dart';
 import 'package:tavrida_flutter/services/model_service.dart';
 
 part 'qr_event.dart';
@@ -25,7 +26,7 @@ class QRBloc extends Bloc<QREvent, QRState> {
         return;
       }
       if (event.context.mounted) {
-        event.context.push("/Load", extra: model);
+        event.context.push(Routes.loadingPage, extra: model);
       }
     });
 
@@ -37,7 +38,7 @@ class QRBloc extends Bloc<QREvent, QRState> {
         return;
       }
       if (event.context.mounted) {
-        event.context.push("/Load", extra: model);
+        event.context.push(Routes.loadingPage, extra: model);
       }
     });
   }

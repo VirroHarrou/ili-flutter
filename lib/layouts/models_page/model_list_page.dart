@@ -3,10 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:tavrida_flutter/common/routes.dart';
 import 'package:tavrida_flutter/layouts/models_page/bloc/model_list_bloc.dart';
 import 'package:tavrida_flutter/services/models/model.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
-import 'package:tavrida_flutter/widgets/DataEmpty.dart';
+import 'package:tavrida_flutter/widgets/failures/failure.dart';
 import 'package:tavrida_flutter/widgets/loading_state_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -42,9 +43,15 @@ class ModelListPageState extends State<ModelListPage> {
             case ModelListInitState():
               return Container();
             case ModelListFailureState():
-              return Container(color: AppColors.red,);
+              return FailureContent(
+                  title: 'Упс! Что-то пошло не так...',
+                  message: state.message,
+                );
             case ModelListEmptyState():
-              return generateDataEmpty(context, 'Скачивайте модели, и они появятся здесь');
+              return const EmptyContent(
+                title: 'Здесь пока пусто',
+                message: 'Скачивайте модели и они появятся здесь',
+              );
             default:
               return Container();
           }
@@ -62,7 +69,7 @@ class ModelListPageState extends State<ModelListPage> {
         itemBuilder: (context, i) {
           final model = models[i];
           return InkWell(
-            onTap: () => context.push('/Load', extra: model),
+            onTap: () => context.push(Routes.loadingPage, extra: model),
             child: Container(
               padding: const EdgeInsets.all(8),
               height: 360,

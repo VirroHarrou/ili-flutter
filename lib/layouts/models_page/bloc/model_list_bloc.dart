@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dart_extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injector/injector.dart';
@@ -30,16 +31,11 @@ class ModelListBloc extends Bloc<ModelListEvent, ModelListState> {
       for (var id in downloaded) {
         if (models.any((element) => element.id == id)) continue;
 
-        var model = await _getModelData(id);
-
-        model ??= Model(
-          id: '',
-          title: 'Сломанная модель',
-        );
-
-        models.add(model);
+        if (await _getModelData(id) case var model?) {
+          models.add(model);
+        }
       }
-      if (models.isEmpty){
+      if (models.isEmptyOrNull){
         emit(ModelListFailureState(
           message: 'При обновлении данных произошла ошибка, пожалуйста попробуйте позже',
         ));

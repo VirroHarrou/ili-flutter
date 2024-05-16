@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
 import 'package:tavrida_flutter/common/injector_initializer.dart';
+import 'package:tavrida_flutter/common/routes.dart';
+import 'package:tavrida_flutter/layouts/platform/platform_list_page.dart';
 import 'package:tavrida_flutter/services/models/model.dart';
 import 'package:tavrida_flutter/themes/src/theme_default.dart';
 
@@ -16,50 +18,52 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await InjectorInitializer.initialize(Injector.appInstance);
 
-  runApp(const TavridaApp());
+  runApp(TavridaApp());
 }
 
 class TavridaApp extends StatelessWidget {
-  const TavridaApp({super.key});
-
+  TavridaApp({super.key});
+  final _rootNavigatorKey = GlobalKey<NavigatorState>();
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       theme: createLightTheme(),
+      key: _rootNavigatorKey,
       routerConfig: GoRouter(
+        initialLocation: Routes.platformList,
         routes: [
-          GoRoute(
-            path: '/',
-            builder: (context, state) => const HomePage(),
+          ShellRoute(
+            builder: (context, state, child) => HomePage(
+              location: state.matchedLocation,
+              child: child,
+            ),
             routes: [
               GoRoute(
-                  path: 'ForumDetail',
-                  builder: (context, state) => ForumDetailPage(id: state.extra as String),
-                  routes: [
-                    GoRoute(
-                      path: 'QR',
-                      builder: (context, state) => const QRPage(),
-                    ),
-                  ]
+                path: Routes.modelsList,
+                pageBuilder: (context, state) => const NoTransitionPage<void>(child: ModelListPage()),
+              ),
+              GoRoute(
+                path: Routes.platformList,
+                pageBuilder: (context, state) => const NoTransitionPage<void>(child: PlatformListPage()),
               ),
             ],
           ),
           GoRoute(
-            path: '/QR',
+            path: Routes.platform,
+            builder: (context, state) => ForumDetailPage(id: state.extra as String),
+          ),
+          GoRoute(
+            path: Routes.qrScanner,
             builder: (context, state) => const QRPage(),
           ),
           GoRoute(
-            path: '/auth',
+            path: Routes.auth,
             builder: (context, state) => const AuthPage(),
           ),
           GoRoute(
-            path: '/Load',
+            path: Routes.loadingPage,
             builder: (context, state) => LoadingPage(model: state.extra as Model,),
-          ),
-          GoRoute(
-            path: '/ModelList',
-            builder: (context, state) => const ModelListPage(),
           ),
         ],
       ),

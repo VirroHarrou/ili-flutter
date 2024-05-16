@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tavrida_flutter/common/routes.dart';
 import 'package:tavrida_flutter/layouts/models_page/model_list_page.dart';
 import 'package:tavrida_flutter/layouts/platform/view.dart';
 
 import '../themes/app_colors.dart';
 
 class HomePage extends StatefulWidget{
-  const HomePage({super.key});
+  final String location;
+  final Widget child;
+
+  const HomePage({
+    super.key,
+    required this.location,
+    required this.child,
+  });
 
   @override
   State<StatefulWidget> createState() =>
@@ -20,13 +28,14 @@ class HomePageState extends State<HomePage> {
     PlatformListPage(),
     ModelListPage(),
   ];
-  int _selectedWidget = 0;
+  int get _currentIndex => NavigatorRoute.values
+      .firstWhere((e) => widget.location.contains(e.path))
+      .index;
 
   @override
   Widget build(BuildContext context) {
     final fab = InkWell(
-      onTap: () => context.push('/QR'),
-      //onLongPress: () => Navigator.pushNamed(context, "/ModelList"),
+      onTap: () => context.push(Routes.qrScanner),
       child: Container(
         width: 64,
         height: 64,
@@ -51,38 +60,49 @@ class HomePageState extends State<HomePage> {
     );
 
     return Scaffold(
-      body: widgets[_selectedWidget],
+      body: widget.child,
       floatingActionButton: fab,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Главная',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_outline),
-            activeIcon: Icon(Icons.favorite),
-            label: 'Сохраненные',
-          ),
-        ],
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) => setState(() {
-          _selectedWidget = index;
-        }),
-        currentIndex: _selectedWidget,
-        fixedColor: AppColors.black,
-        selectedLabelStyle: const TextStyle(
-          fontFamily: 'Open Sans',
-        ),
-        unselectedLabelStyle: const TextStyle(
-          fontFamily: 'Open Sans',
-        ),
-        selectedFontSize: 14,
-        unselectedFontSize: 14,
-        iconSize: 26,
-      )
+      bottomNavigationBar: buildBottomNavigationBar()
     );
+  }
+
+  BottomNavigationBar buildBottomNavigationBar() {
+    return BottomNavigationBar(
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home_outlined),
+          activeIcon: Icon(Icons.home),
+          label: 'Главная',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.favorite_outline),
+          activeIcon: Icon(Icons.favorite),
+          label: 'Сохраненные',
+        ),
+      ],
+      type: BottomNavigationBarType.fixed,
+      onTap: (index) => _onItemTaped(
+        context,
+        NavigatorRoute.values[index],
+      ),
+      currentIndex: _currentIndex,
+      fixedColor: AppColors.black,
+      selectedLabelStyle: const TextStyle(
+        fontFamily: 'Open Sans',
+      ),
+      unselectedLabelStyle: const TextStyle(
+        fontFamily: 'Open Sans',
+      ),
+      selectedFontSize: 14,
+      unselectedFontSize: 14,
+      iconSize: 26,
+    );
+  }
+
+  void _onItemTaped(BuildContext context, NavigatorRoute navigatorRoute) {
+    if (navigatorRoute.index != _currentIndex) {
+      context.go(navigatorRoute.path);
+    }
   }
 }
