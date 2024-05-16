@@ -12,7 +12,6 @@ struct ContentView1: View {
         )
             .environmentObject(SessionSettings())
             .environmentObject(PlacementSettings())
-            .environmentObject(SceneManager())
             .environmentObject(ModelDeletionManager())
     }
 }
@@ -24,7 +23,6 @@ struct ContentView: View {
     
     @EnvironmentObject var placementSettings: PlacementSettings
     @EnvironmentObject var modelDeletionManager: ModelDeletionManager
-    @EnvironmentObject var sceneManager: SceneManager
 
     @State private var selectedControlMode: Int = 0
     @State private var isControlsVisible: Bool = true
@@ -39,7 +37,7 @@ struct ContentView: View {
     var body: some View {
         ZStack (alignment: .bottomLeading) {
             
-            ARViewContainer()
+            ARViewContainer(path: access_token)
             
             VStack {
                 Spacer()
@@ -63,15 +61,15 @@ struct ContentView: View {
                 Spacer()
 
                 
-                if self.placementSettings.customType == .place {
-                    PlacementView()
-                }
-                else if self.placementSettings.customType == .scan {
-                    ScanView(isFocused: _isFocused)
-                }
-                else {
+//                if self.placementSettings.customType == .place {
+//                    PlacementView()
+//                }
+//                else if self.placementSettings.customType == .scan {
+//                    ScanView(isFocused: _isFocused)
+//                }
+//                else {
                     ModelView()
-                }
+//                }
             }
             
 //            if self.placementSettings.selectedModel != nil {
@@ -83,10 +81,10 @@ struct ContentView: View {
 //            }
         }
         .edgesIgnoringSafeArea(.all)
-        .onAppear() {
-            self.placementSettings.fetchData(path: access_token)
-            //self.placementSettings.access_token = access_token
-        }
+//        .onAppear() {
+//            self.placementSettings.fetchData(path: access_token)
+//            //self.placementSettings.access_token = access_token
+//        }
         .sheet(isPresented: $placementSettings.isPresented) {
             CustomBottomSheet()
                 .presentationDetents([.medium])

@@ -1,11 +1,9 @@
 import RealityKit
 import ARKit
-import FocusEntity
 import SwiftUI
 import Combine
 
 class CustomARView: ARView {
-    var focusEntity: FocusEntity?
     var sessionSettings: SessionSettings
     var modelDeletionManager: ModelDeletionManager
     
@@ -32,8 +30,6 @@ class CustomARView: ARView {
         self.modelDeletionManager = modelDeletionManager
 
         super.init(frame: frameRect)
-                
-        self.focusEntity = FocusEntity(on: self, focus: .classic)
         
         self.configure()
         

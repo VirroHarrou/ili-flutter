@@ -26,7 +26,6 @@
 		60494D342BF50A8000B67912 /* CustomBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D332BF50A8000B67912 /* CustomBottomSheet.swift */; };
 		60494D362BF50A9700B67912 /* ScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D352BF50A9700B67912 /* ScanView.swift */; };
 		60494D382BF50AA500B67912 /* ModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D372BF50AA500B67912 /* ModelView.swift */; };
-		60494D3B2BF50D0D00B67912 /* FocusEntity in Frameworks */ = {isa = PBXBuildFile; productRef = 60494D3A2BF50D0D00B67912 /* FocusEntity */; };
 		60494D3E2BF50D4B00B67912 /* CustomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D3D2BF50D4B00B67912 /* CustomModel.swift */; };
 		60494D422BF50DD600B67912 /* QRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D412BF50DD600B67912 /* QRScanner.swift */; };
 		60494D442BF50DEE00B67912 /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D432BF50DEE00B67912 /* SCNVector3+Extensions.swift */; };
@@ -111,7 +110,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				60494D3B2BF50D0D00B67912 /* FocusEntity in Frameworks */,
 				8D7282CBD1DE92FC1FAFB3C4 /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -296,7 +294,6 @@
 			);
 			name = Runner;
 			packageProductDependencies = (
-				60494D3A2BF50D0D00B67912 /* FocusEntity */,
 			);
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
@@ -849,14 +846,6 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		60494D3A2BF50D0D00B67912 /* FocusEntity */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 60494D392BF50D0D00B67912 /* XCRemoteSwiftPackageReference "FocusEntity" */;
-			productName = FocusEntity;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 97C146E61CF9000F007C117D /* Project object */;
 }

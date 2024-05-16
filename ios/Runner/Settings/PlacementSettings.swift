@@ -42,6 +42,11 @@ class PlacementSettings: ObservableObject {
     func fetchData(path: String) {
             self.model.path = path
             self.model.asyncLoadModelEntity { completed, error in
+                if completed {
+                    let modelAnchor = ModelAnchor(model: self.model, anchor: nil)
+                    self.modelsConfirmedForPlacement.append(modelAnchor)
+                    print("Adding modelAnchor with name: \(self.model.name)")
+                }
         }
     }
     

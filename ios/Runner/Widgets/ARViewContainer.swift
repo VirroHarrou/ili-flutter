@@ -3,180 +3,41 @@ import RealityKit
 import ARKit
 import Combine
 
-private let anchorNamePrefix = "model-"
-
 struct ARViewContainer: UIViewRepresentable {
+    var path: String
     @EnvironmentObject var placementSettings: PlacementSettings
     @EnvironmentObject var sessionSettings: SessionSettings
-    @EnvironmentObject var sceneManager: SceneManager
     @EnvironmentObject var modelDeletionManager: ModelDeletionManager
         
-    func makeUIView(context: Context) -> CustomARView {
+    func makeUIView(context: Context) -> ARView {
         
-        let arView = CustomARView(
-            frame: .zero,
-            sessionSettings: sessionSettings,
-            modelDeletionManager: modelDeletionManager
-        )
-        
-        arView.session.delegate = context.coordinator
-                
-        // Subscribe to Scene Events - https://developer.apple.com/documentation/realitykit/sceneevents/update
-        // NOTE: This is easier than dealing with a ARSessionDelegate method
-        self.placementSettings.sceneObserver = arView.scene.subscribe(to: SceneEvents.Update.self) { event in
-            self.updateScene(for: arView)
-            self.updatePersistenceAvailability(for: arView)
-            self.handlePersistence(for: arView)
-        }
+        let arView = ARView(frame: .zero)
 
         let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = [.horizontal, .vertical]
+    
+        // Enable sceneReconstruction if the device has a LiDAR Scanner
+        if ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh) {
+            configuration.sceneReconstruction = .mesh
+        }
+        
+        context.coordinator.arView = arView
+        arView.session.delegate = context.coordinator
+        
         arView.session.run(configuration)
+        
+        let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handleTap(_:)))
+        arView.addGestureRecognizer(tapGesture)
         
         return arView
     }
     
-    func updateUIView(_ uiView: CustomARView, context: Context) {}
-    
-    private func updateScene(for arView: CustomARView) {
-        
-        // Only display focusEntity when in "placement mode"
-        arView.focusEntity?.isEnabled = self.placementSettings.selectedModel == nil
-        
-//        for anchor in anchors {
-//            guard let imageAnchor = anchor as? ARImageAnchor else { return }
-//            self.parent.place(<#T##ModelEntity#>, for: anchor, in: self.parent)
-//        }
-        
-        // Add model(s) to scene if confirmed for placement
-        if let modelAnchor = self.placementSettings.modelsConfirmedForPlacement.popLast(), let modelEntity = modelAnchor.model.modelEntity {
-            
-            if let anchor = modelAnchor.anchor {
-                // Anchor is being loaded from persistent scene
-                self.place(modelEntity, for: anchor, in: arView)
-            } else if let transform = getTransformForPlacement(in: arView) {
-                // Anchor needs to be created for placement
-                let anchorName = anchorNamePrefix + modelAnchor.model.name
-                let anchor = ARAnchor(name: anchorName, transform: transform)
-                
-                self.place(modelEntity, for: anchor, in: arView)
-                
-                arView.session.add(anchor: anchor)
-                
-                self.placementSettings.recentlyPlaced.append(modelAnchor.model)
-            }
-        }
-    }
-    
-    private func place(_ modelEntity: ModelEntity, for anchor: ARAnchor, in arView: ARView) {
-        let modelEntityClone = modelEntity.clone(recursive: true) // Cloning creates an identical copy, which references the same model
-        
-        // Enable translation and rotation gestures
-        modelEntityClone.generateCollisionShapes(recursive: true)
-        arView.installGestures([.all], for: modelEntityClone)
-        
-        let anchorEntity = AnchorEntity(anchor: anchor)
-        anchorEntity.addChild(modelEntityClone)
-        
-        anchorEntity.anchoring = AnchoringComponent(anchor)
-        
-        arView.scene.addAnchor(anchorEntity)
-        
-        self.sceneManager.anchorEntities.append(anchorEntity)
-        self.sceneManager.modelEntities.append(modelEntityClone)
-        
-        let da = self.sceneManager.modelEntities.first
-        
-        da?.transform.scale *= 50
-        
-        da?.availableAnimations.forEach {
-                                    da?.playAnimation($0.repeat())
-                                }
-                
-        print("Added modelEntity to scene.")
-    }
-    
-    private func getTransformForPlacement(in arView: ARView) -> simd_float4x4? {
-        guard let query = arView.makeRaycastQuery(from: arView.center, allowing: .estimatedPlane, alignment: .any) else { return nil }
-        guard let raycastResult = arView.session.raycast(query).first else { return nil }
-        
-        return raycastResult.worldTransform
-    }
+    func updateUIView(_ uiView: ARView, context: Context) {}
 }
-
-// MARK: - Persistence
-
-class SceneManager: ObservableObject {
-    @Published var isPersistenceAvailable: Bool = false
-    @Published var anchorEntities: [AnchorEntity] = [] // Keeps track of anchorEntities (w/ modelEntities) in the scene.
-    @Published var modelEntities: [ModelEntity] = []
-    
-    var shouldSaveSceneToFilesystem: Bool = false // Flag to trigger save scene to filesystem function
-    var shouldLoadSceneFromFilesystem: Bool = false // Flag to trigger load scene from filesystem function
-    
-    lazy var persistenceUrl: URL = {
-        do {
-            return try FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("arf.persistence")
-        } catch {
-            fatalError("Unable to get persistence URL: \(error.localizedDescription)")
-        }
-    }()
-    
-    // Verify that scene data can be loaded from filesystem
-    var scenePersistenceData: Data? {
-        return try? Data(contentsOf: persistenceUrl)
-    }
-}
-
-// Reference: https://developer.apple.com/documentation/arkit/data_management/saving_and_loading_world_data
-extension ARViewContainer {
-    private func updatePersistenceAvailability(for arView: ARView) {
-        guard let currentFrame = arView.session.currentFrame else {
-            print("ARFrame not available.")
-            return
-        }
-        
-        // Allow user to save AR content when mapping status is good and at least one model has been placed in the scene.
-        
-        switch currentFrame.worldMappingStatus {
-        case .mapped, .extending:
-            self.sceneManager.isPersistenceAvailable = !self.sceneManager.anchorEntities.isEmpty
-        default:
-            self.sceneManager.isPersistenceAvailable = false
-        }
-    }
-    
-    private func handlePersistence(for arView: CustomARView) {
-        if self.sceneManager.shouldSaveSceneToFilesystem {
-            
-            ScenePersistenceHelper.saveScene(for: arView, at: self.sceneManager.persistenceUrl)
-            
-            self.sceneManager.shouldSaveSceneToFilesystem = false
-            
-        } else if self.sceneManager.shouldLoadSceneFromFilesystem {
-            
-            guard let scenePersistenceData = self.sceneManager.scenePersistenceData else {
-                print("Unable to retrieve scenePersistenceData. Canceled loadScene operation.")
-                return
-            }
-                        
-            //self.modelsViewModel.clearModelEntitiesFromMemory()
-            
-            self.sceneManager.anchorEntities.removeAll(keepingCapacity: true)
-                        
-            ScenePersistenceHelper.loadScene(for: arView, with: scenePersistenceData)
-                        
-            self.sceneManager.shouldLoadSceneFromFilesystem = false
-            
-        }
-    }
-}
-
-// MARK: - ARSessionDelegate + Coordinator
-
-// Reference: https://www.hackingwithswift.com/books/ios-swiftui/using-coordinators-to-manage-swiftui-view-controllers
 
 extension ARViewContainer {
     class Coordinator: NSObject, ARSessionDelegate {
+        var arView: ARView?
         
         var parent: ARViewContainer
 
@@ -184,95 +45,59 @@ extension ARViewContainer {
             self.parent = parent
         }
         
-        func session(_ session: ARSession, didUpdate frame: ARFrame) {
-            if self.parent.placementSettings.customType == .scan && !self.parent.placementSettings.isLoading && !self.parent.placementSettings.isPresented {
-                DispatchQueue.global(qos: .background).async {
-                    let qrResponses = QRScanner.findQR(in: frame)
-                    for response in qrResponses {
-                        if response.feature.messageString != nil {
-                            if response.feature.messageString!.count == 36 {
-                                DispatchQueue.main.async {
-                                    self.parent.placementSettings.isLoading = true
-                                    self.parent.placementSettings.makeRequest(
-                                        id: response.feature.messageString!
-                                    ) { (result: Result<CustomModel, Error>) in
-                                        DispatchQueue.main.async {
-                                            switch result {
-                                            case .success(let customModel1):
-                                                self.parent.placementSettings.customModel = customModel1
-                                                self.parent.placementSettings.isLoading = false
-                                                self.parent.placementSettings.isPresented = true
-                                            case .failure(_):
-                                                self.parent.placementSettings.isLoading = false
-                                                print("failure")
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+        @objc func handleTap(_ gestureRecognizer: UITapGestureRecognizer) {
+            guard let arView = arView else { return }
+            
+            let da = arView.raycast(
+                from: gestureRecognizer.location(in: arView),
+                allowing: .existingPlaneGeometry,
+                alignment: .horizontal
+            )
+            
+            if let result = arView.raycast(
+                from: gestureRecognizer.location(in: arView),
+                allowing: .existingPlaneGeometry,
+                alignment: .horizontal
+            )
+                .first {
+                    let newPosition = SIMD3<Float>(
+                        result.worldTransform.columns.3.x,
+                        result.worldTransform.columns.3.y,
+                        result.worldTransform.columns.3.z
+                    )
+                            
+                arView.scene.anchors.first?.position = newPosition
+                arView.scene.anchors.first?.scale.x = 5
+                arView.scene.anchors.first?.scale.y = 5
+                arView.scene.anchors.first?.scale.z = 5
             }
         }
+
         
         func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-            for anchor in anchors {
-                if let anchorName = anchor.name, anchorName.hasPrefix(anchorNamePrefix) {
-                    let modelName = anchorName.dropFirst(anchorNamePrefix.count)
-                    
-                    print("ARSession: didAdd anchor for modelName: \(modelName).")
-                    
-                    let model = self.parent.placementSettings.model
-                                        
-                    // IMPORTANT: This should only run when loading anchors from a persisted scene. If the user places a model, the modelAnchor should be already appended to modelsConfirmedForPlacement.
-                    if model.modelEntity == nil {
-                        model.asyncLoadModelEntity { completed, error in
-                            print("ARSession: loaded modelEntity for anchor - \(modelName)")
-                            if completed {
-                                let modelAnchor = ModelAnchor(model: model, anchor: anchor)
-                                self.parent.placementSettings.modelsConfirmedForPlacement.append(modelAnchor)
-                                print("Adding modelAnchor with name: \(model.name)")
-                            }
-                        }
+            
+            guard let arView = arView else { return }
+            
+            if arView.scene.anchors.isEmpty {
+                for anchor in anchors {
+                    if let planeAnchor = anchor as? ARPlaneAnchor {
+                        let modelEntity = try! ModelEntity.loadModel(contentsOf: URL(fileURLWithPath: self.parent.path))
+                        
+                        modelEntity.generateCollisionShapes(recursive: true)
+                        
+                        modelEntity.scale *= 0.5
+                        
+                        let anchorEntity = AnchorEntity()
+                        anchorEntity.addChild(modelEntity)
+                        
+                        arView.installGestures([.all], for: modelEntity)
+
+                        arView.scene.addAnchor(anchorEntity)
+                        break
                     }
                 }
-                
-//                if let anchorName = anchor.name {
-//                    print("Эщкере")
-//
-////                    let modelName = "armyanin"
-////
-////                    print("ARSession: didAdd anchor for modelName: \(modelName).")
-////
-////                    guard let model = self.parent.modelsViewModel.models.first(where: { $0.name == modelName }) else {
-////                        print("Unable to retrieve model from modelsViewModel.")
-////                        return
-////                    }
-//
-//                    let model = self.parent.modelsViewModel.models.first!
-//
-//                    if model.modelEntity == nil {
-//                        model.asyncLoadModelEntity { completed, error in
-//                            //print("ARSession: loaded modelEntity for anchor - \(modelName)")
-//                            if completed {
-//                                let modelAnchor = ModelAnchor(model: model, anchor: anchor)
-//                                self.parent.placementSettings.modelsConfirmedForPlacement.append(modelAnchor)
-//                                self.parent.placementSettings.selectedModel = model
-//                                print("Adding modelAnchor with name: \(model.name)")
-//                            }
-//                        }
-//                    }
-//                }
             }
-            
-//            for anchor in anchors {
-//                guard let imageAnchor = anchor as? ARImageAnchor else { return }
-//                self.parent.placementSettings
-//            }
         }
-        
-        
     }
     
     func makeCoordinator() -> Coordinator {
