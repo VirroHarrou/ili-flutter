@@ -11,6 +11,7 @@ struct ModelView: View {
                 Text(
                     "Нажмите на горизонтальную поверхность"
                 )
+                .multilineTextAlignment(.center)
                 .font(.system(
                     size: 20,
                     weight: .semibold
