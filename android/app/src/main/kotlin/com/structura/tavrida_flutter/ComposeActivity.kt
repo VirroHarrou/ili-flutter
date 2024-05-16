@@ -78,74 +78,55 @@ class ComposeActivity : ComponentActivity() {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    val argValue = intent.getStringExtra(ARG_KEY)
-                    val engine = rememberEngine()
-                    val modelLoader = rememberModelLoader(engine)
-                    val materialLoader = rememberMaterialLoader(engine)
-                    val camera = rememberCameraNode2(engine)
-                    val childNodes = rememberNodes()
-                    val view = rememberView(engine)
-                    val collisionSystem = rememberCollisionSystem(view)
+                    var isActivated by remember { mutableStateOf(true) }
+                    if (isActivated) {
+                        val argValue = intent.getStringExtra(ARG_KEY)
+                        val engine = rememberEngine()
+                        val modelLoader = rememberModelLoader(engine)
+                        val materialLoader = rememberMaterialLoader(engine)
+                        val camera = rememberCameraNode2(engine)
+                        val childNodes = rememberNodes()
+                        val view = rememberView(engine)
+                        val collisionSystem = rememberCollisionSystem(view)
 
-                    var planeRenderer by remember { mutableStateOf(false) }
+                        var planeRenderer by remember { mutableStateOf(false) }
 
-                    val modelInstances = remember { mutableListOf<ModelInstance>() }
-                    var trackingFailureReason by remember {
-                        mutableStateOf<TrackingFailureReason?>(null)
-                    }
-                    var frame by remember { mutableStateOf<Frame?>(null) }
+                        val modelInstances = remember { mutableListOf<ModelInstance>() }
+                        var trackingFailureReason by remember {
+                            mutableStateOf<TrackingFailureReason?>(null)
+                        }
+                        var frame by remember { mutableStateOf<Frame?>(null) }
 
-                    ARScene(
-                        modifier = Modifier.fillMaxSize(),
-                        childNodes = childNodes,
-                        engine = engine,
-                        view = view,
-                        modelLoader = modelLoader,
-                        collisionSystem = collisionSystem,
-                        sessionConfiguration = { session, config ->
-                            config.depthMode =
-                                when (session.isDepthModeSupported(Config.DepthMode.AUTOMATIC)) {
-                                    true -> Config.DepthMode.AUTOMATIC
-                                    else -> Config.DepthMode.DISABLED
-                                }
-                            config.instantPlacementMode = Config.InstantPlacementMode.LOCAL_Y_UP
-                            config.lightEstimationMode =
-                                Config.LightEstimationMode.ENVIRONMENTAL_HDR
-                        },
-                        cameraNode = camera,
-                        planeRenderer = planeRenderer,
-                        onTrackingFailureChanged = {
-                            trackingFailureReason = it
-                        },
-                        onSessionUpdated = { session, updatedFrame ->
-                            frame = updatedFrame
-
-                            if (childNodes.isEmpty()) {
-                                updatedFrame.getUpdatedPlanes()
-                                    .firstOrNull { it.type == Plane.Type.HORIZONTAL_UPWARD_FACING }
-                                    ?.let { it.createAnchorOrNull(it.centerPose) }?.let { anchor ->
-                                        childNodes += createAnchorNode(
-                                            engine = engine,
-                                            modelLoader = modelLoader,
-                                            materialLoader = materialLoader,
-                                            modelInstances = modelInstances,
-                                            anchor = anchor
-                                        )
+                        ARScene(
+                            modifier = Modifier.fillMaxSize(),
+                            childNodes = childNodes,
+                            engine = engine,
+                            view = view,
+                            modelLoader = modelLoader,
+                            collisionSystem = collisionSystem,
+                            sessionConfiguration = { session, config ->
+                                config.depthMode =
+                                    when (session.isDepthModeSupported(Config.DepthMode.AUTOMATIC)) {
+                                        true -> Config.DepthMode.AUTOMATIC
+                                        else -> Config.DepthMode.DISABLED
                                     }
-                            }
-                        },
-                        onGestureListener = rememberOnGestureListener(
-                            onSingleTapConfirmed = { motionEvent, node ->
-                                if (node == null) {
-                                    val hitResults = frame?.hitTest(motionEvent.x, motionEvent.y)
-                                    hitResults?.firstOrNull {
-                                        it.isValid(
-                                            depthPoint = false,
-                                            point = false
-                                        )
-                                    }?.createAnchorOrNull()
+                                config.instantPlacementMode = Config.InstantPlacementMode.LOCAL_Y_UP
+                                config.lightEstimationMode =
+                                    Config.LightEstimationMode.ENVIRONMENTAL_HDR
+                            },
+                            cameraNode = camera,
+                            planeRenderer = planeRenderer,
+                            onTrackingFailureChanged = {
+                                trackingFailureReason = it
+                            },
+                            onSessionUpdated = { session, updatedFrame ->
+                                frame = updatedFrame
+
+                                if (childNodes.isEmpty()) {
+                                    updatedFrame.getUpdatedPlanes()
+                                        .firstOrNull { it.type == Plane.Type.HORIZONTAL_UPWARD_FACING }
+                                        ?.let { it.createAnchorOrNull(it.centerPose) }
                                         ?.let { anchor ->
-                                            planeRenderer = false
                                             childNodes += createAnchorNode(
                                                 engine = engine,
                                                 modelLoader = modelLoader,
@@ -155,25 +136,49 @@ class ComposeActivity : ComponentActivity() {
                                             )
                                         }
                                 }
-                            })
-                    )
-                    Text(
-                        modifier = Modifier
-                            .systemBarsPadding()
-                            .fillMaxWidth()
-                            .align(Alignment.TopCenter)
-                            .padding(top = 16.dp, start = 32.dp, end = 32.dp),
-                        textAlign = TextAlign.Center,
-                        fontSize = 28.sp,
-                        color = Color.White,
-                        text = trackingFailureReason?.let {
-                            it.getDescription(LocalContext.current)
-                        } ?: if (childNodes.isEmpty()) {
-                            "Наведите на горизонтальную поверхность"
-                        } else {
-                            "Вращайте модель двумя пальцами\n" + "перемещайте модель долгим нажатием\n"
-                        }
-                    )
+                            },
+                            onGestureListener = rememberOnGestureListener(
+                                onSingleTapConfirmed = { motionEvent, node ->
+                                    if (node == null) {
+                                        val hitResults =
+                                            frame?.hitTest(motionEvent.x, motionEvent.y)
+                                        hitResults?.firstOrNull {
+                                            it.isValid(
+                                                depthPoint = false,
+                                                point = false
+                                            )
+                                        }?.createAnchorOrNull()
+                                            ?.let { anchor ->
+                                                planeRenderer = false
+                                                childNodes += createAnchorNode(
+                                                    engine = engine,
+                                                    modelLoader = modelLoader,
+                                                    materialLoader = materialLoader,
+                                                    modelInstances = modelInstances,
+                                                    anchor = anchor
+                                                )
+                                            }
+                                    }
+                                })
+                        )
+                        Text(
+                            modifier = Modifier
+                                .systemBarsPadding()
+                                .fillMaxWidth()
+                                .align(Alignment.TopCenter)
+                                .padding(top = 16.dp, start = 32.dp, end = 32.dp),
+                            textAlign = TextAlign.Center,
+                            fontSize = 28.sp,
+                            color = Color.White,
+                            text = trackingFailureReason?.let {
+                                it.getDescription(LocalContext.current)
+                            } ?: if (childNodes.isEmpty()) {
+                                "Наведите на горизонтальную поверхность"
+                            } else {
+                                "Вращайте модель двумя пальцами\n" + "перемещайте модель долгим нажатием\n"
+                            }
+                        )
+                    }
                     Box(
                         modifier = Modifier
                             .size(48.dp)
@@ -183,6 +188,7 @@ class ComposeActivity : ComponentActivity() {
                             )
                             .padding(10.dp)
                             .clickable {
+                                isActivated = false
                                 val replyIntent = Intent()
                                 replyIntent.putExtra(REPLY_MESSAGE, "фвывфы")
                                 setResult(RESULT_OK, replyIntent)
