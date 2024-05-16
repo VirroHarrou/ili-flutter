@@ -8,7 +8,6 @@ struct ModelView: View {
         VStack {
             if !isModelAdded {
                 Spacer()
-                    .frame(height: 50)
                 Text(
                     "Нажмите на горизонтальную поверхность"
                 )
@@ -23,28 +22,8 @@ struct ModelView: View {
                 Spacer()
                     .frame(height: 14)
                 Image("icon-park-outline_trapezoid")
+                Spacer()
             }
-            Spacer()
-            Text(
-                "Вращайте модель двумя пальцами"
-            )
-            .font(.system(
-                size: 16,
-                weight: .semibold
-            ))
-            .foregroundStyle(.white)
-            Spacer()
-                .frame(height: 16)
-            Text(
-                "Перемещайте модель зажатием"
-            )
-            .font(.system(
-                size: 16,
-                weight: .semibold
-            ))
-            .foregroundStyle(.white)
-            Spacer()
-                .frame(height: 36)
         }
         .onAppear {
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
