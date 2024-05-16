@@ -6,8 +6,6 @@ import Combine
 struct ARViewContainer: UIViewRepresentable {
     var path: String
     @EnvironmentObject var placementSettings: PlacementSettings
-    @EnvironmentObject var sessionSettings: SessionSettings
-    @EnvironmentObject var modelDeletionManager: ModelDeletionManager
         
     func makeUIView(context: Context) -> ARView {
         
@@ -32,7 +30,30 @@ struct ARViewContainer: UIViewRepresentable {
         return arView
     }
     
-    func updateUIView(_ uiView: ARView, context: Context) {}
+    func updateUIView(_ uiView: ARView, context: Context) {
+//        if isModelAdded {
+//                    let screenCenter = CGPoint(x: uiView.frame.midX, y: uiView.frame.midY)
+//                    let raycastResult = uiView.raycast(
+//                        from: screenCenter,
+//                        allowing: .estimatedPlane,
+//                        alignment: .horizontal
+//                    )
+//                    
+//                    if let firstResult = raycastResult.first {
+//                        let newPosition = SIMD3<Float>(
+//                            firstResult.worldTransform.columns.3.x,
+//                            firstResult.worldTransform.columns.3.y,
+//                            firstResult.worldTransform.columns.3.z
+//                        )
+////                        uiView.scene.anchors.first?.transform.translation = firstResult.worldTransform.translation
+//                        
+//                        uiView.scene.anchors.first?.position = newPosition
+//                    }
+//
+//                    // Reset the flag to prevent adding the model multiple times
+//                    isModelAdded = false
+//                }
+    }
 }
 
 extension ARViewContainer {
@@ -47,12 +68,6 @@ extension ARViewContainer {
         
         @objc func handleTap(_ gestureRecognizer: UITapGestureRecognizer) {
             guard let arView = arView else { return }
-            
-            let da = arView.raycast(
-                from: gestureRecognizer.location(in: arView),
-                allowing: .existingPlaneGeometry,
-                alignment: .horizontal
-            )
             
             if let result = arView.raycast(
                 from: gestureRecognizer.location(in: arView),
@@ -87,12 +102,15 @@ extension ARViewContainer {
                         
                         modelEntity.scale *= 0.5
                         
-                        let anchorEntity = AnchorEntity()
+                        let anchorEntity = AnchorEntity(world: [0, 0, -1])
                         anchorEntity.addChild(modelEntity)
+                        
+                        print(anchorEntity.availableAnimations)
                         
                         arView.installGestures([.all], for: modelEntity)
 
                         arView.scene.addAnchor(anchorEntity)
+
                         break
                     }
                 }

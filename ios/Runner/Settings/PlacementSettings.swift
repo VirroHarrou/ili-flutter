@@ -15,6 +15,8 @@ enum CustomType {
 }
 
 class PlacementSettings: ObservableObject {
+    @Published var arView: ARView?
+    
     @Published var selectedModel: Model? = nil {
         willSet(newValue) {
             print("Setting selectedModel to \(String(describing: newValue?.name)).")
