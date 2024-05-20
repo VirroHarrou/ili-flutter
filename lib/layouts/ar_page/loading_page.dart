@@ -23,8 +23,28 @@ class LoadingPageState extends State<LoadingPage> {
     try {
       final model = widget.model;
       final dir = (await getApplicationDocumentsDirectory());
-      var data = await const MethodChannel('com.hendrick.navigateChannel').invokeMethod('flutterNavigate', {"access_token": '${dir.path}/${model.id}.${Platform.isIOS ? 'usdz' : 'glb'}'});
-      return data;
+      if (Platform.isIOS) {
+        var data = await const MethodChannel('com.hendrick.navigateChannel').invokeMethod(
+            'flutterNavigate',
+            {
+              "path": '${dir.path}/${model.id}.usdz',
+              "id": model.id,
+              "title": model.title,
+              "description": model.description,
+              "like": model.like,
+            }
+        );
+        return data;
+      }
+      else {
+        var data = await const MethodChannel('com.hendrick.navigateChannel').invokeMethod(
+            'flutterNavigate',
+            {
+              "access_token": '${dir.path}/${model.id}.${Platform.isIOS ? 'usdz' : 'glb'}'
+            }
+        );
+        return data;
+      }
     } on PlatformException catch (e) {
       return 'Failed to invoke: ${e.message}';
     }

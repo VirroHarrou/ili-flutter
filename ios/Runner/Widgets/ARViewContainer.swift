@@ -9,7 +9,7 @@ struct ARViewContainer: UIViewRepresentable {
         
     func makeUIView(context: Context) -> ARView {
         
-        let arView = ARView(frame: .zero)
+        self.placementSettings.arView = ARView(frame: .zero)
 
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
@@ -19,15 +19,15 @@ struct ARViewContainer: UIViewRepresentable {
             configuration.sceneReconstruction = .mesh
         }
         
-        context.coordinator.arView = arView
-        arView.session.delegate = context.coordinator
+        context.coordinator.arView = self.placementSettings.arView!
+        self.placementSettings.arView!.session.delegate = context.coordinator
         
-        arView.session.run(configuration)
+        self.placementSettings.arView!.session.run(configuration)
         
         let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handleTap(_:)))
-        arView.addGestureRecognizer(tapGesture)
+        self.placementSettings.arView!.addGestureRecognizer(tapGesture)
         
-        return arView
+        return self.placementSettings.arView!
     }
     
     func updateUIView(_ uiView: ARView, context: Context) {
@@ -95,7 +95,7 @@ extension ARViewContainer {
             
             if arView.scene.anchors.isEmpty {
                 for anchor in anchors {
-                    if let planeAnchor = anchor as? ARPlaneAnchor {
+                    if anchor is ARPlaneAnchor {
                         let modelEntity = try! ModelEntity.loadModel(contentsOf: URL(fileURLWithPath: self.parent.path))
                         
                         modelEntity.generateCollisionShapes(recursive: true)

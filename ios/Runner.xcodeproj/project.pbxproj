@@ -29,6 +29,10 @@
 		60494D3E2BF50D4B00B67912 /* CustomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D3D2BF50D4B00B67912 /* CustomModel.swift */; };
 		60494D422BF50DD600B67912 /* QRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D412BF50DD600B67912 /* QRScanner.swift */; };
 		60494D442BF50DEE00B67912 /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D432BF50DEE00B67912 /* SCNVector3+Extensions.swift */; };
+		60F0F54A2BF787A3009EDE41 /* MakeUIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F0F5492BF787A3009EDE41 /* MakeUIImage.swift */; };
+		60F0F54C2BF78818009EDE41 /* ImageSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F0F54B2BF78818009EDE41 /* ImageSaver.swift */; };
+		60F0F54E2BF78864009EDE41 /* ScreenshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F0F54D2BF78864009EDE41 /* ScreenshotView.swift */; };
+		60F0F5502BF79299009EDE41 /* CustomSnackBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F0F54F2BF79299009EDE41 /* CustomSnackBar.swift */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		8D7282CBD1DE92FC1FAFB3C4 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 156AA67FADB51BCD4F46AE3D /* Pods_Runner.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
@@ -88,6 +92,10 @@
 		60494D3D2BF50D4B00B67912 /* CustomModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModel.swift; sourceTree = "<group>"; };
 		60494D412BF50DD600B67912 /* QRScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanner.swift; sourceTree = "<group>"; };
 		60494D432BF50DEE00B67912 /* SCNVector3+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNVector3+Extensions.swift"; sourceTree = "<group>"; };
+		60F0F5492BF787A3009EDE41 /* MakeUIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeUIImage.swift; sourceTree = "<group>"; };
+		60F0F54B2BF78818009EDE41 /* ImageSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSaver.swift; sourceTree = "<group>"; };
+		60F0F54D2BF78864009EDE41 /* ScreenshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotView.swift; sourceTree = "<group>"; };
+		60F0F54F2BF79299009EDE41 /* CustomSnackBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSnackBar.swift; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AA4EE1F0A2D2B7345D3744B /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
@@ -148,6 +156,7 @@
 				60494D242BF5097800B67912 /* ModelDeletionManager.swift */,
 				60494D262BF5098600B67912 /* PlacementSettings.swift */,
 				60494D282BF5099400B67912 /* SessionSettings.swift */,
+				60F0F54B2BF78818009EDE41 /* ImageSaver.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -161,6 +170,8 @@
 				60494D332BF50A8000B67912 /* CustomBottomSheet.swift */,
 				60494D352BF50A9700B67912 /* ScanView.swift */,
 				60494D372BF50AA500B67912 /* ModelView.swift */,
+				60F0F54D2BF78864009EDE41 /* ScreenshotView.swift */,
+				60F0F54F2BF79299009EDE41 /* CustomSnackBar.swift */,
 			);
 			path = Widgets;
 			sourceTree = "<group>";
@@ -180,6 +191,14 @@
 				60494D432BF50DEE00B67912 /* SCNVector3+Extensions.swift */,
 			);
 			path = QRScanner;
+			sourceTree = "<group>";
+		};
+		60F0F5482BF7878F009EDE41 /* Extenstions */ = {
+			isa = PBXGroup;
+			children = (
+				60F0F5492BF787A3009EDE41 /* MakeUIImage.swift */,
+			);
+			path = Extenstions;
 			sourceTree = "<group>";
 		};
 		9740EEB11CF90186004384FC /* Flutter */ = {
@@ -217,6 +236,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				60F0F5482BF7878F009EDE41 /* Extenstions */,
 				60494D402BF50DC300B67912 /* QRScanner */,
 				60494D3C2BF50D4000B67912 /* Models */,
 				60494D2C2BF509B400B67912 /* Widgets */,
@@ -470,21 +490,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				60F0F54E2BF78864009EDE41 /* ScreenshotView.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				60494D2E2BF509BF00B67912 /* PlacementView.swift in Sources */,
 				60494D222BF5094000B67912 /* DelegateViewController.swift in Sources */,
 				60494D302BF50A4E00B67912 /* ARViewContainer.swift in Sources */,
 				60494D292BF5099400B67912 /* SessionSettings.swift in Sources */,
+				60F0F54A2BF787A3009EDE41 /* MakeUIImage.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 				60494D202BF5080F00B67912 /* ScenePersistenceHelper.swift in Sources */,
 				60494D3E2BF50D4B00B67912 /* CustomModel.swift in Sources */,
 				60494D272BF5098600B67912 /* PlacementSettings.swift in Sources */,
 				60494D1A2BF507CC00B67912 /* CustomARView.swift in Sources */,
 				60494D1E2BF507FE00B67912 /* Model.swift in Sources */,
+				60F0F54C2BF78818009EDE41 /* ImageSaver.swift in Sources */,
 				60494D182BF507BB00B67912 /* ContentView.swift in Sources */,
 				60494D342BF50A8000B67912 /* CustomBottomSheet.swift in Sources */,
 				60494D442BF50DEE00B67912 /* SCNVector3+Extensions.swift in Sources */,
 				60494D382BF50AA500B67912 /* ModelView.swift in Sources */,
+				60F0F5502BF79299009EDE41 /* CustomSnackBar.swift in Sources */,
 				60494D2B2BF509A900B67912 /* SettingsView.swift in Sources */,
 				60494D252BF5097800B67912 /* ModelDeletionManager.swift in Sources */,
 				60494D1C2BF507DF00B67912 /* DeletionView.swift in Sources */,
