@@ -102,6 +102,16 @@ extension ARViewContainer {
                         
                         modelEntity.scale *= 0.5
                         
+                        print(modelEntity.availableAnimations)
+                        
+                        if !modelEntity.availableAnimations.isEmpty {
+                            modelEntity.playAnimation(
+                                modelEntity.availableAnimations.first!.repeat(duration: .infinity),
+                                transitionDuration: 1.25,
+                                startsPaused: false
+                            )
+                        }
+                        
                         let anchorEntity = AnchorEntity(world: [0, 0, -1])
                         anchorEntity.addChild(modelEntity)
                         
