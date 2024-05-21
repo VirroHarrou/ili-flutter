@@ -71,8 +71,7 @@ class _PlatformListPageState extends State<PlatformListPage> {
         DateTime endedAt = DateTime.parse(platforms[index].endedAt ?? '12122012');
         return InkWell(
             onTap: () {
-              var id = platforms[index].id;
-              context.push(Routes.platform, extra: id);
+              context.push(Routes.platform, extra: platforms[index]);
             },
             child: Padding(
               padding: const EdgeInsets.only(bottom: 20, left: 24, right: 24),

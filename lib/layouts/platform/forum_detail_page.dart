@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:tavrida_flutter/common/routes.dart';
 import 'package:tavrida_flutter/repositories/Settings.dart';
 import 'package:tavrida_flutter/services/models/platform.dart';
 import 'package:tavrida_flutter/services/models/questionnaire.dart';
@@ -15,9 +16,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'widgets/view.dart';
 
 class ForumDetailPage extends StatefulWidget {
-  const ForumDetailPage({super.key, required this.id});
+  const ForumDetailPage({super.key, required this.platform});
 
-  final String id;
+  final Platform platform;
 
   @override
   State<StatefulWidget> createState() => _ForumDetailPageState();
@@ -98,15 +99,16 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (isFirst) {
+      platform = widget.platform;
+      updateData(widget.platform.id ?? '');
+      isFirst = false;
+    }
     var theme = Theme.of(context);
     DateTime startedAt = DateTime.parse(platform?.startedAt ?? '12122012');
     DateTime endedAt = DateTime.parse(platform?.endedAt ?? '12122012');
     arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
-    if (isFirst) {
-      updateData(widget.id);
-      isFirst = false;
-    }
     return Scaffold(
         body: SingleChildScrollView(
           child: Column(
@@ -355,7 +357,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
             flex: 7,
             child: MaterialButton(
                 onPressed: () {
-                  context.push('/QR');
+                  context.push(Routes.qrScanner);
                 },
                 padding: EdgeInsets.zero,
                 child: Container(

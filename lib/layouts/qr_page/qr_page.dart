@@ -43,8 +43,10 @@ class _QRPageState extends State<QRPage> {
 
   Widget buildScanner({bool barCodeError = false, bool codeError = false}) {
     final qrViewSize = MediaQuery.of(context).size.width * 0.8;
+    final additionalMargin = MediaQuery.of(context).viewInsets.bottom;
+    final qrViewVerticalMargin = (MediaQuery.of(context).size.height - additionalMargin - qrViewSize) / 2 - 5;
     final theme = Theme.of(context);
-    final isKeyboardOff = MediaQuery.of(context).viewInsets.bottom == 0;
+    final isKeyboardOff = additionalMargin == 0;
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -65,21 +67,19 @@ class _QRPageState extends State<QRPage> {
               ],
             ),
             Positioned(
-              height: qrViewSize + 140,
+              top: qrViewVerticalMargin - 20,
               width: qrViewSize,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 40.0),
-                    child: Text("Наведите камеру на QR-код", style: theme.textTheme.bodyMedium,),
-                  ),
-                  Text(
-                    'Если вам нет 18, используйте приложение в присутствии родителей. Cледите за своим окружением, AR может искажать объекты.',
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                ],
+              child: Center(
+                  child: Text("Наведите камеру на QR-код", style: theme.textTheme.bodyMedium,),
+              ),
+            ),
+            Positioned(
+              bottom: qrViewVerticalMargin - 60,
+              width: qrViewSize,
+              child: Text(
+                'Если вам нет 18, используйте приложение в присутствии родителей. Cледите за своим окружением, AR может искажать объекты.',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium,
               ),
             ),
             Positioned.fill(

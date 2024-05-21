@@ -5,6 +5,7 @@ import 'package:tavrida_flutter/common/injector_initializer.dart';
 import 'package:tavrida_flutter/common/routes.dart';
 import 'package:tavrida_flutter/layouts/platform/platform_list_page.dart';
 import 'package:tavrida_flutter/services/models/model.dart';
+import 'package:tavrida_flutter/services/models/platform.dart';
 import 'package:tavrida_flutter/themes/src/theme_default.dart';
 
 import 'layouts/ar_page/loading_page.dart';
@@ -51,7 +52,7 @@ class TavridaApp extends StatelessWidget {
           ),
           GoRoute(
             path: Routes.platform,
-            builder: (context, state) => ForumDetailPage(id: state.extra as String),
+            builder: (context, state) => ForumDetailPage(platform: state.extra as Platform),
           ),
           GoRoute(
             path: Routes.qrScanner,
