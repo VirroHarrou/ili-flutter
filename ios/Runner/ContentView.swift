@@ -161,6 +161,7 @@ struct ContentView: View {
                         HStack {
                             VStack {
                                 Button (action: {
+                                    self.placementSettings.isTap = true
                                     if self.scale >= 1 {
                                         self.scale += 1
                                     }
@@ -172,15 +173,19 @@ struct ContentView: View {
                                         self.scale,
                                         self.scale
                                     ]
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                        self.placementSettings.isTap = false
+                                    }
                                 }) {
                                     ZStack {
                                         Circle()
                                             .fill(.clear)
-                                            .overlay(Circle().stroke(.white, lineWidth: 1))
-                                            .frame(width: 24, height: 24)
+                                            .overlay(Circle().stroke(.white, lineWidth: 2))
+                                            .frame(width: 48, height: 48)
                                         
                                         Image(systemName: "plus")
                                             .foregroundColor(.white)
+                                            .frame(width: 24, height: 24)
                                     }
                                         }
                                 Spacer()
@@ -197,37 +202,44 @@ struct ContentView: View {
                                 Spacer()
                                     .frame(height: 13)
                                 Button (action: {
-                                    if self.scale > 1 {
-                                        self.scale -= 1
+                                    if self.scale != 0.1 {
+                                        self.placementSettings.isTap = true
+                                        if self.scale > 1 {
+                                            self.scale -= 1
+                                        }
+                                        else {
+                                            self.scale -= 0.1
+                                        }
+                                        self.placementSettings.arView?.scene.anchors.first?.scale = [
+                                            self.scale,
+                                            self.scale,
+                                            self.scale
+                                        ]
+                                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                            self.placementSettings.isTap = false
+                                        }
                                     }
-                                    else {
-                                        self.scale -= 0.1
-                                    }
-                                    self.placementSettings.arView?.scene.anchors.first?.scale = [
-                                        self.scale,
-                                        self.scale,
-                                        self.scale
-                                    ]
                                 }) {
                                     ZStack {
                                                 Circle()
                                                     .fill(Color.clear)
-                                                    .overlay(Circle().stroke(.white, lineWidth: 1))
-                                                    .frame(width: 24, height: 24)
+                                                    .overlay(Circle().stroke(.white, lineWidth: 2))
+                                                    .frame(width: 48, height: 48)
                                                 
                                                 Image(systemName: "minus")
                                                     .foregroundColor(.white)
+                                                    .frame(width: 24, height: 24)
                                             }
                                 }
                                 Spacer()
                                     .frame(height: 44)
-                                Button(action: {
-                                    self.placementSettings.arView?.scene.anchors.first?.removeFromParent()
-                                }) {
-                                    Image("eos-icons_content-deleted")
-                                }
-                                Spacer()
-                                    .frame(height: 30)
+//                                Button(action: {
+//                                    self.placementSettings.arView?.scene.anchors.first?.removeFromParent()
+//                                }) {
+//                                    Image("eos-icons_content-deleted")
+//                                }
+//                                Spacer()
+//                                    .frame(height: 30)
                             }
                             Spacer()
                             Button (action: {
@@ -246,66 +258,67 @@ struct ContentView: View {
                             }
                             Spacer()
                             VStack {
-                                Button(action: {
-                                    if self.isFavorite {
-                                        self.isFavorite = false
-                                    }
-                                    else {
-                                        withAnimation {
-                                            if self.isShowCopy {
-                                                self.isShowCopy = false
-                                            }
-                                            if self.isShowPhoto {
-                                                self.isShowCopy = false
-                                            }
-                                            self.isFavorite = true
-                                            self.isShowFavorite = true
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                                self.isShowFavorite = false
-                                            }
-                                        }
-                                    }
-                                }) {
-                                    Image(systemName: self.isFavorite ? "heart.fill" : "heart")
-                                        .frame(
-                                            width: 32,
-                                            height: 32
-                                        )
-                                        .foregroundColor(.white)
-                                }
-                                Spacer()
-                                    .frame(height: 40)
-                                Button(action: {
-                                    UIPasteboard.general.setValue(
-                                        self.id,
-                                        forPasteboardType: UTType.plainText.identifier
-                                    )
-                                    withAnimation {
-                                        if self.isShowFavorite {
-                                            self.isShowFavorite = false
-                                        }
-                                        if self.isShowPhoto {
-                                            self.isShowPhoto = false
-                                        }
-                                        self.isShowCopy = true
-                                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                            self.isShowCopy = false
-                                        }
-                                    }
-                                }) {
-                                    Image(systemName: "arrowshape.turn.up.right.fill")
-                                        .frame(
-                                            width: 32,
-                                            height: 32
-                                        )
-                                        .foregroundColor(.white)
-                                }
+//                                Button(action: {
+//                                    if self.isFavorite {
+//                                        self.isFavorite = false
+//                                    }
+//                                    else {
+//                                        withAnimation {
+//                                            if self.isShowCopy {
+//                                                self.isShowCopy = false
+//                                            }
+//                                            if self.isShowPhoto {
+//                                                self.isShowCopy = false
+//                                            }
+//                                            self.isFavorite = true
+//                                            self.isShowFavorite = true
+//                                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//                                                self.isShowFavorite = false
+//                                            }
+//                                        }
+//                                    }
+//                                }) {
+//                                    Image(systemName: self.isFavorite ? "heart.fill" : "heart")
+//                                        .frame(
+//                                            width: 32,
+//                                            height: 32
+//                                        )
+//                                        .foregroundColor(.white)
+//                                }
+//                                Spacer()
+//                                    .frame(height: 40)
+//                                Button(action: {
+//                                    UIPasteboard.general.setValue(
+//                                        self.id,
+//                                        forPasteboardType: UTType.plainText.identifier
+//                                    )
+//                                    withAnimation {
+//                                        if self.isShowFavorite {
+//                                            self.isShowFavorite = false
+//                                        }
+//                                        if self.isShowPhoto {
+//                                            self.isShowPhoto = false
+//                                        }
+//                                        self.isShowCopy = true
+//                                        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//                                            self.isShowCopy = false
+//                                        }
+//                                    }
+//                                }) {
+//                                    Image(systemName: "arrowshape.turn.up.right.fill")
+//                                        .frame(
+//                                            width: 32,
+//                                            height: 32
+//                                        )
+//                                        .foregroundColor(.white)
+//                                }
                                 Spacer()
                                     .frame(height: 40)
                                 Button(action: {
                                     self.isSheet = true
                                 }) {
                                     Image(systemName: "info.circle")
+                                        .resizable()
                                         .frame(
                                             width: 32,
                                             height: 32

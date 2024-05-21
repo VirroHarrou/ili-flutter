@@ -67,24 +67,26 @@ extension ARViewContainer {
         }
         
         @objc func handleTap(_ gestureRecognizer: UITapGestureRecognizer) {
-            guard let arView = arView else { return }
-            
-            if let result = arView.raycast(
-                from: gestureRecognizer.location(in: arView),
-                allowing: .existingPlaneGeometry,
-                alignment: .horizontal
-            )
-                .first {
-                    let newPosition = SIMD3<Float>(
-                        result.worldTransform.columns.3.x,
-                        result.worldTransform.columns.3.y,
-                        result.worldTransform.columns.3.z
-                    )
-                            
-                arView.scene.anchors.first?.position = newPosition
-                arView.scene.anchors.first?.scale.x = 5
-                arView.scene.anchors.first?.scale.y = 5
-                arView.scene.anchors.first?.scale.z = 5
+            if !self.parent.placementSettings.isTap {
+                guard let arView = arView else { return }
+                
+                if let result = arView.raycast(
+                    from: gestureRecognizer.location(in: arView),
+                    allowing: .existingPlaneGeometry,
+                    alignment: .horizontal
+                )
+                    .first {
+                        let newPosition = SIMD3<Float>(
+                            result.worldTransform.columns.3.x,
+                            result.worldTransform.columns.3.y,
+                            result.worldTransform.columns.3.z
+                        )
+                                
+                    arView.scene.anchors.first?.position = newPosition
+                    arView.scene.anchors.first?.scale.x = 5
+                    arView.scene.anchors.first?.scale.y = 5
+                    arView.scene.anchors.first?.scale.z = 5
+                }
             }
         }
 

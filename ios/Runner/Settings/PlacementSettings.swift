@@ -35,6 +35,8 @@ class PlacementSettings: ObservableObject {
     @Published var customModel: CustomModel?
     
     @Published var customType: CustomType = .place
+    
+    @Published var isTap: Bool = false
 
     var modelsConfirmedForPlacement: [ModelAnchor] = []
     var sceneObserver: Cancellable?
