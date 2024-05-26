@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:tavrida_flutter/widgets/failures/failure.dart';
 
 import '../../services/models/model.dart';
 import 'CustomDownloadIndicator.dart';
@@ -53,6 +54,15 @@ class LoadingPageState extends State<LoadingPage> {
   @override
   Widget build(BuildContext context) {
     final model = widget.model;
+    final indicator = DownloadProgressIndicator(
+              url: (Platform.isIOS ? model.valueUrlUSDZ : model.valueUrl) ?? '',
+              filename: '${model.id}.${Platform.isIOS ? 'usdz' : 'glb'}',
+              onDownloadComplete: (file) {
+                context.pop();
+                navigateToNative();
+              },
+            );
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -60,14 +70,11 @@ class LoadingPageState extends State<LoadingPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            DownloadProgressIndicator(
-              url: (Platform.isIOS ? model.valueUrlUSDZ : model.valueUrl) ?? '',
-              filename: '${model.id}.${Platform.isIOS ? 'usdz' : 'glb'}',
-              onDownloadComplete: (file) {
-                context.pop();
-                navigateToNative();
-              },
-            ),
+            _validateUrl(model) ? indicator :
+              const FailureContent(
+                title: 'Ошибка в данных модели!',
+                message: 'Ссылка на модель не корректна для вашей платформы',
+              ),
             const SizedBox(height: 32,),
             InkWell(
               onTap: () => context.pop(),
@@ -78,9 +85,10 @@ class LoadingPageState extends State<LoadingPage> {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: Colors.black, width: 2),
                 ),
-                child: const Center(
-                  child: Text("Отмена",
-                    style: TextStyle(
+                child: Center(
+                  child: Text(
+                    _validateUrl(model) ? "Отмена" : "Выйти",
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -93,6 +101,14 @@ class LoadingPageState extends State<LoadingPage> {
         ),
       ),
     );
+  }
+
+  bool _validateUrl(Model model){
+    if (Platform.isIOS) {
+      return model.valueUrlUSDZ?.endsWith('.usdz') ?? false;
+    } else {
+      return  model.valueUrl?.endsWith('.glb') ?? false;
+    }
   }
 }
 

@@ -4,7 +4,7 @@ import 'package:injector/injector.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:tavrida_flutter/common/routes.dart';
-import 'package:tavrida_flutter/repositories/Settings.dart';
+import 'package:tavrida_flutter/common/settings.dart';
 import 'package:tavrida_flutter/services/models/platform.dart';
 import 'package:tavrida_flutter/services/models/questionnaire.dart';
 import 'package:tavrida_flutter/services/platform_service.dart';

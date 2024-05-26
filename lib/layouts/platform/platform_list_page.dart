@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-import 'package:tavrida_flutter/common/routes.dart';
-import 'package:tavrida_flutter/layouts/platform/bloc/platform_list_bloc.dart';
 import 'package:tavrida_flutter/services/models/platform.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:tavrida_flutter/widgets/failures/failure.dart';
 import 'package:tavrida_flutter/widgets/loading_state_widget.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+
+import 'platform_list_controller.dart';
+import 'widgets/view.dart';
 
 class PlatformListPage extends StatefulWidget {
   const PlatformListPage({super.key});
@@ -17,41 +16,41 @@ class PlatformListPage extends StatefulWidget {
 }
 
 class _PlatformListPageState extends State<PlatformListPage> {
-  final bloc = PlatformListBloc();
+  final controller = PlatformListController();
   late ThemeData theme;
   Icon customIcon = const Icon(Icons.search, size: 32,);
   bool isSearching = false;
 
   @override
   void initState() {
+    controller.init();
     super.initState();
-    bloc.add(PlatformListUpdateEvent());
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     theme = Theme.of(context);
     return Scaffold(
-      appBar: buildAppBar(theme, context),
-      body: BlocBuilder<PlatformListBloc, PlatformListState>(
-        bloc: bloc,
-        builder: (context, state) {
-          switch (state) {
-            case PlatformListEmpty():
-              return const EmptyContent(
-                title: 'Площадок пока нет',
-                message: 'Здесь появятся площадки, но пока здесь пусто',
-              );
-            case PlatformListLoading():
-              return buildLoading(context);
-            case PlatformListLoaded():
-              return buildLoadedList(state.platforms);
-            case PlatformListFailure():
-              return buildFailure(message: state.message,);
-            default:
-              return Container();
-          }
-        },
+      appBar: _buildAppBar(theme, context),
+      body: PagedListView(
+        pagingController: controller.pageController,
+        builderDelegate: PagedChildBuilderDelegate<Platform>(
+          itemBuilder: (context, item, index) => PlatformCard(platform: item),
+          firstPageProgressIndicatorBuilder: (context) => buildLoading(context),
+          firstPageErrorIndicatorBuilder: (context) => buildFailure(
+            message: 'При обновлении данных произошла ошибка, пожалуйста попробуйте позже',
+          ),
+          noItemsFoundIndicatorBuilder: (context) => const EmptyContent(
+            title: 'Площадок пока нет',
+            message: 'Здесь появятся площадки, но пока здесь пусто',
+          ),
+        ),
       ),
     );
   }
@@ -63,78 +62,7 @@ class _PlatformListPageState extends State<PlatformListPage> {
     );
   }
 
-  Widget buildLoadedList(List<Platform> platforms){
-    return ListView.builder(
-      itemCount: platforms.length,
-      itemBuilder: (context, index) {
-        DateTime startedAt = DateTime.parse(platforms[index].startedAt ?? '12122012');
-        DateTime endedAt = DateTime.parse(platforms[index].endedAt ?? '12122012');
-        return InkWell(
-            onTap: () {
-              context.push(Routes.platform, extra: platforms[index]);
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 20, left: 24, right: 24),
-              child: Container(
-                height: 366,
-                width:  366,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  image: DecorationImage(
-                      image: FadeInImage.assetNetwork(
-                          placeholder: "assets/no_results_found.png",
-                          image: platforms[index].mediaUrls?.elementAtOrNull(0) ?? "").image,
-                      fit: BoxFit.cover,
-                      colorFilter: ColorFilter.mode(
-                          Colors.black.withOpacity(0.5), BlendMode.dstATop)),
-                  borderRadius: const BorderRadius.all(Radius.circular(16)),
-                  boxShadow: const [BoxShadow(
-                    color: Color(0x14000000),
-                    blurRadius: 12,
-                    offset: Offset(0, 0),
-                    spreadRadius: 0,
-                  ),],
-                ),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        textAlign: TextAlign.left,
-                        "${platforms[index].title}",
-                        style: theme.textTheme.titleMedium,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Container(
-                          height: 28,
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                          decoration: const BoxDecoration(
-                            color: Colors.white54,
-                            borderRadius: BorderRadius.all(Radius.circular(14)),
-                          ),
-                          child: Text(
-                            "${DateFormat('dd.MM.yyyy').format(startedAt)} "
-                                "- ${DateFormat('dd.MM.yyyy').format(endedAt)}",
-                            style: theme.textTheme.bodySmall,
-                          ),
-                        ),
-                      ),
-                      const Spacer(),
-                      Text(
-                        maxLines: 4,
-                        textAlign: TextAlign.start,
-                        "${platforms[index].description}",
-                        style: theme.textTheme.bodyMedium,
-                      )
-                    ]),
-              ),
-            ));
-      },
-    );
-  }
-
-  AppBar buildAppBar(ThemeData theme, BuildContext context) => AppBar(
+  AppBar _buildAppBar(ThemeData theme, BuildContext context) => AppBar(
     toolbarHeight: 66,
     titleSpacing: 24,
     automaticallyImplyLeading: false,
@@ -162,7 +90,11 @@ class _PlatformListPageState extends State<PlatformListPage> {
             borderRadius: BorderRadius.circular(8.0),
           )
       ),
-      onChanged: (query) => bloc.add(PlatformListSearchUpdateEvent(query: query)),
+      //Todo: implement search
+      onChanged: (query) {
+          controller.filter = query.trim();
+          controller.pageController.refresh();
+        },
       style: theme.textTheme.bodySmall,
     ),
     actions: <Widget>[
@@ -172,11 +104,11 @@ class _PlatformListPageState extends State<PlatformListPage> {
               if (!isSearching) {
                 customIcon = const Icon(Icons.clear, size: 32,);
                 isSearching = true;
-                bloc.add(PlatformListUpdateEvent());
               } else {
                 customIcon = const Icon(Icons.search, size: 32,);
                 isSearching = false;
-                bloc.add(PlatformListUpdateEvent());
+                controller.filter = '';
+                controller.pageController.refresh();
               }
             });
           },
@@ -186,3 +118,4 @@ class _PlatformListPageState extends State<PlatformListPage> {
     ],
   );
 }
+

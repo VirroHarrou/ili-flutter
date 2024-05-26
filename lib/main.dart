@@ -12,7 +12,7 @@ import 'layouts/ar_page/loading_page.dart';
 import 'layouts/auth_page/auth_page_view.dart';
 import 'layouts/home_page.dart';
 import 'layouts/models_page/model_list_page.dart';
-import 'layouts/platform/forum_detail_page.dart';
+import 'layouts/platform/detail/forum_detail_page.dart';
 import 'layouts/qr_page/qr_page.dart';
 
 void main() async {

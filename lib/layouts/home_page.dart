@@ -3,8 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tavrida_flutter/common/routes.dart';
 import 'package:tavrida_flutter/layouts/models_page/model_list_page.dart';
 import 'package:tavrida_flutter/layouts/platform/view.dart';
-
-import '../themes/app_colors.dart';
+import 'package:tavrida_flutter/themes/app_colors.dart';
 
 class HomePage extends StatefulWidget{
   final String location;

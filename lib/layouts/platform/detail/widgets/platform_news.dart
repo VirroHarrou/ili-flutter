@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../themes/app_colors.dart';
 import 'view.dart';
 
 class PlatformNews extends StatefulWidget {
