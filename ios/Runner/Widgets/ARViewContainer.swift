@@ -24,8 +24,17 @@ struct ARViewContainer: UIViewRepresentable {
         
         self.placementSettings.arView!.session.run(configuration)
         
-        let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.handleTap(_:)))
+        let tapGesture = UITapGestureRecognizer(
+            target: context.coordinator,
+            action: #selector(context.coordinator.handleTap(_:))
+        )
         self.placementSettings.arView!.addGestureRecognizer(tapGesture)
+        
+        let pinchGesture = UIPanGestureRecognizer(
+            target: context.coordinator,
+            action: #selector(context.coordinator.handlePinchGesture(_:))
+        )
+        self.placementSettings.arView!.addGestureRecognizer(pinchGesture)
         
         return self.placementSettings.arView!
     }
@@ -89,8 +98,11 @@ extension ARViewContainer {
                 }
             }
         }
-
         
+        @objc func handlePinchGesture(_ gesture: UIPanGestureRecognizer) {
+            print("двды \(self.parent.placementSettings.arView!.scene.anchors.first!.scale)")
+        }
+
         func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
             
             guard let arView = arView else { return }
@@ -119,7 +131,7 @@ extension ARViewContainer {
                         
                         print(anchorEntity.availableAnimations)
                         
-                        arView.installGestures([.all], for: modelEntity)
+                        arView.installGestures([.translation, .rotation], for: modelEntity)
 
                         arView.scene.addAnchor(anchorEntity)
 

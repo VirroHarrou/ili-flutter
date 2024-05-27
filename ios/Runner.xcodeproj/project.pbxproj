@@ -29,6 +29,7 @@
 		60494D3E2BF50D4B00B67912 /* CustomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D3D2BF50D4B00B67912 /* CustomModel.swift */; };
 		60494D422BF50DD600B67912 /* QRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D412BF50DD600B67912 /* QRScanner.swift */; };
 		60494D442BF50DEE00B67912 /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D432BF50DEE00B67912 /* SCNVector3+Extensions.swift */; };
+		604B5A462BFE6E5200779119 /* RecordScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604B5A452BFE6E5200779119 /* RecordScreen.swift */; };
 		60F0F54A2BF787A3009EDE41 /* MakeUIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F0F5492BF787A3009EDE41 /* MakeUIImage.swift */; };
 		60F0F54C2BF78818009EDE41 /* ImageSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F0F54B2BF78818009EDE41 /* ImageSaver.swift */; };
 		60F0F54E2BF78864009EDE41 /* ScreenshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F0F54D2BF78864009EDE41 /* ScreenshotView.swift */; };
@@ -92,6 +93,7 @@
 		60494D3D2BF50D4B00B67912 /* CustomModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModel.swift; sourceTree = "<group>"; };
 		60494D412BF50DD600B67912 /* QRScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanner.swift; sourceTree = "<group>"; };
 		60494D432BF50DEE00B67912 /* SCNVector3+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNVector3+Extensions.swift"; sourceTree = "<group>"; };
+		604B5A452BFE6E5200779119 /* RecordScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordScreen.swift; sourceTree = "<group>"; };
 		60F0F5492BF787A3009EDE41 /* MakeUIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeUIImage.swift; sourceTree = "<group>"; };
 		60F0F54B2BF78818009EDE41 /* ImageSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSaver.swift; sourceTree = "<group>"; };
 		60F0F54D2BF78864009EDE41 /* ScreenshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotView.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 			isa = PBXGroup;
 			children = (
 				60F0F5492BF787A3009EDE41 /* MakeUIImage.swift */,
+				604B5A452BFE6E5200779119 /* RecordScreen.swift */,
 			);
 			path = Extenstions;
 			sourceTree = "<group>";
@@ -514,6 +517,7 @@
 				60494D1C2BF507DF00B67912 /* DeletionView.swift in Sources */,
 				60494D362BF50A9700B67912 /* ScanView.swift in Sources */,
 				60494D322BF50A7100B67912 /* CustomTextField.swift in Sources */,
+				604B5A462BFE6E5200779119 /* RecordScreen.swift in Sources */,
 				60494D422BF50DD600B67912 /* QRScanner.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

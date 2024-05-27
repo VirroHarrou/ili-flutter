@@ -62,6 +62,9 @@ struct ContentView: View {
     
     @State private var isShowPhoto: Bool = false
     
+    @State private var isRecording: Bool = false
+    @State private var url: URL?
+    
     @State private var isShowButtons: Bool = true {
         didSet {
             if !isShowButtons {
@@ -244,6 +247,29 @@ struct ContentView: View {
                             Spacer()
                             Button (action: {
                                 self.isShowButtons = false
+//                                if isRecording {
+//                                    Task {
+//                                        do {
+//                                            self.url = try await stopRecording()
+//                                            print(self.url)
+//                                            isRecording = false
+//                                        }
+//                                        catch {
+//                                            print(error.localizedDescription)
+//                                        }
+//                                    }
+//                                }
+//                                else {
+//                                    startRecording {
+//                                        error in
+//                                        if let error = error {
+//                                            print(error.localizedDescription)
+//                                            return
+//                                        }
+//                                        
+//                                        isRecording = true
+//                                    }
+//                                }
                             }) {
                                 ZStack {
                                     Circle()
