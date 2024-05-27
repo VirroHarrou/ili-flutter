@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 
 Widget generateNotAvailable(BuildContext context){
@@ -32,7 +33,7 @@ Widget generateNotAvailable(BuildContext context){
           ),
           const Spacer(),
           ElevatedButton(
-            onPressed: () => Navigator.pushNamed(context, "/auth"),
+            onPressed: () => context.push("/auth"),
             style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(AppColors.black),
                 minimumSize: MaterialStateProperty.all(const Size(300, 50)),

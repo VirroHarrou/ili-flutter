@@ -43,7 +43,7 @@ class Model: ObservableObject, Identifiable {
         
         self.scaleCompensation = scaleCompensation
         
-        self.path = name
+        self.path = ""
         
 //        FirebaseStorageHelper.asyncDownloadToFilesystem(relativePath: "thumbnails/\(self.name).jpg") { localUrl in
 //            do {

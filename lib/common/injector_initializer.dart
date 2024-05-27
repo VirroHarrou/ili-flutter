@@ -19,7 +19,6 @@ class InjectorInitializer{
     injector.registerSingleton(() => QuestionnaireService(prefs: preferences));
     injector.registerSingleton(() => ModelService(prefs: preferences));
 
-    ApiService.checkApiVersion('model/id=res_timestamp-18-1713050076086');
     return injector;
   }
 }

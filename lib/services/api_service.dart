@@ -61,21 +61,6 @@ class ApiService{
     }
     return null;
   }
-
-  //Todo: implement more usability version
-  static Future<void> checkApiVersion(String request) async {
-    debugPrint('im called!');
-    var response =
-        await ApiService.sendRequest(
-          request: request,
-        );
-    if (response == null || response.statusCode == null) return;
-    if (response.statusCode! > 405 || response.statusCode! < 400) return;
-    if (response.data['error']['code'] == 'UnsupportedApiVersion'){
-      baseUrl = 'http://80.90.185.153:7054/api/2.0/';
-      await restartService();
-    }
-  }
 }
 
 enum RequestMethod{

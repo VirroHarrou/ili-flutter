@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct DeletionView: View {
-    @EnvironmentObject var sceneManager: SceneManager
+    
     @EnvironmentObject var modelDeletionManager: ModelDeletionManager
     
     var body: some View {
@@ -22,10 +22,10 @@ struct DeletionView: View {
                 
                 // Remove anchorEntity (with matching anchoringIdentifier to achor) from anchorEntities array
                 let anchoringIdentifier = anchor.anchorIdentifier
-                if let index = self.sceneManager.anchorEntities.firstIndex(where: { $0.anchorIdentifier == anchoringIdentifier }) {
-                    print("Deleting anchorEntity with id: \(String(describing: anchoringIdentifier)).")
-                    self.sceneManager.anchorEntities.remove(at: index)
-                }
+//                if let index = self.sceneManager.anchorEntities.firstIndex(where: { $0.anchorIdentifier == anchoringIdentifier }) {
+//                    print("Deleting anchorEntity with id: \(String(describing: anchoringIdentifier)).")
+//                    self.sceneManager.anchorEntities.remove(at: index)
+//                }
                 
                 // Remove anchor from scene
                 anchor.removeFromParent()

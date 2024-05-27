@@ -3,7 +3,7 @@ import 'package:tavrida_flutter/services/api_service.dart';
 import 'package:tavrida_flutter/services/models/platform.dart';
 
 class PlatformService {
-  Future<List<Platform>?> getPlatformList({count = 10, skip = 0}) async {
+  Future<List<Platform>?> getPlatformList({int count = 10, int skip = 0}) async {
     var response =
         await ApiService.sendRequest(
           request: "platform/list?Count=$count&Skiped=$skip",
@@ -31,7 +31,7 @@ class PlatformService {
     if (response == null) return null;
     if (response.statusCode! >= 400) return null;
     try {
-      List jsonPlatformList = response.data;
+      List jsonPlatformList = response.data['platformList'];
       List<Platform> platformList = [];
       for (var element in jsonPlatformList) {
         platformList.add(Platform.fromJson(element));
