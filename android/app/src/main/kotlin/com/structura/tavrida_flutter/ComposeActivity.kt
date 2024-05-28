@@ -69,6 +69,7 @@ private const val kModelFile = "models/model-11.glb"
 private const val kMaxModelInstances = 10
 
 class ComposeActivity : ComponentActivity() {
+    private var isScale = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -260,6 +261,15 @@ class ComposeActivity : ComponentActivity() {
             materialInstance = materialLoader.createColorInstance(Color.White.copy(alpha = 0.5f))
         ).apply {
             isVisible = false
+        }
+        modelNode.onScale = { _, _, scaleFactor ->
+            if (scaleFactor > 1) {
+                isScale = !isScale
+                isScale
+            }
+            else {
+                true
+            }
         }
         modelNode.addChildNode(boundingBoxNode)
         anchorNode.addChildNode(modelNode)
