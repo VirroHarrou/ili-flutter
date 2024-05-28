@@ -69,7 +69,7 @@ private const val kModelFile = "models/model-11.glb"
 private const val kMaxModelInstances = 10
 
 class ComposeActivity : ComponentActivity() {
-    private var isScale = true
+    private var scale = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -182,19 +182,20 @@ class ComposeActivity : ComponentActivity() {
                     }
                     Box(
                         modifier = Modifier
-                            .size(48.dp)
-                            .background(
-                                color = Color(0xffFFFFFF).copy(alpha = 0.4f),
-                                shape = CircleShape
-                            )
-                            .padding(10.dp)
                             .clickable {
                                 isActivated = false
                                 val replyIntent = Intent()
                                 replyIntent.putExtra(REPLY_MESSAGE, "фвывфы")
                                 setResult(RESULT_OK, replyIntent)
                                 finish()
-                            },
+                            }
+                            .padding(start = 20.dp, top = 20.dp)
+                            .size(48.dp)
+                            .background(
+                                color = Color(0xffFFFFFF).copy(alpha = 0.4f),
+                                shape = CircleShape
+                            )
+                            .padding(10.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -264,8 +265,11 @@ class ComposeActivity : ComponentActivity() {
         }
         modelNode.onScale = { _, _, scaleFactor ->
             if (scaleFactor > 1) {
-                isScale = !isScale
-                isScale
+                scale++
+                if (scale == 4) {
+                    scale = 0
+                }
+                scale == 3
             }
             else {
                 true
