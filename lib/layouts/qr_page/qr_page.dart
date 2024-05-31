@@ -135,7 +135,7 @@ class _QRPageState extends State<QRPage> {
 
   Future<void> _onQRViewCreated(QRViewController controller) async {
     controller.scannedDataStream.listen(
-          (event) async {
+          (event) {
             final code = event.code;
             if (code.isEmptyOrNull) return;
             bloc.add(QRBarCodeFindEvent(barCode: code!, context: context));

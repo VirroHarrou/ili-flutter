@@ -23,13 +23,14 @@
 		60494D2E2BF509BF00B67912 /* PlacementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D2D2BF509BF00B67912 /* PlacementView.swift */; };
 		60494D302BF50A4E00B67912 /* ARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D2F2BF50A4E00B67912 /* ARViewContainer.swift */; };
 		60494D322BF50A7100B67912 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D312BF50A7100B67912 /* CustomTextField.swift */; };
-		60494D342BF50A8000B67912 /* CustomBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D332BF50A8000B67912 /* CustomBottomSheet.swift */; };
+		60494D342BF50A8000B67912 /* DescriptionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D332BF50A8000B67912 /* DescriptionSheet.swift */; };
 		60494D362BF50A9700B67912 /* ScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D352BF50A9700B67912 /* ScanView.swift */; };
 		60494D382BF50AA500B67912 /* ModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D372BF50AA500B67912 /* ModelView.swift */; };
 		60494D3E2BF50D4B00B67912 /* CustomModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D3D2BF50D4B00B67912 /* CustomModel.swift */; };
 		60494D422BF50DD600B67912 /* QRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D412BF50DD600B67912 /* QRScanner.swift */; };
 		60494D442BF50DEE00B67912 /* SCNVector3+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60494D432BF50DEE00B67912 /* SCNVector3+Extensions.swift */; };
 		604B5A462BFE6E5200779119 /* RecordScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604B5A452BFE6E5200779119 /* RecordScreen.swift */; };
+		60DE6B7F2C0A006D00DF2E78 /* CustomBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DE6B7E2C0A006D00DF2E78 /* CustomBottomSheet.swift */; };
 		60F0F54A2BF787A3009EDE41 /* MakeUIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F0F5492BF787A3009EDE41 /* MakeUIImage.swift */; };
 		60F0F54C2BF78818009EDE41 /* ImageSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F0F54B2BF78818009EDE41 /* ImageSaver.swift */; };
 		60F0F54E2BF78864009EDE41 /* ScreenshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F0F54D2BF78864009EDE41 /* ScreenshotView.swift */; };
@@ -87,13 +88,14 @@
 		60494D2D2BF509BF00B67912 /* PlacementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacementView.swift; sourceTree = "<group>"; };
 		60494D2F2BF50A4E00B67912 /* ARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewContainer.swift; sourceTree = "<group>"; };
 		60494D312BF50A7100B67912 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
-		60494D332BF50A8000B67912 /* CustomBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBottomSheet.swift; sourceTree = "<group>"; };
+		60494D332BF50A8000B67912 /* DescriptionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionSheet.swift; sourceTree = "<group>"; };
 		60494D352BF50A9700B67912 /* ScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanView.swift; sourceTree = "<group>"; };
 		60494D372BF50AA500B67912 /* ModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelView.swift; sourceTree = "<group>"; };
 		60494D3D2BF50D4B00B67912 /* CustomModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomModel.swift; sourceTree = "<group>"; };
 		60494D412BF50DD600B67912 /* QRScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanner.swift; sourceTree = "<group>"; };
 		60494D432BF50DEE00B67912 /* SCNVector3+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNVector3+Extensions.swift"; sourceTree = "<group>"; };
 		604B5A452BFE6E5200779119 /* RecordScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordScreen.swift; sourceTree = "<group>"; };
+		60DE6B7E2C0A006D00DF2E78 /* CustomBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBottomSheet.swift; sourceTree = "<group>"; };
 		60F0F5492BF787A3009EDE41 /* MakeUIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakeUIImage.swift; sourceTree = "<group>"; };
 		60F0F54B2BF78818009EDE41 /* ImageSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSaver.swift; sourceTree = "<group>"; };
 		60F0F54D2BF78864009EDE41 /* ScreenshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotView.swift; sourceTree = "<group>"; };
@@ -169,11 +171,12 @@
 				60494D2D2BF509BF00B67912 /* PlacementView.swift */,
 				60494D2F2BF50A4E00B67912 /* ARViewContainer.swift */,
 				60494D312BF50A7100B67912 /* CustomTextField.swift */,
-				60494D332BF50A8000B67912 /* CustomBottomSheet.swift */,
+				60494D332BF50A8000B67912 /* DescriptionSheet.swift */,
 				60494D352BF50A9700B67912 /* ScanView.swift */,
 				60494D372BF50AA500B67912 /* ModelView.swift */,
 				60F0F54D2BF78864009EDE41 /* ScreenshotView.swift */,
 				60F0F54F2BF79299009EDE41 /* CustomSnackBar.swift */,
+				60DE6B7E2C0A006D00DF2E78 /* CustomBottomSheet.swift */,
 			);
 			path = Widgets;
 			sourceTree = "<group>";
@@ -494,6 +497,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				60F0F54E2BF78864009EDE41 /* ScreenshotView.swift in Sources */,
+				60DE6B7F2C0A006D00DF2E78 /* CustomBottomSheet.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				60494D2E2BF509BF00B67912 /* PlacementView.swift in Sources */,
 				60494D222BF5094000B67912 /* DelegateViewController.swift in Sources */,
@@ -508,7 +512,7 @@
 				60494D1E2BF507FE00B67912 /* Model.swift in Sources */,
 				60F0F54C2BF78818009EDE41 /* ImageSaver.swift in Sources */,
 				60494D182BF507BB00B67912 /* ContentView.swift in Sources */,
-				60494D342BF50A8000B67912 /* CustomBottomSheet.swift in Sources */,
+				60494D342BF50A8000B67912 /* DescriptionSheet.swift in Sources */,
 				60494D442BF50DEE00B67912 /* SCNVector3+Extensions.swift in Sources */,
 				60494D382BF50AA500B67912 /* ModelView.swift in Sources */,
 				60F0F5502BF79299009EDE41 /* CustomSnackBar.swift in Sources */,
@@ -612,7 +616,7 @@
 				DEVELOPMENT_TEAM = 3DC4VZYZ2Z;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -792,7 +796,7 @@
 				DEVELOPMENT_TEAM = 3DC4VZYZ2Z;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -816,7 +820,7 @@
 				DEVELOPMENT_TEAM = 3DC4VZYZ2Z;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

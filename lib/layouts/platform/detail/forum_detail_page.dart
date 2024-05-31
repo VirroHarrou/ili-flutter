@@ -1,10 +1,13 @@
 import 'package:dart_extensions/dart_extensions.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tavrida_flutter/common/routes.dart';
 import 'package:tavrida_flutter/common/settings.dart';
+import 'package:tavrida_flutter/services/auth_service.dart';
 import 'package:tavrida_flutter/services/models/platform.dart';
 import 'package:tavrida_flutter/services/models/questionnaire.dart';
 import 'package:tavrida_flutter/services/platform_service.dart';
@@ -12,7 +15,7 @@ import 'package:tavrida_flutter/services/questionnaire_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:tavrida_flutter/widgets/ImagesCarousel.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'dart:io' as io;
 import 'widgets/view.dart';
 
 class ForumDetailPage extends StatefulWidget {
@@ -90,6 +93,24 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
     }
     setState(() {});
     getPlatformElements(json);
+  }
+
+  Future<String> navigateToNative() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getString("access_token") == null) {
+        await AuthService(prefs: prefs).loginNoName();
+      }
+      var data = await const MethodChannel('com.arChannel').invokeMethod(
+          'flutterNavigate',
+          {
+            "access_token": prefs.getString("access_token")
+          }
+      );
+      return data;
+    } on PlatformException catch (e) {
+      return 'Failed to invoke: ${e.message}';
+    }
   }
 
   @override
@@ -357,7 +378,12 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
             flex: 7,
             child: MaterialButton(
                 onPressed: () {
+                  if (io.Platform.isIOS) {
+                    navigateToNative();
+                  }
+                  else {
                   context.push(Routes.qrScanner);
+                  }
                 },
                 padding: EdgeInsets.zero,
                 child: Container(

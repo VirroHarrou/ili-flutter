@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tavrida_flutter/common/routes.dart';
 import 'package:tavrida_flutter/layouts/models_page/model_list_page.dart';
 import 'package:tavrida_flutter/layouts/platform/view.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
+import 'dart:io' show Platform;
+
+import '../services/auth_service.dart';
 
 class HomePage extends StatefulWidget{
   final String location;
@@ -31,10 +36,35 @@ class HomePageState extends State<HomePage> {
       .firstWhere((e) => widget.location.contains(e.path))
       .index;
 
+  Future<String> navigateToNative() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (prefs.getString("access_token") == null) {
+        await AuthService(prefs: prefs).loginNoName();
+      }
+      var data = await const MethodChannel('com.arChannel').invokeMethod(
+          'flutterNavigate',
+          {
+            "access_token": prefs.getString("access_token")
+          }
+      );
+      return data;
+    } on PlatformException catch (e) {
+      return 'Failed to invoke: ${e.message}';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final fab = InkWell(
-      onTap: () => context.push(Routes.qrScanner),
+      onTap: () {
+        if (Platform.isIOS) {
+          navigateToNative();
+        }
+        else {
+          context.push(Routes.qrScanner);
+        }
+      },
       child: Container(
         width: 64,
         height: 64,

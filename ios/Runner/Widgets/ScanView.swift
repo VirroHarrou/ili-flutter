@@ -38,28 +38,28 @@ struct ScanView: View {
             .background(isFocused ? .white : Color(red: 0.58, green: 0.631, blue: 0.698).opacity(0.2))
             .foregroundStyle(.black)
             .cornerRadius(8)
-//            .onChange(of: value) {
-//                if value.count == 4 {
-//                    DispatchQueue.main.async {
-//                        self.placementSettings.isLoading = true
-//                        self.placementSettings.makeRequest(
-//                            id: value
-//                        ) { (result: Result<CustomModel, Error>) in
-//                            DispatchQueue.main.async {
-//                                switch result {
-//                                case .success(let customModel1):
-//                                    self.placementSettings.customModel = customModel1
-//                                    self.placementSettings.isLoading = false
-//                                    self.placementSettings.isPresented = true
-//                                case .failure(_):
-//                                    self.placementSettings.isLoading = false
-//                                    print("failure")
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+            .onChange(of: value) {
+                if value.count == 4 {
+                    DispatchQueue.main.async {
+                        self.placementSettings.isLoading = true
+                        self.placementSettings.makeRequest(
+                            id: value
+                        ) { (result: Result<CustomModel, Error>) in
+                            DispatchQueue.main.async {
+                                switch result {
+                                case .success(let customModel1):
+                                    self.placementSettings.customModel = customModel1
+                                    self.placementSettings.isLoading = false
+                                    self.placementSettings.isPresented = true
+                                case .failure(_):
+                                    self.placementSettings.isLoading = false
+                                    print("failure")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             .onTapGesture {
                 isFocused = true
             }

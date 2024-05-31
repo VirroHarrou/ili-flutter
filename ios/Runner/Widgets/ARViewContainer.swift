@@ -4,7 +4,6 @@ import ARKit
 import Combine
 
 struct ARViewContainer: UIViewRepresentable {
-    var path: String
     @EnvironmentObject var placementSettings: PlacementSettings
         
     func makeUIView(context: Context) -> ARView {
@@ -102,15 +101,49 @@ extension ARViewContainer {
         @objc func handlePinchGesture(_ gesture: UIPanGestureRecognizer) {
             print("двды \(self.parent.placementSettings.arView!.scene.anchors.first!.scale)")
         }
+        
+        func session(_ session: ARSession, didUpdate frame: ARFrame) {
+                    if self.parent.placementSettings.customType == .scan && !self.parent.placementSettings.isLoading && !self.parent.placementSettings.isPresented {
+                        DispatchQueue.global(qos: .background).async {
+                            let qrResponses = QRScanner.findQR(in: frame)
+                            for response in qrResponses {
+                                if response.feature.messageString != nil {
+                                    if response.feature.messageString!.count == 36 {
+                                        DispatchQueue.main.async {
+                                            self.parent.placementSettings.isLoading = true
+                                            self.parent.placementSettings.makeRequest(
+                                                id: response.feature.messageString!
+                                            ) { (result: Result<CustomModel, Error>) in
+                                                DispatchQueue.main.async {
+                                                    switch result {
+                                                    case .success(let customModel1):
+                                                        self.parent.placementSettings.customModel = customModel1
+                                                        self.parent.placementSettings.isLoading = false
+                                                        self.parent.placementSettings.isPresented = true
+                                                    case .failure(_):
+                                                        self.parent.placementSettings.isLoading = false
+                                                        print("failure")
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
 
         func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
             
             guard let arView = arView else { return }
             
-            if arView.scene.anchors.isEmpty {
+            if arView.scene.anchors.isEmpty && self.parent.placementSettings.customType == .place {
                 for anchor in anchors {
                     if anchor is ARPlaneAnchor {
-                        let modelEntity = try! ModelEntity.loadModel(contentsOf: URL(fileURLWithPath: self.parent.path))
+                        let modelEntity = try! ModelEntity.loadModel(
+                            contentsOf: URL(fileURLWithPath: self.parent.placementSettings.path)
+                        )
                         
                         modelEntity.generateCollisionShapes(recursive: true)
                         
@@ -134,6 +167,8 @@ extension ARViewContainer {
                         arView.installGestures([.translation, .rotation], for: modelEntity)
 
                         arView.scene.addAnchor(anchorEntity)
+                        
+                        self.parent.placementSettings.isModelAdded = true
 
                         break
                     }

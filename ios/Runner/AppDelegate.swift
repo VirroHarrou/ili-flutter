@@ -4,7 +4,7 @@ import Flutter
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
-    private let channelName =  "com.hendrick.navigateChannel"
+    private let channelName =  "com.arChannel"
     private let navigateFunctionName = "flutterNavigate"
     
     
@@ -31,12 +31,7 @@ import Flutter
           if call.method == self.navigateFunctionName {
               let swiftUIViewController = UIHostingController(
                 rootView: ContentView1(
-                    path: (call.arguments as! [String: Any])["path"] as! String,
-                    id: (call.arguments as! [String: Any])["id"] as! String,
-                    title: (call.arguments as! [String: Any])["title"] as! String,
-                    description: (call.arguments as! [String: Any])["description"] as! String,
-                    like: (call.arguments as! [String: Any])["like"] as! Bool,
-                    navigationController: navigationController
+                    access_token: (call.arguments as! [String: Any])["access_token"] as! String
                 )
               )
               

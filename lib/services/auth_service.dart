@@ -32,7 +32,7 @@ class AuthService{
     return '';
   }
 
-  Future<String> loginUser(
+  Future<String> loginxUser(
       {
         required String email,
         required String password

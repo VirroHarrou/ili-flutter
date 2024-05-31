@@ -1,8 +1,6 @@
 import SwiftUI
 
 struct CustomBottomSheet: View {
-    var title: String
-    var description: String
     
     @State private var progress: Double = 0
       private let total: Double = 1
@@ -46,7 +44,7 @@ struct CustomBottomSheet: View {
                     DispatchQueue.main.async {
                         self.placementSettings.customType = .place
                         self.placementSettings.isPresented = false
-                        self.placementSettings.fetchData(path: fileURL.path)
+                        self.placementSettings.path = fileURL.path
                     }
                 } catch {
                     print("Error saving file: \(error.localizedDescription)")
@@ -67,7 +65,7 @@ struct CustomBottomSheet: View {
       }
     
     var body: some View {
-        VStack (alignment: .leading) {
+        VStack {
             Spacer()
                 .frame(height: 8)
             HStack {
@@ -88,7 +86,7 @@ struct CustomBottomSheet: View {
             Spacer()
                 .frame(height: 18)
             Text(
-                self.title
+                self.placementSettings.customModel?.title ?? ""
             )
             .font(.system(
                 size: 20,
@@ -102,7 +100,7 @@ struct CustomBottomSheet: View {
             Spacer()
                 .frame(height: 16)
             Text(
-                self.description
+                self.placementSettings.customModel?.description ?? ""
             )
             .font(.system(
                 size: 18,
@@ -113,74 +111,74 @@ struct CustomBottomSheet: View {
                 green: 0.153,
                 blue: 0.196
             ))
-//            if !self.placementSettings.customModel!.valueUrlUSDZ.isEmpty {
-//                ZStack {
-//                    ProgressView("Downloading image...", value: progress, total: total)
-//                        .progressViewStyle(LinearProgressViewStyle(tint: Color(
-//                            red: 0.863,
-//                            green: 0.886,
-//                            blue: 0.937
-//                        )))
-//                      .padding()
-//                }
-//                HStack {
-//                  Spacer()
-//                    Button(action: {
-//                        if isExists {
-//                            guard let documentsDirectory = FileManager.default.urls(
-//                                for: .documentDirectory,
-//                                in: .userDomainMask
-//                            ).first else {
-//                                    print("Error finding documents directory")
-//                                    return
-//                                }
-//                                
-//                            let fileURL = documentsDirectory.appendingPathComponent("\(self.placementSettings.customModel!.id).usdz")
-//                            self.placementSettings.customType = .place
-//                            self.placementSettings.isPresented = false
-//                            self.placementSettings.fetchData(path: fileURL.path)
-//                        }
-//                        else {
-//                            downloadModel()
-//                        }
-//                            }) {
-//                                HStack {
-//                                    Image(
-//                                        systemName: isExists ? "plus" : "arrow.down.square.fill"
-//                                    )
-//                                    .foregroundStyle(.white)
-//                                    Spacer()
-//                                        .frame(width: 8)
-//                                    Text(
-//                                        isExists ? "Добавить" : "Скачать"
-//                                    )
-//                                    .font(.system(
-//                                        size: 16,
-//                                        weight: .medium
-//                                    ))
-//                                    .foregroundStyle(.white)
-//                                }
-//                            }
-//                            .padding(
-//                                [.vertical],
-//                                13
-//                            )
-//                            .padding(
-//                                [.horizontal],
-//                                23
-//                            )
-//                            .frame(
-//                              width: 160,
-//                              height: 48
-//                            )
-//                            .background(Color(
-//                              red: 0.149,
-//                              green: 0.153,
-//                              blue: 0.196
-//                          ))
-//                            .cornerRadius(24)
-//                }
-//            }
+            if !self.placementSettings.customModel!.valueUrlUSDZ.isEmpty {
+                ZStack {
+                    ProgressView("Downloading image...", value: progress, total: total)
+                        .progressViewStyle(LinearProgressViewStyle(tint: Color(
+                            red: 0.863,
+                            green: 0.886,
+                            blue: 0.937
+                        )))
+                      .padding()
+                }
+                HStack {
+                  Spacer()
+                    Button(action: {
+                        if isExists {
+                            guard let documentsDirectory = FileManager.default.urls(
+                                for: .documentDirectory,
+                                in: .userDomainMask
+                            ).first else {
+                                    print("Error finding documents directory")
+                                    return
+                                }
+                                
+                            let fileURL = documentsDirectory.appendingPathComponent("\(self.placementSettings.customModel!.id).usdz")
+                            self.placementSettings.customType = .place
+                            self.placementSettings.isPresented = false
+                            self.placementSettings.path = fileURL.path
+                        }
+                        else {
+                            downloadModel()
+                        }
+                            }) {
+                                HStack {
+                                    Image(
+                                        systemName: isExists ? "plus" : "arrow.down.square.fill"
+                                    )
+                                    .foregroundStyle(.white)
+                                    Spacer()
+                                        .frame(width: 8)
+                                    Text(
+                                        isExists ? "Добавить" : "Скачать"
+                                    )
+                                    .font(.system(
+                                        size: 16,
+                                        weight: .medium
+                                    ))
+                                    .foregroundStyle(.white)
+                                }
+                            }
+                            .padding(
+                                [.vertical],
+                                13
+                            )
+                            .padding(
+                                [.horizontal],
+                                23
+                            )
+                            .frame(
+                              width: 160,
+                              height: 48
+                            )
+                            .background(Color(
+                              red: 0.149,
+                              green: 0.153,
+                              blue: 0.196
+                          ))
+                            .cornerRadius(24)
+                }
+            }
             Spacer()
             }
         .padding(
@@ -188,24 +186,24 @@ struct CustomBottomSheet: View {
           20
         )
         .background(.white)
-//        .onAppear {
-//            guard let documentsDirectory = FileManager.default.urls(
-//                for: .documentDirectory,
-//                in: .userDomainMask
-//            ).first else {
-//                    print("Error finding documents directory")
-//                    return
-//                }
-//                
-//            let fileURL = documentsDirectory.appendingPathComponent("\(self.placementSettings.customModel!.id).usdz")
-//            
-//            let filePath = fileURL.path
-//                    let fileManager = FileManager.default
-//                    if fileManager.fileExists(atPath: filePath) {
-//                        isExists = true
-//                    } else {
-//                        isExists = false
-//                    }
-//        }
+        .onAppear {
+            guard let documentsDirectory = FileManager.default.urls(
+                for: .documentDirectory,
+                in: .userDomainMask
+            ).first else {
+                    print("Error finding documents directory")
+                    return
+                }
+                
+            let fileURL = documentsDirectory.appendingPathComponent("\(self.placementSettings.customModel!.id).usdz")
+            
+            let filePath = fileURL.path
+                    let fileManager = FileManager.default
+                    if fileManager.fileExists(atPath: filePath) {
+                        isExists = true
+                    } else {
+                        isExists = false
+                    }
+        }
     }
 }
