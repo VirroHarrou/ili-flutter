@@ -13,7 +13,7 @@ import 'package:tavrida_flutter/services/models/questionnaire.dart';
 import 'package:tavrida_flutter/services/platform_service.dart';
 import 'package:tavrida_flutter/services/questionnaire_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
-import 'package:tavrida_flutter/widgets/ImagesCarousel.dart';
+import 'package:tavrida_flutter/ui/ImagesCarousel.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io' as io;
 import 'widgets/view.dart';

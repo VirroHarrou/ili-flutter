@@ -7,8 +7,8 @@ import 'package:tavrida_flutter/common/routes.dart';
 import 'package:tavrida_flutter/layouts/models_page/bloc/model_list_bloc.dart';
 import 'package:tavrida_flutter/services/models/model.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
-import 'package:tavrida_flutter/widgets/failures/failure.dart';
-import 'package:tavrida_flutter/widgets/loading_state_widget.dart';
+import 'package:tavrida_flutter/ui/failures/failure.dart';
+import 'package:tavrida_flutter/ui/loading_state_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 part 'widgets/app_bar.dart';

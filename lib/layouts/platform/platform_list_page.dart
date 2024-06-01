@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tavrida_flutter/services/models/platform.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
-import 'package:tavrida_flutter/widgets/failures/failure.dart';
-import 'package:tavrida_flutter/widgets/loading_state_widget.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:tavrida_flutter/ui/failures/failure.dart';
+import 'package:tavrida_flutter/ui/loading_state_widget.dart';
 
 import 'platform_list_controller.dart';
 import 'widgets/view.dart';

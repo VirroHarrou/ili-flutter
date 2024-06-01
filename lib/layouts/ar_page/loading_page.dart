@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:tavrida_flutter/widgets/failures/failure.dart';
+import 'package:tavrida_flutter/services/models/model.dart';
+import 'package:tavrida_flutter/ui/failures/failure.dart';
 
-import '../../services/models/model.dart';
 import 'CustomDownloadIndicator.dart';
 
 class LoadingPage extends StatefulWidget{

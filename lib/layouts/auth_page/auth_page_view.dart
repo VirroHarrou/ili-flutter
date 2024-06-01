@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tavrida_flutter/widgets/AuthContainer.dart';
+import 'package:tavrida_flutter/ui/AuthContainer.dart';
 
 class AuthPage extends StatelessWidget{
   const AuthPage({super.key});
