@@ -1,10 +1,9 @@
-import 'package:dart_extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:tavrida_flutter/layouts/qr_page/bloc/qr_bloc.dart';
 import 'package:tavrida_flutter/layouts/qr_page/widgets/code_widget.dart';
+import 'package:tavrida_flutter/layouts/qr_page/widgets/qr_widget.dart';
 
 import '../../themes/app_colors.dart';
 
@@ -53,18 +52,10 @@ class _QRPageState extends State<QRPage> {
         body: Stack(
           alignment: Alignment.center,
           children: [
-            QRView(
-              key: key,
-              onQRViewCreated: _onQRViewCreated,
-              overlay: QrScannerOverlayShape(
-                borderColor: barCodeError ? AppColors.red : Colors.grey,
-                borderRadius: 10,
-                cutOutSize: qrViewSize,
-                overlayColor: const Color(0xBB000000),
-              ),
-              formatsAllowed: const [
-                BarcodeFormat.qrcode,
-              ],
+            QRWidget(
+              output: (code) {
+                bloc.add(QRBarCodeFindEvent(barCode: code, context: context));
+              },
             ),
             Positioned(
               top: qrViewVerticalMargin - 20,
@@ -130,16 +121,6 @@ class _QRPageState extends State<QRPage> {
           ],
         ),
       ),
-    );
-  }
-
-  Future<void> _onQRViewCreated(QRViewController controller) async {
-    controller.scannedDataStream.listen(
-          (event) {
-            final code = event.code;
-            if (code.isEmptyOrNull) return;
-            bloc.add(QRBarCodeFindEvent(barCode: code!, context: context));
-          },
     );
   }
 

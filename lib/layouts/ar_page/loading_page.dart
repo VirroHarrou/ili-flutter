@@ -41,7 +41,11 @@ class LoadingPageState extends State<LoadingPage> {
         var data = await const MethodChannel('com.hendrick.navigateChannel').invokeMethod(
             'flutterNavigate',
             {
-              "access_token": '${dir.path}/${model.id}.${Platform.isIOS ? 'usdz' : 'glb'}'
+              "path": '${dir.path}/${model.id}.glb',
+              "id": model.id,
+              "title": model.title,
+              "description": model.description,
+              "like": model.like,
             }
         );
         return data;

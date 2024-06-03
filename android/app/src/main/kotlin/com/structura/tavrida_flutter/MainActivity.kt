@@ -23,9 +23,13 @@ class MainActivity : FlutterActivity() {
             methodChannelResult = result
 
             if (call.method == navigateFunctionName) {
-                val argument = call.argument<String>("access_token")
+                val argsMap = call.arguments as Map<String, *>
                 val intent = Intent(this, ComposeActivity::class.java)
-                intent.putExtra("argKey", argument)
+                intent.putExtra("path", argsMap["path"] as String)
+                intent.putExtra("id", argsMap["id"] as String)
+                intent.putExtra("title", argsMap["title"] as String)
+                intent.putExtra("description", argsMap["description"] as String)
+                intent.putExtra("like", argsMap["like"] as Boolean)
                 startActivityForResult(intent, composeActivityRequestCode)
             }
         }
