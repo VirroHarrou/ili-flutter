@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tavrida_flutter/layouts/qr_page/bloc/qr_bloc.dart';
-import 'package:tavrida_flutter/layouts/qr_page/widgets/code_widget.dart';
-import 'package:tavrida_flutter/layouts/qr_page/widgets/qr_widget.dart';
+import 'package:tavrida_flutter/themes/app_colors.dart';
 
-import '../../themes/app_colors.dart';
+import 'bloc/qr_bloc.dart';
+import 'widgets/code_widget.dart';
+import 'widgets/qr_widget.dart';
 
 
 class QRPage extends StatefulWidget {

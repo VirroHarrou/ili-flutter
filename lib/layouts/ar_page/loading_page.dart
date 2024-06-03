@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:tavrida_flutter/common/routes.dart';
 import 'package:tavrida_flutter/services/models/model.dart';
 import 'package:tavrida_flutter/ui/failures/failure.dart';
 
@@ -25,17 +26,19 @@ class LoadingPageState extends State<LoadingPage> {
       final model = widget.model;
       final dir = (await getApplicationDocumentsDirectory());
       if (Platform.isIOS) {
-        var data = await const MethodChannel('com.hendrick.navigateChannel').invokeMethod(
-            'flutterNavigate',
-            {
-              "path": '${dir.path}/${model.id}.usdz',
-              "id": model.id,
-              "title": model.title,
-              "description": model.description,
-              "like": model.like,
-            }
-        );
-        return data;
+        context.push(Routes.arView, extra: model);
+        // var data = await const MethodChannel('com.hendrick.navigateChannel').invokeMethod(
+        //     'flutterNavigate',
+        //     {
+        //       "path": '${dir.path}/${model.id}.usdz',
+        //       "id": model.id,
+        //       "title": model.title,
+        //       "description": model.description,
+        //       "like": model.like,
+        //     }
+        // );
+        // return data;
+        return "";
       }
       else {
         var data = await const MethodChannel('com.hendrick.navigateChannel').invokeMethod(
