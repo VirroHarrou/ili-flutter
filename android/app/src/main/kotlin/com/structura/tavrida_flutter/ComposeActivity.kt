@@ -3,11 +3,15 @@ package com.structura.tavrida_flutter
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,16 +21,23 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -63,23 +74,29 @@ import io.github.sceneview.rememberView
 import io.github.sceneview.safeDestroyCamera
 import io.github.sceneview.safeDestroyEntity
 import io.github.sceneview.safeDestroyTransformable
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
+import java.util.Timer
+import kotlin.concurrent.schedule
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.seconds
 
-private const val kModelFile = "models/model-11.glb"
-private const val kMaxModelInstances = 10
+private const val kMaxModelInstances = 1
 
 class ComposeActivity : ComponentActivity() {
     private var scale = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             SceneviewTheme {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     var isActivated by remember { mutableStateOf(true) }
+                    var textVisible by remember { mutableStateOf(true) }
                     if (isActivated) {
                         val argValue = intent.getStringExtra(ARG_KEY)
                         val engine = rememberEngine()
@@ -162,65 +179,59 @@ class ComposeActivity : ComponentActivity() {
                                     }
                                 })
                         )
-                        Text(
-                            modifier = Modifier
-                                .systemBarsPadding()
-                                .fillMaxWidth()
-                                .align(Alignment.TopCenter)
-                                .padding(top = 16.dp, start = 32.dp, end = 32.dp),
-                            textAlign = TextAlign.Center,
-                            fontSize = 28.sp,
-                            color = Color.White,
-                            text = trackingFailureReason?.let {
-                                it.getDescription(LocalContext.current)
-                            } ?: if (childNodes.isEmpty()) {
-                                "Наведите на горизонтальную поверхность"
-                            } else {
-                                "Вращайте модель двумя пальцами\n" + "перемещайте модель долгим нажатием\n"
+                        Column (
+                            modifier = Modifier,
+                            verticalArrangement = Arrangement.Top,
+                            horizontalAlignment = Alignment.Start
+                        ) {
+                            IconButton(
+                                modifier = Modifier
+                                    .padding(start = 20.dp, top = 20.dp)
+                                    .size(64.dp)
+                                    .background(
+                                        color = Color(0xffFFFFFF).copy(alpha = 0.4f),
+                                        shape = CircleShape
+                                    )
+                                    .padding(10.dp),
+                                onClick = {
+                                    isActivated = false
+                                    val replyIntent = Intent()
+                                    replyIntent.putExtra(REPLY_MESSAGE, "фвывфы")
+                                    setResult(RESULT_OK, replyIntent)
+                                    finish()
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.ArrowBack,
+                                    contentDescription = "Back",
+                                    tint = Color(0xff0A0E15)
+                                )
                             }
-                        )
-                    }
-                    Box(
-                        modifier = Modifier
-                            .clickable {
-                                isActivated = false
-                                val replyIntent = Intent()
-                                replyIntent.putExtra(REPLY_MESSAGE, "фвывфы")
-                                setResult(RESULT_OK, replyIntent)
-                                finish()
+                            if (textVisible || trackingFailureReason?.getDescription(LocalContext.current) != null) {
+                                Text(
+                                    modifier = Modifier
+                                        .systemBarsPadding()
+                                        .fillMaxWidth()
+                                        .padding(top = 16.dp, start = 20.dp, end = 20.dp),
+                                    textAlign = TextAlign.Center,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight(600),
+                                    color = Color.White,
+                                    text = trackingFailureReason?.getDescription(LocalContext.current)
+                                        ?: if (childNodes.isEmpty()) {
+                                            "Наведите на горизонтальную поверхность"
+                                        } else {
+                                            LaunchedEffect(Unit) {
+                                                delay(5.seconds)
+                                                textVisible = false
+                                            }
+                                            "Вращайте модель двумя пальцами\n" + "перемещайте модель долгим нажатием\n"
+                                        }
+                                )
                             }
-                            .padding(start = 20.dp, top = 20.dp)
-                            .size(48.dp)
-                            .background(
-                                color = Color(0xffFFFFFF).copy(alpha = 0.4f),
-                                shape = CircleShape
-                            )
-                            .padding(10.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color(0xff0A0E15)
-                        )
+                        }
                     }
-//                    Text(
-//                        modifier = Modifier
-//                            .systemBarsPadding()
-//                            .fillMaxWidth()
-//                            .align(Alignment.TopCenter)
-//                            .padding(top = 16.dp, start = 32.dp, end = 32.dp),
-//                        textAlign = TextAlign.Center,
-//                        fontSize = 28.sp,
-//                        color = Color.White,
-//                        text = trackingFailureReason?.let {
-//                            it.getDescription(LocalContext.current)
-//                        } ?: if (childNodes.isEmpty()) {
-//                            stringResource("фвы")
-//                        } else {
-//                            stringResource("фвы")
-//                        }
-//                    )
+
                 }
             }
         }
@@ -248,10 +259,12 @@ class ComposeActivity : ComponentActivity() {
                 }
             }.removeLast(),
             // Scale to fit in a 0.5 meters cube
-            scaleToUnits = 0.5f
+            scaleToUnits = .5f
         ).apply {
             // Model Node needs to be editable for independent rotation from the anchor rotation
             isEditable = true
+            editableScaleRange = 0.15f..1f
+            isShadowCaster = true
         }
 //        Log.d("message", "This is a debug message")
 //        Log.d("message", modelNode.playingAnimations.toString())
@@ -263,24 +276,16 @@ class ComposeActivity : ComponentActivity() {
         ).apply {
             isVisible = false
         }
-        modelNode.onScale = { _, _, scaleFactor ->
-            if (scaleFactor > 1) {
-                scale++
-                if (scale == 4) {
-                    scale = 0
-                }
-                scale == 3
-            }
-            else {
-                true
-            }
+        modelNode.onScale = { gestureDetector, event, scaleFactor -> true
+//            if (scaleFactor > 1.1 || scaleFactor < 0.9) false
+//            else true
         }
         modelNode.addChildNode(boundingBoxNode)
         anchorNode.addChildNode(modelNode)
 
         listOf(modelNode, anchorNode).forEach {
             it.onEditingChanged = { editingTransforms ->
-                boundingBoxNode.isVisible = editingTransforms.isNotEmpty()
+//                boundingBoxNode.isVisible = editingTransforms.isNotEmpty()
             }
         }
         return anchorNode

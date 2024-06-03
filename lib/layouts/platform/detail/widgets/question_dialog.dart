@@ -4,7 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tavrida_flutter/services/models/questionnaire.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
-import 'package:tavrida_flutter/widgets/CustomTextField.dart';
+import 'package:tavrida_flutter/ui/CustomTextField.dart';
+
 
 import 'view.dart';
 
