@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -35,8 +36,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -191,28 +195,30 @@ class ComposeActivity : ComponentActivity() {
                                     }
                                 },
                                 onGestureListener = rememberOnGestureListener(
-                                    onSingleTapConfirmed = { motionEvent, node ->
-                                        if (node == null) {
-                                            val hitResults =
-                                                frame?.hitTest(motionEvent.x, motionEvent.y)
-                                            hitResults?.firstOrNull {
-                                                it.isValid(
-                                                    depthPoint = false,
-                                                    point = false
-                                                )
-                                            }?.createAnchorOrNull()
-                                                ?.let { anchor ->
-                                                    planeRenderer = false
-                                                    childNodes += createAnchorNode(
-                                                        engine = engine,
-                                                        modelLoader = modelLoader,
-                                                        materialLoader = materialLoader,
-                                                        modelInstances = modelInstances,
-                                                        anchor = anchor
-                                                    )
-                                                }
-                                        }
-                                    })
+//                                    onSingleTapConfirmed = { motionEvent, node ->
+//                                        if (!childNodes.isEmpty()) null
+//                                        if (node == null) {
+//                                            val hitResults =
+//                                                frame?.hitTest(motionEvent.x, motionEvent.y)
+//                                            hitResults?.firstOrNull {
+//                                                it.isValid(
+//                                                    depthPoint = false,
+//                                                    point = false
+//                                                )
+//                                            }?.createAnchorOrNull()
+//                                                ?.let { anchor ->
+//                                                    planeRenderer = false
+//                                                    childNodes += createAnchorNode(
+//                                                        engine = engine,
+//                                                        modelLoader = modelLoader,
+//                                                        materialLoader = materialLoader,
+//                                                        modelInstances = modelInstances,
+//                                                        anchor = anchor
+//                                                    )
+//                                                }
+//                                        }
+//                                    }
+                                )
                             )
                             Column (
                                 modifier = Modifier,
@@ -264,6 +270,22 @@ class ComposeActivity : ComponentActivity() {
                                                 "Вращайте модель двумя пальцами\n" + "перемещайте модель долгим нажатием\n"
                                             }
                                     )
+                                    if (childNodes.isEmpty()) {
+                                        Icon(
+                                            imageVector = ImageVector.vectorResource(id = R.drawable.wi_horizon_alt),
+                                            modifier = Modifier
+                                                .shadow(
+                                                    elevation = 16.dp,
+                                                    spotColor = Color(0x33000000),
+                                                    ambientColor = Color(0x33000000)
+                                                )
+                                                .align(Alignment.CenterHorizontally)
+                                                .width(75.dp)
+                                                .height(75.dp),
+                                            tint = Color.White,
+                                            contentDescription = "ar_hint"
+                                        )
+                                    }
                                 }
                             }
                             IconButton(
