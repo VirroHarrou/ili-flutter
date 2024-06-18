@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tavrida_flutter/generated/l10n.dart';
 import 'package:tavrida_flutter/services/models/platform.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:tavrida_flutter/ui/app_text_styles.dart';
 import 'package:tavrida_flutter/ui/failures/failure.dart';
 import 'package:tavrida_flutter/ui/loading_state_widget.dart';
 
@@ -44,11 +46,11 @@ class _PlatformListPageState extends State<PlatformListPage> {
           itemBuilder: (context, item, index) => PlatformCard(platform: item),
           firstPageProgressIndicatorBuilder: (context) => buildLoading(context),
           firstPageErrorIndicatorBuilder: (context) => buildFailure(
-            message: 'При обновлении данных произошла ошибка, пожалуйста попробуйте позже',
+            message: S.of(context).errorWhileUpdating,
           ),
-          noItemsFoundIndicatorBuilder: (context) => const EmptyContent(
-            title: 'Площадок пока нет',
-            message: 'Здесь появятся площадки, но пока здесь пусто',
+          noItemsFoundIndicatorBuilder: (context) => EmptyContent(
+            title: S.of(context).stillEmpty,
+            message: S.of(context).platformsWillBeHereButEmpty,
           ),
         ),
       ),
@@ -57,7 +59,7 @@ class _PlatformListPageState extends State<PlatformListPage> {
 
   Widget buildFailure({required String message}) {
     return FailureContent(
-      title: 'Упс! Что-то пошло не так...',
+      title: S.of(context).somethingWentWrong,
       message: message,
     );
   }
@@ -68,11 +70,12 @@ class _PlatformListPageState extends State<PlatformListPage> {
     automaticallyImplyLeading: false,
     backgroundColor: theme.colorScheme.background,
     title: !isSearching
-        ? Text("Площадки", style: theme.textTheme.titleLarge)
+        ? Text(S.of(context).platforms, style: AppTextStyles.titleH1)
         : TextField(
       textAlignVertical: TextAlignVertical.center,
       decoration: InputDecoration(
-          hintText: 'Найти...',
+          hintText: S.of(context).find,
+          //Todo: hint style
           hintStyle: const TextStyle(
             color: Colors.black38,
             fontSize: 15,
@@ -95,7 +98,7 @@ class _PlatformListPageState extends State<PlatformListPage> {
           controller.filter = query.trim();
           controller.pageController.refresh();
         },
-      style: theme.textTheme.bodySmall,
+      style: AppTextStyles.body,
     ),
     actions: <Widget>[
       IconButton(

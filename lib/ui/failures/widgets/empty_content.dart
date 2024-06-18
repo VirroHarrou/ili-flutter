@@ -2,6 +2,7 @@ import 'package:dart_extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
+import 'package:tavrida_flutter/ui/app_text_styles.dart';
 
 class EmptyContent extends StatelessWidget {
   final String title;
@@ -28,7 +29,7 @@ class EmptyContent extends StatelessWidget {
             ),
             Text(
               title,
-              style: theme.textTheme.headlineLarge,
+              style: AppTextStyles.titleH2,
               textAlign: TextAlign.center,
             ),
             if (!message.isEmptyOrNull) ... [
@@ -37,11 +38,7 @@ class EmptyContent extends StatelessWidget {
                 child: Text(
                   message!,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.grey,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: AppTextStyles.label,
                 ),
               ),
             ],

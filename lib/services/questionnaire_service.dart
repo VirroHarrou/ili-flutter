@@ -61,9 +61,9 @@ class QuestionnaireService{
     if (response == null) return null;
     if (response.statusCode! >= 400) return null;
     try {
-      List jsons = response.data['questions'];
+      List json = response.data['questions'];
       List<Question> result = [];
-      for (var element in jsons) {
+      for (var element in json) {
         result.add(Question.fromJson(element));
       }
       return result;

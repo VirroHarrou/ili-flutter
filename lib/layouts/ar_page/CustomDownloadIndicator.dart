@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:tavrida_flutter/generated/l10n.dart';
 
 class DownloadProgressIndicator extends StatefulWidget {
   final String url;
@@ -70,8 +71,8 @@ class _DownloadProgressIndicatorState extends State<DownloadProgressIndicator> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text("Загружаем 3D модель...",
-          style: TextStyle(
+        Text(S.of(context).loadModel,
+          style: const TextStyle(
             color: Colors.black,
             fontSize: 16,
             fontWeight: FontWeight.w600,

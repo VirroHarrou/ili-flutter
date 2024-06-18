@@ -1,5 +1,3 @@
-import 'package:dart_extensions/dart_extensions.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -7,8 +5,18 @@ import 'package:photo_view/photo_view_gallery.dart';
 class ImageViewer extends StatefulWidget{
   final List<String> imageUrls;
   final double height;
+  final double maxScale;
+  final PhotoViewComputedScale computedScale;
+  final bool disableGestures;
 
-  const ImageViewer({super.key, required this.imageUrls, this.height = 300});
+  const ImageViewer({
+    super.key,
+    required this.imageUrls,
+    this.height = 300,
+    this.maxScale = 4,
+    this.computedScale = PhotoViewComputedScale.contained,
+    this.disableGestures = false,
+  });
 
   @override
   State<ImageViewer> createState() => _ImageViewerState();
@@ -27,7 +35,8 @@ class _ImageViewerState extends State<ImageViewer> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
+      alignment: Alignment.bottomCenter,
       children: [
         SizedBox(
           height: widget.height,
@@ -40,9 +49,10 @@ class _ImageViewerState extends State<ImageViewer> {
             builder: (BuildContext context, int index) {
               return PhotoViewGalleryPageOptions(
                 imageProvider: NetworkImage(widget.imageUrls[index]),
-                initialScale: PhotoViewComputedScale.contained * 1,
-                minScale: PhotoViewComputedScale.contained * 1,
-                maxScale: PhotoViewComputedScale.contained * 4,
+                initialScale: widget.computedScale * 1,
+                minScale: widget.computedScale * 1,
+                disableGestures: widget.disableGestures,
+                maxScale: widget.computedScale * widget.maxScale,
               );
             },
             itemCount: widget.imageUrls.length,
@@ -50,8 +60,8 @@ class _ImageViewerState extends State<ImageViewer> {
             onPageChanged: onPageChanged,
             loadingBuilder: (context, event) => Center(
               child: SizedBox(
-                width: 20.0,
-                height: 20.0,
+                width: 40.0,
+                height: 40.0,
                 child: CircularProgressIndicator(
                   value: event == null
                       ? 0
@@ -62,26 +72,29 @@ class _ImageViewerState extends State<ImageViewer> {
           ),
         ),
         if (widget.imageUrls.length >= 2) ...[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              for (int i = 0; i < widget.imageUrls.length; i++) ...[
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 6.0),
-                  child: Container(
-                    width: 7,
-                    height: 7,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(3),
-                      color: i == currentIndex 
-                          ? Colors.black.withOpacity(0.8)
-                          : Colors.black.withOpacity(0.4),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (int i = 0; i < widget.imageUrls.length; i++) ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 6.0),
+                    child: Container(
+                      width: 7,
+                      height: 7,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(3),
+                        color: i == currentIndex
+                            ? Colors.black.withOpacity(0.8)
+                            : Colors.black.withOpacity(0.4),
+                      ),
                     ),
-                  ),
-                )
+                  )
+                ],
               ],
-            ],
+            ),
           )
         ],
       ],

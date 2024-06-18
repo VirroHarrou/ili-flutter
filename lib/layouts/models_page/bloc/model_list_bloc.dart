@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dart_extensions/dart_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injector/injector.dart';
 import 'package:path_provider/path_provider.dart';
@@ -36,9 +35,7 @@ class ModelListBloc extends Bloc<ModelListEvent, ModelListState> {
         }
       }
       if (models.isEmptyOrNull){
-        emit(ModelListFailureState(
-          message: 'При обновлении данных произошла ошибка, пожалуйста попробуйте позже',
-        ));
+        emit(ModelListFailureState());
         return;
       }
       emit(ModelListLoadedState(models: models));

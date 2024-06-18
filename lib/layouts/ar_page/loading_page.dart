@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:tavrida_flutter/generated/l10n.dart';
 import 'package:tavrida_flutter/services/models/model.dart';
 import 'package:tavrida_flutter/ui/failures/failure.dart';
 
@@ -75,9 +76,9 @@ class LoadingPageState extends State<LoadingPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _validateUrl(model) ? indicator :
-              const FailureContent(
-                title: 'Ошибка в данных модели!',
-                message: 'Ссылка на модель не корректна для вашей платформы',
+              FailureContent(
+                title: S.of(context).errorModelData,
+                message: S.of(context).modelLinkNotCorrect,
               ),
             const SizedBox(height: 32,),
             InkWell(
@@ -91,7 +92,7 @@ class LoadingPageState extends State<LoadingPage> {
                 ),
                 child: Center(
                   child: Text(
-                    _validateUrl(model) ? "Отмена" : "Выйти",
+                    _validateUrl(model) ? S.of(context).cancel : S.of(context).exit,
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 16,

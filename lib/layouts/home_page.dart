@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tavrida_flutter/common/routes.dart';
+import 'package:tavrida_flutter/generated/l10n.dart';
 import 'package:tavrida_flutter/layouts/models_page/model_list_page.dart';
 import 'package:tavrida_flutter/layouts/platform/view.dart';
-import 'package:tavrida_flutter/services/models/model.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
-import 'dart:io' show Platform;
-
-import '../services/auth_service.dart';
 
 class HomePage extends StatefulWidget{
   final String location;
@@ -76,16 +71,16 @@ class HomePageState extends State<HomePage> {
 
   BottomNavigationBar buildBottomNavigationBar() {
     return BottomNavigationBar(
-      items: const [
+      items: [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
-          activeIcon: Icon(Icons.home),
-          label: 'Главная',
+          icon: const Icon(Icons.home_outlined),
+          activeIcon: const Icon(Icons.home),
+          label: S.of(context).homePage,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.favorite_outline),
-          activeIcon: Icon(Icons.favorite),
-          label: 'Сохраненные',
+          icon: const Icon(Icons.favorite_outline),
+          activeIcon: const Icon(Icons.favorite),
+          label: S.of(context).favorites,
         ),
       ],
       type: BottomNavigationBarType.fixed,

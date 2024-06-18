@@ -1,17 +1,21 @@
 import 'package:dart_extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tavrida_flutter/generated/l10n.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
+import 'package:tavrida_flutter/ui/app_text_styles.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'view.dart';
 
 class PlatformServices extends StatefulWidget {
   final List<PlatformServicesModel> elements;
+  final String allKey;
 
   const PlatformServices({
     super.key,
     required this.elements,
+    required this.allKey,
   });
 
   @override
@@ -20,11 +24,12 @@ class PlatformServices extends StatefulWidget {
 
 class _PlatformServicesState extends State<PlatformServices> {
   late List<PlatformServicesModel> selectedElements;
-  Map<String, bool> unions = {'Всё':true};
+  Map<String, bool> unions = {};
 
   @override
   void initState() {
     super.initState();
+    unions = {widget.allKey:true};
     selectedElements = widget.elements;
     for(var el in widget.elements){
       if (el.union == null) continue;
@@ -36,12 +41,12 @@ class _PlatformServicesState extends State<PlatformServices> {
   }
 
   Future<void> selectedNew(String key) async {
-    print(key);
+    debugPrint(key);
     unions.forEach((key, value) {
       unions[key] = false;
     });
     unions[key] = true;
-    if(key == 'Всё') {
+    if(key == widget.allKey) {
       selectedElements = widget.elements;
       setState(() {});
       return;
@@ -221,33 +226,33 @@ class _PlatformServicesState extends State<PlatformServices> {
                   padding: const EdgeInsets.only(bottom: 12.0),
                   child: Text(
                     model.title ?? '',
-                    style: theme.textTheme.titleLarge,
+                    style: AppTextStyles.titleH1,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Align(
                     alignment: Alignment.topLeft,
-                    child: Text('Описание', style: theme.textTheme.labelMedium,)
+                    child: Text(S.of(context).description, style: AppTextStyles.label,)
                   ),
                 ),
                 Align(
                   alignment: Alignment.topLeft,
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 12.0),
-                    child: Text(model.description ?? '', style: theme.textTheme.bodySmall),
+                    child: Text(model.description ?? '', style: AppTextStyles.body),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text('Расположение', style: theme.textTheme.labelMedium,)
+                      child: Text(S.of(context).location, style: AppTextStyles.label,)
                   ),
                 ),
                 Align(
                   alignment: Alignment.topLeft,
-                  child: Text(model.location ?? '', style: theme.textTheme.bodySmall),
+                  child: Text(model.location ?? '', style: AppTextStyles.body),
                 ),
                 if (!model.url.isEmptyOrNull) ... [
                   Padding(
@@ -257,15 +262,25 @@ class _PlatformServicesState extends State<PlatformServices> {
                         child: InkWell(
                           onTap: () async {
                             final Uri url = Uri.parse(model.url!);
-                            if (!await launchUrl(url)) {
-                              throw Exception('Could not launch $url');
+                            try {
+                              await launchUrl(url);
+                            } catch (ex) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(S.of(context).couldNotLaunchUrl(url)),
+                                    duration: const Duration(seconds: 1),
+                                  ),
+                                );
+                                debugPrint(ex.toString());
+                              }
                             }
                           },
                           child: Row(
                             children: [
                               const Icon(Icons.link_outlined, color: Color(0xFF6EB3F2),),
                               const SizedBox(width: 4,),
-                              Text(model.urlName ?? 'Полезная ссылка',
+                              Text(model.urlName ?? S.of(context).usefulLinks,
                                 style: const TextStyle(
                                   color: Color(0xFF6EB3F2),
                                   fontWeight: FontWeight.w600,
