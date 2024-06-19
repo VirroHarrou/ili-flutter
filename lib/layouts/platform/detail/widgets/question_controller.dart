@@ -2,6 +2,7 @@ import 'package:dart_extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
+import 'package:tavrida_flutter/generated/l10n.dart';
 import 'package:tavrida_flutter/services/models/questionnaire.dart';
 import 'package:tavrida_flutter/services/questionnaire_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
@@ -108,7 +109,7 @@ class QuestionController {
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      'Спасибо! Вы успешно прошли опрос',
+                      S.of(context).successfullyCompletedSurvey,
                       style: theme.textTheme.titleLarge,
                     ),
                   ),
@@ -117,7 +118,7 @@ class QuestionController {
                   padding: const EdgeInsets.only(),
                   child: Align(
                     alignment: Alignment.centerRight,
-                    child: buildButton("Ок", () {
+                    child: buildButton(S.of(context).ok, () {
                       context.pop();
                     }),
                   ),

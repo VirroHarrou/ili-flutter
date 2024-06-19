@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:tavrida_flutter/common/routes.dart';
 import 'package:tavrida_flutter/services/models/platform.dart';
+import 'package:tavrida_flutter/ui/app_text_styles.dart';
 
 class PlatformCard extends StatelessWidget {
   const PlatformCard({
@@ -14,8 +15,6 @@ class PlatformCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime startedAt = DateTime.parse(platform.startedAt ?? '12122012');
-    DateTime endedAt = DateTime.parse(platform.endedAt ?? '12122012');
     final theme = Theme.of(context);
     return InkWell(
         onTap: () {
@@ -49,7 +48,7 @@ class PlatformCard extends StatelessWidget {
                   Text(
                     textAlign: TextAlign.left,
                     "${platform.title}",
-                    style: theme.textTheme.titleMedium,
+                    style: AppTextStyles.titleH1White,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
@@ -61,9 +60,9 @@ class PlatformCard extends StatelessWidget {
                         borderRadius: BorderRadius.all(Radius.circular(14)),
                       ),
                       child: Text(
-                        "${DateFormat('dd.MM.yyyy').format(startedAt)} "
-                            "- ${DateFormat('dd.MM.yyyy').format(endedAt)}",
-                        style: theme.textTheme.bodySmall,
+                        "${DateFormat.yMd().format(DateTime.parse(platform.startedAt!))} "
+                            "- ${DateFormat.yMd().format(DateTime.parse(platform.endedAt!))}",
+                        style: AppTextStyles.body,
                       ),
                     ),
                   ),
@@ -72,7 +71,7 @@ class PlatformCard extends StatelessWidget {
                     maxLines: 4,
                     textAlign: TextAlign.start,
                     "${platform.description}",
-                    style: theme.textTheme.bodyMedium,
+                    style: AppTextStyles.bodyWhite,
                   )
                 ]),
           ),

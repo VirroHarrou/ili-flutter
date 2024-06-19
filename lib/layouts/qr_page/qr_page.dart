@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tavrida_flutter/generated/l10n.dart';
 import 'package:tavrida_flutter/layouts/qr_page/bloc/qr_bloc.dart';
 import 'package:tavrida_flutter/layouts/qr_page/widgets/code_widget.dart';
 import 'package:tavrida_flutter/layouts/qr_page/widgets/qr_widget.dart';
@@ -61,14 +62,14 @@ class _QRPageState extends State<QRPage> {
               top: qrViewVerticalMargin - 20,
               width: qrViewSize,
               child: Center(
-                  child: Text("Наведите камеру на QR-код", style: theme.textTheme.bodyMedium,),
+                  child: Text(S.of(context).pointCameraAtQR, style: theme.textTheme.bodyMedium,),
               ),
             ),
             Positioned(
               bottom: qrViewVerticalMargin - 60,
               width: qrViewSize,
               child: Text(
-                'Если вам нет 18, используйте приложение в присутствии родителей. Cледите за своим окружением, AR может искажать объекты.',
+                S.of(context).arWarningMessage,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium,
               ),
@@ -97,7 +98,7 @@ class _QRPageState extends State<QRPage> {
                       bottom: 20,
                       child: Column(
                         children: [
-                          Text("Введите код модели", style: theme.textTheme.bodyMedium,),
+                          Text(S.of(context).enterModelCode, style: theme.textTheme.bodyMedium,),
                           const SizedBox(height: 8,),
                           CodeDisplay(
                             count: 4,
@@ -124,11 +125,12 @@ class _QRPageState extends State<QRPage> {
     );
   }
 
+  //this code should not be used, but just in case
   Widget buildFailure() {
     return Center(
       child: Container(
-        color: Colors.red,
-        child: Text("Что-то сломалось", style: Theme.of(context).textTheme.bodyLarge,),
+        color: Colors.amber,
+        child: Text(S.of(context).somethingWentWrong, style: Theme.of(context).textTheme.bodyLarge,),
       ),
     );
   }

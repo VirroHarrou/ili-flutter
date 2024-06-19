@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
 import 'package:tavrida_flutter/common/injector_initializer.dart';
 import 'package:tavrida_flutter/common/routes.dart';
-import 'package:tavrida_flutter/layouts/platform/platform_list_page.dart';
+import 'package:tavrida_flutter/generated/l10n.dart';
 import 'package:tavrida_flutter/services/models/model.dart';
 import 'package:tavrida_flutter/services/models/platform.dart';
 import 'package:tavrida_flutter/themes/src/theme_default.dart';
@@ -12,7 +13,7 @@ import 'layouts/ar_page/loading_page.dart';
 import 'layouts/auth_page/auth_page_view.dart';
 import 'layouts/home_page.dart';
 import 'layouts/models_page/model_list_page.dart';
-import 'layouts/platform/detail/forum_detail_page.dart';
+import 'layouts/platform/view.dart';
 import 'layouts/qr_page/qr_page.dart';
 
 void main() async {
@@ -29,6 +30,13 @@ class TavridaApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      localizationsDelegates: const [
+        S.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: S.delegate.supportedLocales,
       theme: createLightTheme(),
       key: _rootNavigatorKey,
       routerConfig: GoRouter(
@@ -52,7 +60,7 @@ class TavridaApp extends StatelessWidget {
           ),
           GoRoute(
             path: Routes.platform,
-            builder: (context, state) => ForumDetailPage(platform: state.extra as Platform),
+            builder: (context, state) => PlatformDetailPage(platform: state.extra as Platform),
           ),
           GoRoute(
             path: Routes.qrScanner,

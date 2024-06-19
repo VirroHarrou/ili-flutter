@@ -12,8 +12,8 @@ class ModelListLoadedState extends ModelListState {
 }
 
 class ModelListFailureState extends ModelListState {
-  String message;
-  ModelListFailureState({required this.message});
+  String? message;
+  ModelListFailureState({this.message});
 }
 
 class ModelListEmptyState extends ModelListState {}

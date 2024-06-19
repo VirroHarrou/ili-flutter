@@ -61,7 +61,7 @@ class _QRWidgetState
     );
   }
 
-  Widget _buildScanWindow(Rect scanWindowRect) {
+  Widget _buildScanWindow(RRect scanWindowRRect) {
     return ValueListenableBuilder(
       valueListenable: controller,
       builder: (context, value, child) {
@@ -74,7 +74,7 @@ class _QRWidgetState
         }
 
         return CustomPaint(
-          painter: ScannerOverlay(scanWindowRect),
+          painter: ScannerOverlay(scanWindowRRect),
         );
       },
     );
@@ -87,6 +87,8 @@ class _QRWidgetState
       width: MediaQuery.of(context).size.width * 0.8,
       height: MediaQuery.of(context).size.width * 0.8,
     );
+
+    final scanWindowRRect = RRect.fromRectAndRadius(scanWindow, const Radius.circular(16));
 
     return Stack(
         fit: StackFit.expand,
@@ -106,7 +108,7 @@ class _QRWidgetState
             },
           ),
           _buildBarcodeOverlay(),
-          _buildScanWindow(scanWindow),
+          _buildScanWindow(scanWindowRRect),
         ],
     );
   }
@@ -121,14 +123,14 @@ class _QRWidgetState
 class ScannerOverlay extends CustomPainter {
   ScannerOverlay(this.scanWindow);
 
-  final Rect scanWindow;
+  final RRect scanWindow;
 
   @override
   void paint(Canvas canvas, Size size) {
     // TODO: use `Offset.zero & size` instead of Rect.largest
     // we need to pass the size to the custom paint widget
     final backgroundPath = Path()..addRect(Rect.largest);
-    final cutoutPath = Path()..addRect(scanWindow);
+    final cutoutPath = Path()..addRect(scanWindow.outerRect);
 
     final backgroundPaint = Paint()
       ..color = Colors.black.withOpacity(0.7)

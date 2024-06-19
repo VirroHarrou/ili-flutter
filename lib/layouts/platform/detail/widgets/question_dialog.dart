@@ -2,9 +2,11 @@ import 'package:dart_extensions/dart_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tavrida_flutter/generated/l10n.dart';
 import 'package:tavrida_flutter/services/models/questionnaire.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
 import 'package:tavrida_flutter/ui/CustomTextField.dart';
+import 'package:tavrida_flutter/ui/app_text_styles.dart';
 
 
 import 'view.dart';
@@ -77,14 +79,17 @@ class _QuestionDialogState extends State<QuestionDialog> {
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Align(
                       alignment: Alignment.topLeft,
-                      child: Text('Вопрос ${widget.questionController.i + 1}/${questions.length}', style: theme.textTheme.labelMedium,)
+                      child: Text(
+                        '${S.of(context).questions(widget.questionController.i + 1)} '
+                            '${widget.questionController.i + 1}'
+                            '/${questions.length}', style: AppTextStyles.label)
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: Text(
                     '${questions[widget.questionController.i].description}',
-                    style: theme.textTheme.titleLarge,
+                    style: AppTextStyles.titleH1,
                   ),
                 ),
 
@@ -98,7 +103,7 @@ class _QuestionDialogState extends State<QuestionDialog> {
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Align(
                     alignment: Alignment.centerRight,
-                    child: buildButton("Далее", () {
+                    child: buildButton(S.of(context).next, () {
                       if (!_answer.isEmptyOrNull) {
                         widget.questionController.next(_answer!, context);
                       }
@@ -129,11 +134,7 @@ class _QuestionDialogState extends State<QuestionDialog> {
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             contentPadding: EdgeInsets.zero,
             title: Text(answers[i],
-              style: const TextStyle(
-                  color: AppColors.black,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 14
-              ),
+              style: AppTextStyles.body,
               maxLines: 1,
             ),
             groupValue: _answer,
@@ -157,12 +158,8 @@ class _QuestionDialogState extends State<QuestionDialog> {
         inputFormatters: [
           LengthLimitingTextInputFormatter(160),
         ],
-        hintText: 'Введите ответ',
-        hintStyle: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-          color: Color(0xFF60666C),
-        ),
+        hintText: S.of(context).enterAnswer,
+        hintStyle: AppTextStyles.label, //Todo: hint style
         onChanged: (answer) => _answer = answer,
       ),
     );
@@ -177,11 +174,7 @@ class _QuestionDialogState extends State<QuestionDialog> {
           borderRadius: BorderRadius.circular(28),
           color: AppColors.black,
         ),
-        child: Text(title, style: const TextStyle(
-          color: AppColors.white,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-        ),),
+        child: Text(title, style: AppTextStyles.titleH2White),
       ),
     );
   }

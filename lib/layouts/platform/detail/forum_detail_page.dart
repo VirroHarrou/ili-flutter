@@ -13,7 +13,6 @@ import 'package:tavrida_flutter/services/models/questionnaire.dart';
 import 'package:tavrida_flutter/services/platform_service.dart';
 import 'package:tavrida_flutter/services/questionnaire_service.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
-import 'package:tavrida_flutter/ui/ImagesCarousel.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io' as io;
 import 'widgets/view.dart';
@@ -136,7 +135,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
             children: [
               SizedBox(
                 height: 350,
-                child: CarouselImages(
+                child: ImageViewer(
                     imageUrls: platform?.mediaUrls?.elementAtOrNull(0) == null
                         ? <String>[AppSettings.imageNotFoundUrl]
                         : platform!.mediaUrls!
@@ -178,7 +177,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                             shrinkWrap: true,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, i) {
-                              var survey = questionnaires[i];
+                              Questionnaire survey = questionnaires[i];
                               bool completed = survey.answerCount == survey.questionsCount;
                               return InkWell(
                                 onTap: () {
@@ -279,7 +278,7 @@ class _ForumDetailPageState extends State<ForumDetailPage> {
                       ),
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: PlatformServices(elements: platformServices),
+                        child: PlatformServices(elements: platformServices, allKey: '',),
                       ),
                     ],
                     if (platform?.platformType == 2 && platformNews.isNotEmpty) ...[

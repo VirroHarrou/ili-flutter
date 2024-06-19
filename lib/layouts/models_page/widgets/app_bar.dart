@@ -8,7 +8,7 @@ AppBar generateAppBar(BuildContext context) {
     toolbarHeight: 66,
     centerTitle: false,
     backgroundColor: theme.colorScheme.background,
-    title: Text("Сохраненные модели", style: theme.textTheme.titleLarge),
+    title: Text(S.of(context).favorites, style: AppTextStyles.titleH1),
     titleSpacing: 20,
     actions: [
       Padding(
@@ -26,7 +26,7 @@ AppBar generateAppBar(BuildContext context) {
             menuChildren: [
               ListTile(
                 leading: const Icon(Icons.link),
-                title: Text("Политика конфиденциальности", style: theme.textTheme.bodySmall),
+                title: Text(S.of(context).privacyPolicy, style: AppTextStyles.body),
                 onTap: () async {
                   final Uri url = Uri.parse('https://ili-art.space/policy.html');
                   if (!await launchUrl(url)) {
@@ -36,7 +36,7 @@ AppBar generateAppBar(BuildContext context) {
               ),
               ListTile(
                 leading: const Icon(Icons.contact_support,),
-                title: Text("Связаться с нами", style: theme.textTheme.bodySmall),
+                title: Text(S.of(context).contactWithUs, style: AppTextStyles.body),
                 onTap: () async {
                   final Uri url = Uri.parse('https://t.me/mahad_structura');
                   if (!await launchUrl(url)) {
@@ -48,7 +48,7 @@ AppBar generateAppBar(BuildContext context) {
                 alignment: Alignment.centerRight,
                 child: Padding(
                   padding: const EdgeInsets.only(right: 12.0),
-                  child: Text('Версия: ${info.version}',
+                  child: Text(S.of(context).version(info.version),
                     style:  const TextStyle(
                       color: AppColors.grey,
                       fontSize: 12,

@@ -4,9 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:injector/injector.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tavrida_flutter/common/routes.dart';
+import 'package:tavrida_flutter/generated/l10n.dart';
 import 'package:tavrida_flutter/layouts/models_page/bloc/model_list_bloc.dart';
 import 'package:tavrida_flutter/services/models/model.dart';
 import 'package:tavrida_flutter/themes/app_colors.dart';
+import 'package:tavrida_flutter/ui/app_text_styles.dart';
 import 'package:tavrida_flutter/ui/failures/failure.dart';
 import 'package:tavrida_flutter/ui/loading_state_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -44,13 +46,13 @@ class ModelListPageState extends State<ModelListPage> {
               return Container();
             case ModelListFailureState():
               return FailureContent(
-                  title: 'Упс! Что-то пошло не так...',
-                  message: state.message,
+                  title: S.of(context).somethingWentWrong,
+                  message: S.of(context).errorWhileUpdating,
                 );
             case ModelListEmptyState():
-              return const EmptyContent(
-                title: 'Здесь пока пусто',
-                message: 'Скачивайте модели и они появятся здесь',
+              return EmptyContent(
+                title: S.of(context).stillEmpty,
+                message: S.of(context).downloadModelsAndWillAppear,
               );
             default:
               return Container();
@@ -92,7 +94,7 @@ class ModelListPageState extends State<ModelListPage> {
                 children: [
                   Align(
                     alignment: Alignment.bottomLeft,
-                    child: Text(model.title ?? '', style: theme.textTheme.titleMedium,),
+                    child: Text(model.title ?? '', style: AppTextStyles.titleH1White,),
                   ),
                   Align(
                     alignment: Alignment.topRight,
