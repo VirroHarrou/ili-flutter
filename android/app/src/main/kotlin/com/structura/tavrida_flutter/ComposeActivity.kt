@@ -62,6 +62,8 @@ import io.github.sceneview.ar.node.AnchorNode
 import io.github.sceneview.collision.Vector3
 import io.github.sceneview.loaders.MaterialLoader
 import io.github.sceneview.loaders.ModelLoader
+import io.github.sceneview.math.Position
+import io.github.sceneview.math.Rotation
 import io.github.sceneview.math.Transform
 import io.github.sceneview.math.toFloat3
 import io.github.sceneview.model.ModelInstance
@@ -69,6 +71,7 @@ import io.github.sceneview.node.CubeNode
 import io.github.sceneview.node.ModelNode
 import io.github.sceneview.rememberCollisionSystem
 import io.github.sceneview.rememberEngine
+import io.github.sceneview.rememberMainLightNode
 import io.github.sceneview.rememberMaterialLoader
 import io.github.sceneview.rememberModelLoader
 import io.github.sceneview.rememberNode
@@ -154,6 +157,12 @@ class ComposeActivity : ComponentActivity() {
                             }
                             var frame by remember { mutableStateOf<Frame?>(null) }
 
+                            val mainLightNode = rememberMainLightNode(engine).apply {
+                                intensity = 100_000.0f
+                                isShadowCaster = true
+                                transform = Transform(position = Position(0.0f, 0.0f, 0.0f), rotation = Rotation(0.0f, 1.0f, 0.0f))
+                            }
+
                             ARScene(
                                 modifier = Modifier.fillMaxSize(),
                                 childNodes = childNodes,
@@ -191,6 +200,8 @@ class ComposeActivity : ComponentActivity() {
                                                     modelInstances = modelInstances,
                                                     anchor = anchor
                                                 )
+
+                                                childNodes += mainLightNode
                                             }
                                     }
                                 },
@@ -344,23 +355,11 @@ class ComposeActivity : ComponentActivity() {
             // Model Node needs to be editable for independent rotation from the anchor rotation
             isEditable = true
             editableScaleRange = 0.15f..1f
-            isShadowCaster = true
-        }
-//        Log.d("message", "This is a debug message")
-//        Log.d("message", modelNode.playingAnimations.toString())
-        val boundingBoxNode = CubeNode(
-            engine,
-            size = modelNode.extents,
-            center = modelNode.center,
-            materialInstance = materialLoader.createColorInstance(Color.White.copy(alpha = 0.5f))
-        ).apply {
-            isVisible = false
         }
         modelNode.onScale = { gestureDetector, event, scaleFactor -> true
 //            if (scaleFactor > 1.1 || scaleFactor < 0.9) false
 //            else true
         }
-        modelNode.addChildNode(boundingBoxNode)
         anchorNode.addChildNode(modelNode)
 
         listOf(modelNode, anchorNode).forEach {
