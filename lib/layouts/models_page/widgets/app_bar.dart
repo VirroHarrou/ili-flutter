@@ -9,7 +9,7 @@ AppBar generateAppBar(BuildContext context) {
     centerTitle: false,
     backgroundColor: theme.colorScheme.background,
     title: Text(S.of(context).favorites, style: AppTextStyles.titleH1),
-    titleSpacing: 20,
+    titleSpacing: 24,
     actions: [
       Padding(
         padding: const EdgeInsets.only(right: 0),

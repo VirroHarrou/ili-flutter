@@ -52,7 +52,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "errorWhileUpdating": MessageLookupByLibrary.simpleMessage(
             "An error occurred while updating the data, please try again later"),
         "exit": MessageLookupByLibrary.simpleMessage("Quit"),
-        "favorites": MessageLookupByLibrary.simpleMessage("Favorites"),
+        "favorites": MessageLookupByLibrary.simpleMessage("Catalog"),
         "find": MessageLookupByLibrary.simpleMessage("Find..."),
         "homePage": MessageLookupByLibrary.simpleMessage("Main"),
         "informationAbout":

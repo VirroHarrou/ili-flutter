@@ -25,7 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m1(count) =>
       "${Intl.plural(count, zero: 'нет вопросов', one: 'вопрос', two: 'вопроса', few: 'вопроса', many: 'вопросов', other: 'вопросов')}";
 
-  static String m2(remain) => "${remain} questions";
+  static String m2(remain) => "${remain} вопросов";
 
   static String m3(version) => "Версия: ${version}";
 
@@ -36,7 +36,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Если вам нет 18, используйте приложение в присутствии родителей. Cледите за своим окружением, AR может искажать объекты."),
         "begin": MessageLookupByLibrary.simpleMessage("Начать"),
         "cancel": MessageLookupByLibrary.simpleMessage("Отмена"),
-        "complete": MessageLookupByLibrary.simpleMessage("Complete"),
+        "complete": MessageLookupByLibrary.simpleMessage("Завершено"),
         "contactWithUs":
             MessageLookupByLibrary.simpleMessage("Связаться с нами"),
         "couldNotLaunchUrl": m0,
@@ -52,7 +52,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "errorWhileUpdating": MessageLookupByLibrary.simpleMessage(
             "При обновлении данных произошла ошибка, пожалуйста попробуйте позже"),
         "exit": MessageLookupByLibrary.simpleMessage("Выйти"),
-        "favorites": MessageLookupByLibrary.simpleMessage("Сохраненные"),
+        "favorites": MessageLookupByLibrary.simpleMessage("Каталог"),
         "find": MessageLookupByLibrary.simpleMessage("Найти..."),
         "homePage": MessageLookupByLibrary.simpleMessage("Главная"),
         "informationAbout":

@@ -72,7 +72,7 @@ class _PlatformListPageState extends State<PlatformListPage> {
     title: !isSearching
         ? Text(S.of(context).platforms, style: AppTextStyles.titleH1)
         : TextField(
-      textAlignVertical: TextAlignVertical.center,
+      textAlignVertical: TextAlignVertical.top,
       decoration: InputDecoration(
           hintText: S.of(context).find,
           //Todo: hint style
@@ -93,7 +93,6 @@ class _PlatformListPageState extends State<PlatformListPage> {
             borderRadius: BorderRadius.circular(8.0),
           )
       ),
-      //Todo: implement search
       onChanged: (query) {
           controller.filter = query.trim();
           controller.pageController.refresh();
